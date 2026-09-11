@@ -241,6 +241,11 @@ section{margin-bottom:28px;}
   letter-spacing:.1em;
   margin:0 0 12px;
 }
+.section-sub{
+  font-size:13px;
+  color:var(--text-muted);
+  margin:-6px 0 12px;
+}
 
 .chips{
   display:flex;
@@ -658,11 +663,35 @@ details.add-box[open] summary .chevron{transform:rotate(180deg);}
   padding:2px;
 }
 
-footer.note{
+footer.site-footer{
   text-align:center;
-  font-size:12px;
+  margin-top:48px;
+  padding-top:28px;
+  border-top:1px solid var(--border);
+}
+footer.site-footer .footer-name{
+  font-family:"Shippori Mincho", serif;
+  font-size:15px;
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 4px;
+}
+footer.site-footer .footer-tagline{
+  font-size:12.5px;
   color:var(--text-muted);
-  margin-top:32px;
+  margin:0 0 14px;
+}
+footer.site-footer .footer-note{
+  font-size:11px;
+  color:var(--text-muted);
+  opacity:.75;
+  margin:0 0 8px;
+}
+footer.site-footer .footer-copyright{
+  font-size:11px;
+  color:var(--text-muted);
+  opacity:.6;
+  margin:0;
 }
 
 @media (prefers-reduced-motion: reduce){
@@ -867,6 +896,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   font-size:15px;
   color:var(--text);
   margin:0 0 4px;
+}
+.decided-recap{
+  text-align:center;
+  font-size:12.5px;
+  color:var(--text-muted);
+  margin:0 0 10px;
+  line-height:1.6;
 }
 .decided-panel .btn[disabled]{
   opacity:.55;
@@ -1108,8 +1144,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   </section>
 
   <section>
+    <p class="section-label">わが家の定番</p>
+    <p class="section-sub">よく作る料理を登録しておくと、次のひらめきにも使えます。</p>
     <details class="add-box" id="addBox">
-      <summary>自分の献立を追加する <span class="chevron">▾</span></summary>
+      <summary>＋ わが家の料理を登録</summary>
       <div class="form-grid">
         <div class="field">
           <label for="inName">メニュー名</label>
@@ -1152,7 +1190,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     </details>
   </section>
 
-  <footer class="note">登録した献立と履歴はこの端末のブラウザ内だけに保存されます。</footer>
+  <footer class="site-footer">
+    <p class="footer-name">ごはんのひらめき係</p>
+    <p class="footer-tagline">今日の夕飯を、ちょっと楽しく。</p>
+    <p class="footer-note">登録した献立と履歴は、この端末のブラウザ内だけに保存されます。</p>
+    <p class="footer-copyright">© ごはんのひらめき係</p>
+  </footer>
 </div>
 
 <div class="action-bar" id="actionBar">
@@ -1172,6 +1215,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     <div class="decided-panel" id="decidedPanel" hidden>
       <p class="decided-message">今日の晩ごはんが決まりました。</p>
+      <p class="decided-recap" id="decidedRecap"></p>
       <button class="btn btn-secondary" id="shareBtn">
         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2" stroke-linecap="round"/></svg>
         家族に送る
@@ -3390,6 +3434,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var confirmBtn = document.getElementById("confirmBtn");
   var emptyNote = document.getElementById("emptyNote");
   var decidedPanel = document.getElementById("decidedPanel");
+  var decidedRecap = document.getElementById("decidedRecap");
   var shoppingListBtn = document.getElementById("shoppingListBtn");
   var newDayBtn = document.getElementById("newDayBtn");
   var sidesHeading = document.getElementById("sidesHeading");
@@ -3947,6 +3992,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     renderHistory();
     showToast("今日の献立に決定しました！");
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
+    decidedRecap.textContent = currentPicks.main.name + " ＋ " + currentPicks.side1.name + " ＋ " + currentPicks.side2.name;
     decideRow.hidden = true;
     decidedPanel.hidden = false;
   });
