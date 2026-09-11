@@ -2346,8 +2346,8 @@ footer.note{
   var customMenus = safeGet(LS_CUSTOM, []);
   var history = safeGet(LS_HISTORY, []);
   var selectedCats = safeGet(LS_SELECTED_CATS, []);
-  var selectedGenres = safeGet(LS_SELECTED_GENRES, []);
-  var selectedWeights = safeGet(LS_SELECTED_WEIGHTS, []);
+  var selectedGenres = safeGet(LS_SELECTED_GENRES, []).slice(0, 1);
+  var selectedWeights = safeGet(LS_SELECTED_WEIGHTS, []).slice(0, 1);
   var servings = safeGet(LS_SERVINGS, BASE_SERVINGS);
   if(SERVING_OPTIONS.indexOf(servings) === -1) servings = BASE_SERVINGS;
   var unsplashKey = "-Es-nrgH78WhEwxwEHN-4wYh2k1jOcX4DhxijEWHBAg";
@@ -2440,8 +2440,32 @@ footer.note{
     });
   }
 
-  buildMultiChips(document.getElementById("genreChips"), GENRES, selectedGenres, LS_SELECTED_GENRES);
-  buildMultiChips(document.getElementById("weightChips"), WEIGHTS, selectedWeights, LS_SELECTED_WEIGHTS);
+  function buildSingleChips(containerEl, options, selectedArr, storageKey){
+    var buttons = {};
+    options.forEach(function(opt){
+      var btn = document.createElement("button");
+      btn.className = "chip";
+      btn.type = "button";
+      btn.setAttribute("aria-pressed", selectedArr.indexOf(opt.id) !== -1 ? "true" : "false");
+      btn.textContent = opt.label;
+      btn.addEventListener("click", function(){
+        var wasSelected = selectedArr.indexOf(opt.id) !== -1;
+        selectedArr.length = 0;
+        options.forEach(function(o){ buttons[o.id].setAttribute("aria-pressed", "false"); });
+        if(!wasSelected){
+          selectedArr.push(opt.id);
+          btn.setAttribute("aria-pressed", "true");
+        }
+        safeSet(storageKey, selectedArr);
+        resetResult();
+      });
+      buttons[opt.id] = btn;
+      containerEl.appendChild(btn);
+    });
+  }
+
+  buildSingleChips(document.getElementById("genreChips"), GENRES, selectedGenres, LS_SELECTED_GENRES);
+  buildSingleChips(document.getElementById("weightChips"), WEIGHTS, selectedWeights, LS_SELECTED_WEIGHTS);
 
   var servingsChips = document.getElementById("servingsChips");
   var servingsBtns = {};
