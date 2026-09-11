@@ -2575,22 +2575,27 @@ footer.note{
     return avoided.length > 0 ? avoided : pool;
   }
 
-  function sidePool(excludeNames, excludeCats){
+  var SALAD_STYLE_RE = /サラダ|マリネ|ラペ|コールスロー|酢の物|なます/;
+  function isSaladStyle(menu){ return SALAD_STYLE_RE.test(menu.name); }
+
+  function sidePool(excludeNames, excludeCats, avoidSalad){
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side"; });
     var pool = allSides.filter(matchesGenreWeight);
     var recent = recentNamesByRole("side", 3);
     var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
-    var byNameAndCat = function(m){ return byName(m) && excludeCats.indexOf(m.cat) === -1; };
-    var freshByCat = function(m){ return recent.indexOf(m.name) === -1 && byNameAndCat(m); };
+    var byVariety = function(m){
+      return byName(m) && excludeCats.indexOf(m.cat) === -1 && !(avoidSalad && isSaladStyle(m));
+    };
+    var freshByVariety = function(m){ return recent.indexOf(m.name) === -1 && byVariety(m); };
     var fresh = function(m){ return recent.indexOf(m.name) === -1 && byName(m); };
 
     var tiers = [
-      pool.filter(freshByCat),
-      pool.filter(byNameAndCat),
+      pool.filter(freshByVariety),
+      pool.filter(byVariety),
       pool.filter(fresh),
       pool.filter(byName),
-      allSides.filter(freshByCat),
-      allSides.filter(byNameAndCat),
+      allSides.filter(freshByVariety),
+      allSides.filter(byVariety),
       allSides.filter(fresh),
       allSides.filter(byName)
     ];
@@ -2605,11 +2610,11 @@ footer.note{
     if(mPool.length === 0) return null;
     var mainPick = pickRandom(mPool);
 
-    var sPool1 = sidePool([mainPick.name], [mainPick.cat]);
+    var sPool1 = sidePool([mainPick.name], [mainPick.cat], false);
     if(sPool1.length === 0) return null;
     var side1 = pickRandom(sPool1);
 
-    var sPool2 = sidePool([mainPick.name, side1.name], [mainPick.cat, side1.cat]);
+    var sPool2 = sidePool([mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
     if(sPool2.length === 0) return null;
     var side2 = pickRandom(sPool2);
 
