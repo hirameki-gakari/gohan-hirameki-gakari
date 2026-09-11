@@ -447,6 +447,11 @@ section{margin-bottom:22px;}
   border-radius:999px;
   padding:2px 9px;
 }
+.tag-badge{
+  color:var(--accent-strong);
+  background:var(--accent-soft);
+  font-weight:700;
+}
 
 .btn{
   font-family:inherit;
@@ -640,8 +645,6 @@ footer.note{
 </style>
 </head>
 <body>
-
-
 <div class="page">
   <header class="hero">
     <div class="eyebrow">今日のごはん、決めよう</div>
@@ -679,6 +682,7 @@ footer.note{
           <span class="dish-tag" id="tagMain"></span>
           <span class="meta-badge" id="genreMain" hidden></span>
           <span class="meta-badge" id="weightMain" hidden></span>
+          <span class="meta-badge tag-badge" id="tagBadgeMain" hidden></span>
         </div>
         <div class="dish-photo" id="photoWrapMain">
           <img id="photoMain" alt="" loading="lazy" />
@@ -712,6 +716,7 @@ footer.note{
           <span class="dish-tag" id="tagSide1"></span>
           <span class="meta-badge" id="genreSide1" hidden></span>
           <span class="meta-badge" id="weightSide1" hidden></span>
+          <span class="meta-badge tag-badge" id="tagBadgeSide1" hidden></span>
         </div>
         <div class="dish-photo" id="photoWrapSide1">
           <img id="photoSide1" alt="" loading="lazy" />
@@ -745,6 +750,7 @@ footer.note{
           <span class="dish-tag" id="tagSide2"></span>
           <span class="meta-badge" id="genreSide2" hidden></span>
           <span class="meta-badge" id="weightSide2" hidden></span>
+          <span class="meta-badge tag-badge" id="tagBadgeSide2" hidden></span>
         </div>
         <div class="dish-photo" id="photoWrapSide2">
           <img id="photoSide2" alt="" loading="lazy" />
@@ -2333,7 +2339,307 @@ footer.note{
       steps:["豚バラを炒める","厚揚げとキャベツを加える","甜麺醤で味を調える"]},
     {id:"fx12", cat:"tofu", name:"豆腐の四川風煮込み", desc:"ピリ辛でご飯が進む煮込み。", cost5:750, genre:"chinese", weight:"hearty", img:"tofu sichuan stew",
       ing:["木綿豆腐1.5丁","豚ひき肉200g","豆板醤大さじ1.5","長ねぎ1本"],
-      steps:["ひき肉と豆板醤を炒める","豆腐を加えて煮る","長ねぎを散らして仕上げる"]}
+      steps:["ひき肉と豆板醤を炒める","豆腐を加えて煮る","長ねぎを散らして仕上げる"]},
+    {id:"z1", cat:"pork", name:"悪魔のねぎ塩豚カルビ", desc:"ねぎ塩だれがやみつきになる背徳の一皿。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork belly scallion salt grilled", cookingTime:15, difficulty:1, tags:["ガツン系","バズり","時短"],
+      ing:["豚バラ焼肉用400g","長ねぎ2本","ごま油・塩・レモン汁各適量"],
+      steps:["長ねぎを刻んでねぎ塩だれを作る","豚バラを香ばしく焼く","たれをたっぷりかける"]},
+    {id:"z2", cat:"chicken", name:"にんにく味噌マヨ鶏もも焼き", desc:"濃厚だれでご飯が止まらない。", cost5:950, genre:"japanese", weight:"hearty", img:"chicken garlic miso mayo grilled", cookingTime:20, difficulty:1, tags:["ガツン系","ご飯が進む"],
+      ing:["鶏もも肉3枚","にんにく2かけ","味噌・マヨネーズ各大さじ3"],
+      steps:["にんにくをすりおろす","調味料を混ぜてだれを作る","鶏肉を焼いてだれを絡める"]},
+    {id:"z3", cat:"pork", name:"とろ卵チーズ豚丼", desc:"とろける卵とチーズの背徳丼。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork cheese egg rice bowl", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","丼"],
+      ing:["豚バラ薄切り350g","卵5個","とろけるチーズ100g","しょうゆ・みりん各大さじ3"],
+      steps:["豚肉を甘辛く炒める","ごはんにのせてチーズをのせる","半熟卵をのせて仕上げる"]},
+    {id:"z4", cat:"pork", name:"焦がし醤油バター豚こま", desc:"香ばしい焦がし醤油とバターの黄金コンビ。", cost5:900, genre:"japanese", weight:"hearty", img:"pork butter soy caramelized", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"],
+      ing:["豚こま切れ400g","バター20g","しょうゆ大さじ3","にんにく1かけ"],
+      steps:["豚こまを強火で炒める","バターとにんにくを加える","しょうゆを鍋肌から回し入れ焦がし香をつける"]},
+    {id:"z5", cat:"pork", name:"ご飯泥棒！甘辛肉味噌", desc:"作り置きにも便利な万能そぼろ。", cost5:850, genre:"japanese", weight:"hearty", img:"pork mince sweet miso", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","時短"],
+      ing:["豚ひき肉400g","味噌・みりん・砂糖各大さじ2","長ねぎ1本"],
+      steps:["ひき肉を炒める","調味料を加えて煮詰める","刻んだねぎを混ぜる"]},
+    {id:"z6", cat:"beef", name:"チーズ爆発ハンバーグ", desc:"切った瞬間チーズがとろけ出す。", cost5:1200, genre:"western", weight:"hearty", img:"hamburger steak cheese stuffed", cookingTime:25, difficulty:2, tags:["ガツン系","ご褒美"],
+      ing:["合いびき肉500g","とろけるチーズ100g","玉ねぎ1個","デミグラスソース1缶"],
+      steps:["玉ねぎを炒めてひき肉と混ぜる","チーズを包んで成形する","焼いてデミグラスソースをかける"]},
+    {id:"z7", cat:"pork", name:"カリカリ豚のねぎポン酢", desc:"表面カリカリ、中はジューシー。", cost5:950, genre:"japanese", weight:"hearty", img:"crispy pork belly scallion ponzu", cookingTime:15, difficulty:1, tags:["ガツン系","さっぱり"],
+      ing:["豚バラ薄切り350g","長ねぎ1本","ポン酢大さじ4"],
+      steps:["豚バラをカリカリに焼く","刻みねぎをたっぷりのせる","ポン酢をかける"]},
+    {id:"z8", cat:"beef", name:"焼肉のタレ肉炒め", desc:"市販のたれで簡単ガツン系。", cost5:1300, genre:"japanese", weight:"hearty", img:"beef yakiniku sauce stir fry", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"],
+      ing:["牛カルビ用400g","焼肉のたれ大さじ4","玉ねぎ1個"],
+      steps:["玉ねぎを炒める","牛肉を加えて炒める","焼肉のたれを絡めて仕上げる"]},
+    {id:"z9", cat:"chicken", name:"悪魔のよだれ鶏丼", desc:"ピリ辛ラー油だれが後を引く。", cost5:900, genre:"chinese", weight:"hearty", img:"yodare chicken spicy rice bowl", cookingTime:20, difficulty:2, tags:["ガツン系","バズり","丼"],
+      ing:["鶏もも肉3枚","長ねぎ・しょうが各適量","ラー油・しょうゆ・酢各大さじ2"],
+      steps:["鶏肉を茹でて蒸し鶏にする","薬味とたれを合わせる","ごはんにのせてたれをかける"]},
+    {id:"z10", cat:"chicken", name:"溶岩チーズタッカルビ", desc:"辛うまチキンにとろけるチーズ。", cost5:1100, genre:"chinese", weight:"hearty", img:"cheese dakgalbi korean chicken", cookingTime:25, difficulty:2, tags:["ガツン系","バズり","韓国"],
+      ing:["鶏もも肉3枚","コチュジャン大さじ3","キャベツ1/4個","とろけるチーズ150g"],
+      steps:["鶏肉とコチュジャンだれを絡める","キャベツと炒める","チーズをのせて蒸し焼きにする"]},
+    {id:"z11", cat:"pork", name:"スタミナ爆盛り豚こまキャベツ炒め", desc:"野菜も肉もたっぷり食べられる。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork cabbage stamina stir fry large portion", cookingTime:15, difficulty:1, tags:["育ち盛り","ボリューム","ご飯が進む"],
+      ing:["豚こま切れ500g","キャベツ1/2個","にんにく・しょうゆ各適量"],
+      steps:["キャベツをざく切りにする","豚肉とにんにくを炒める","キャベツを加えてしょうゆで味を調える"]},
+    {id:"z12", cat:"chicken", name:"鶏むね肉の高タンパク竜田揚げ", desc:"むね肉でもジューシーな竜田揚げ。", cost5:900, genre:"japanese", weight:"hearty", img:"chicken breast tatsuta age high protein", cookingTime:20, difficulty:1, tags:["育ち盛り","高タンパク"],
+      ing:["鶏むね肉4枚","しょうゆ・酒各大さじ3","片栗粉適量"],
+      steps:["鶏肉をそぎ切りにして下味をつける","片栗粉をまぶす","カラッと揚げる"]},
+    {id:"z13", cat:"beef", name:"牛肉どっさり焼肉丼", desc:"育ち盛りも満足のボリューム丼。", cost5:1600, genre:"japanese", weight:"hearty", img:"beef yakiniku rice bowl large", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"],
+      ing:["牛カルビ用450g","焼肉のたれ大さじ4","ごはん5膳"],
+      steps:["牛肉を焼肉のたれに漬ける","強火で焼く","ごはんにたっぷりのせる"]},
+    {id:"z14", cat:"pork", name:"がっつりポークソテー大盛りソース", desc:"厚切り肉にたっぷりソースをかけて。", cost5:1100, genre:"western", weight:"hearty", img:"pork saute thick sauce large", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"],
+      ing:["豚ロース厚切り5枚","ケチャップ・ウスターソース各大さじ2","バター15g"],
+      steps:["豚肉を焼く","ソースを合わせる","肉にたっぷりかける"]},
+    {id:"z15", cat:"chicken", name:"鶏もも肉のスタミナ塩だれ炒め", desc:"にんにく香るスタミナ満点おかず。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken garlic salt stamina stir fry", cookingTime:15, difficulty:1, tags:["育ち盛り","スタミナ"],
+      ing:["鶏もも肉3枚","にんにく2かけ","塩・ごま油各適量"],
+      steps:["鶏肉を一口大に切る","にんにくと炒める","塩とごま油で味を調える"]},
+    {id:"z16", cat:"pork", name:"ボリューム満点！豚バラ卵とじ丼", desc:"食べ盛りにうれしい大満足丼。", cost5:1050, genre:"japanese", weight:"hearty", img:"pork belly egg rice bowl hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"],
+      ing:["豚バラ薄切り350g","卵6個","玉ねぎ1個","だし・しょうゆ・みりん各適量"],
+      steps:["玉ねぎと豚肉を煮る","調味料で味を調える","卵でとじてごはんにのせる"]},
+    {id:"z17", cat:"chicken", name:"パワー全開！鶏むねチキンステーキ", desc:"厚みを活かしたジューシーステーキ。", cost5:900, genre:"western", weight:"hearty", img:"chicken breast steak garlic butter", cookingTime:18, difficulty:1, tags:["育ち盛り","高タンパク"],
+      ing:["鶏むね肉4枚","にんにく・バター各適量","しょうゆ大さじ2"],
+      steps:["鶏肉を観音開きにする","両面を香ばしく焼く","にんにくバターじょうゆで仕上げる"]},
+    {id:"z18", cat:"onion", name:"部活男子のキーマカレー", desc:"スパイス香る食べ応え満点カレー。", cost5:1000, genre:"western", weight:"hearty", img:"keema curry hearty", cookingTime:25, difficulty:2, tags:["育ち盛り","カレー"],
+      ing:["合いびき肉400g","玉ねぎ2個","カレールー1/2箱","トマト缶1/2缶"],
+      steps:["玉ねぎを炒める","ひき肉を加えて炒める","トマト缶とカレールーを加えて煮込む"]},
+    {id:"z19", cat:"chicken", name:"鶏もも肉と厚揚げのボリューム煮", desc:"たんぱく質しっかりの満足おかず。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken fried tofu hearty simmered", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"],
+      ing:["鶏もも肉3枚","厚揚げ3枚","だし・しょうゆ・みりん各適量"],
+      steps:["鶏肉と厚揚げを炒める","だしを加える","調味料で味を調えて煮込む"]},
+    {id:"z20", cat:"pork", name:"豚肩ロースの厚切りジューシーステーキ", desc:"かぶりつきたくなる厚切り肉。", cost5:1300, genre:"japanese", weight:"hearty", img:"pork shoulder thick steak", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム","ご褒美"],
+      ing:["豚肩ロース厚切り5枚","にんにく・しょうゆ・みりん各適量"],
+      steps:["豚肉を室温に戻す","両面を焼く","にんにくじょうゆだれを絡める"]},
+    {id:"z21", cat:"pork", name:"豚こまの照り焼き風ステーキ仕立て", desc:"安い豚こまが厚切り肉風に大変身。", cost5:750, genre:"japanese", weight:"hearty", img:"pork scraps steak style teriyaki", cookingTime:15, difficulty:1, tags:["節約","豪華見え"],
+      ing:["豚こま切れ400g","片栗粉適量","しょうゆ・みりん各大さじ2"],
+      steps:["豚こまを丸くまとめて片栗粉をまぶす","焼き固める","照り焼きだれを絡める"]},
+    {id:"z22", cat:"chicken", name:"鶏むね肉のとろとろ油淋鶏風", desc:"むね肉が驚くほどしっとり仕上がる。", cost5:800, genre:"chinese", weight:"hearty", img:"chicken breast youlinji budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+      ing:["鶏むね肉3枚","片栗粉適量","しょうゆ・酢・砂糖各大さじ2"],
+      steps:["鶏肉をそぎ切りにして片栗粉をまぶす","揚げ焼きにする","甘酢だれをかける"]},
+    {id:"z23", cat:"tofu", name:"厚揚げのステーキ風ガーリックソース", desc:"厚揚げが立派なメインになる。", cost5:600, genre:"western", weight:"hearty", img:"fried tofu steak garlic sauce", cookingTime:12, difficulty:1, tags:["節約","豪華見え"],
+      ing:["厚揚げ3枚","にんにく2かけ","バター・しょうゆ各適量"],
+      steps:["厚揚げを厚めに切って焼く","にんにくを炒める","バターしょうゆだれをかける"]},
+    {id:"z24", cat:"tofu", name:"豆腐とひき肉のふわとろ中華丼", desc:"少ない肉でも満足感たっぷり。", cost5:650, genre:"chinese", weight:"hearty", img:"tofu mince chinese rice bowl", cookingTime:15, difficulty:1, tags:["節約","丼","豪華見え"],
+      ing:["木綿豆腐1.5丁","豚ひき肉150g","中華だし・片栗粉各適量"],
+      steps:["ひき肉を炒める","だしと豆腐を加える","とろみをつけてごはんにかける"]},
+    {id:"z25", cat:"potato", name:"卵とじゃがいものボリュームオムレツ", desc:"ワンパンで作れる見栄えの良い一品。", cost5:600, genre:"western", weight:"hearty", img:"potato omelette budget spanish", cookingTime:15, difficulty:2, tags:["節約","豪華見え"],
+      ing:["じゃがいも3個","卵6個","ベーコン60g"],
+      steps:["じゃがいもを薄切りにして炒める","ベーコンを加える","卵を流し入れてふんわり焼く"]},
+    {id:"z26", cat:"pork", name:"もやしと豚バラの重ね蒸し", desc:"安い食材で野菜もたっぷり。", cost5:700, genre:"japanese", weight:"healthy", img:"bean sprout pork belly steamed budget", cookingTime:15, difficulty:1, tags:["節約","ヘルシー"],
+      ing:["もやし2袋","豚バラ薄切り250g","ポン酢適量"],
+      steps:["もやしを敷いて豚肉をのせる","酒をふって蒸す","ポン酢をかける"]},
+    {id:"z27", cat:"chicken", name:"鶏むね肉の豪華照りマヨ焼き", desc:"マヨの効果でしっとりジューシー。", cost5:800, genre:"japanese", weight:"hearty", img:"chicken breast mayo teriyaki budget", cookingTime:15, difficulty:1, tags:["節約","豪華見え"],
+      ing:["鶏むね肉3枚","マヨネーズ大さじ3","しょうゆ・みりん各大さじ2"],
+      steps:["鶏肉にマヨネーズをまぶす","焼く","しょうゆとみりんで照りを出す"]},
+    {id:"z28", cat:"tofu", name:"厚揚げと卵のとろとろ丼", desc:"少ない材料で満足感のある丼。", cost5:550, genre:"japanese", weight:"healthy", img:"fried tofu egg rice bowl budget", cookingTime:12, difficulty:1, tags:["節約","丼","時短"],
+      ing:["厚揚げ3枚","卵5個","だし・しょうゆ・みりん各適量"],
+      steps:["厚揚げを一口大に切って煮る","調味料で味を調える","卵でとじてごはんにのせる"]},
+    {id:"z29", cat:"onion", name:"豚こまと玉ねぎのボリュームロール", desc:"豚こまを巻くだけで見た目が豪華に。", cost5:850, genre:"japanese", weight:"hearty", img:"pork onion roll teriyaki budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+      ing:["豚こま切れ400g","玉ねぎ2個","しょうゆ・みりん各大さじ2"],
+      steps:["玉ねぎをくし切りにして豚肉で巻く","焼き固める","調味料を絡めて照りを出す"]},
+    {id:"z30", cat:"tofu", name:"卵と厚揚げの節約グラタン風", desc:"チーズでコクを出した節約グラタン。", cost5:700, genre:"western", weight:"hearty", img:"fried tofu egg gratin budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+      ing:["厚揚げ3枚","卵4個","とろけるチーズ80g","牛乳100ml"],
+      steps:["厚揚げを耐熱皿に並べる","卵と牛乳を混ぜて流す","チーズをのせて焼く"]},
+    {id:"z31", cat:"chicken", name:"鶏むね肉の5分チンチキン", desc:"レンジだけで作れる時短メイン。", cost5:800, genre:"japanese", weight:"healthy", img:"microwave chicken breast quick", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+      ing:["鶏むね肉2枚","酒大さじ1","ポン酢適量"],
+      steps:["鶏肉に酒をふりラップをする","レンジで加熱する","そぎ切りにしてポン酢をかける"]},
+    {id:"z32", cat:"cabbage", name:"レンジで豚こまキャベツ蒸し", desc:"洗い物少なく10分で完成。", cost5:750, genre:"japanese", weight:"healthy", img:"microwave pork cabbage steamed quick", cookingTime:10, difficulty:1, tags:["時短","レンジ"],
+      ing:["豚こま切れ250g","キャベツ1/4個","ポン酢適量"],
+      steps:["キャベツと豚肉を交互に重ねる","レンジで加熱する","ポン酢をかける"]},
+    {id:"z33", cat:"egg_natto", name:"卵とツナの時短丼", desc:"火を使わず8分で完成。", cost5:500, genre:"japanese", weight:"healthy", img:"egg tuna quick rice bowl", cookingTime:8, difficulty:1, tags:["時短","丼"],
+      ing:["卵4個","ツナ缶2個","しょうゆ・マヨネーズ各適量"],
+      steps:["卵を半熟にゆでる","ツナと調味料を混ぜる","ごはんにのせる"]},
+    {id:"z34", cat:"chicken", name:"フライパン1つで鶏もも照り焼き丼", desc:"洗い物少なく12分で完成。", cost5:900, genre:"japanese", weight:"hearty", img:"chicken teriyaki rice bowl quick", cookingTime:12, difficulty:1, tags:["時短","丼"],
+      ing:["鶏もも肉2枚","しょうゆ・みりん各大さじ2","ごはん5膳"],
+      steps:["鶏肉を焼く","調味料を加えて煮絡める","ごはんにのせる"]},
+    {id:"z35", cat:"tofu", name:"レンジ蒸し豆腐の香味だれ", desc:"レンジで作るヘルシー時短副菜級主菜。", cost5:500, genre:"chinese", weight:"healthy", img:"microwave tofu ginger scallion sauce", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+      ing:["絹豆腐2丁","長ねぎ・しょうが各適量","しょうゆ・ごま油各大さじ1"],
+      steps:["豆腐をレンジで温める","薬味とたれを合わせる","豆腐にかける"]},
+    {id:"z36", cat:"pork", name:"豚こまの爆速ねぎ塩炒め", desc:"包丁いらずで10分完成。", cost5:850, genre:"japanese", weight:"hearty", img:"pork scallion salt quick stir fry", cookingTime:10, difficulty:1, tags:["時短","ガツン系"],
+      ing:["豚こま切れ350g","長ねぎ1本","塩・ごま油各適量"],
+      steps:["長ねぎを切る","豚肉を強火で炒める","塩とごま油で味を調える"]},
+    {id:"z37", cat:"egg_natto", name:"卵ともやしの時短中華炒め", desc:"8分でできる節約時短おかず。", cost5:500, genre:"chinese", weight:"healthy", img:"egg bean sprout quick chinese stir fry", cookingTime:8, difficulty:1, tags:["時短","節約"],
+      ing:["卵5個","もやし2袋","オイスターソース大さじ2"],
+      steps:["もやしを炒める","卵を加える","オイスターソースで味を調える"]},
+    {id:"z38", cat:"chicken", name:"レンジで作る鶏むねの梅ポン蒸し", desc:"さっぱりヘルシーな時短メイン。", cost5:800, genre:"japanese", weight:"healthy", img:"microwave chicken plum ponzu", cookingTime:10, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+      ing:["鶏むね肉2枚","梅干し2個","ポン酢適量"],
+      steps:["鶏肉に梅干しをのせてラップをする","レンジで加熱する","ポン酢をかけて仕上げる"]},
+    {id:"z39", cat:"daikon", name:"フライパン1つ豚バラ大根の時短煮", desc:"薄切り大根で煮込み時間を短縮。", cost5:900, genre:"japanese", weight:"hearty", img:"pork daikon quick simmered thin sliced", cookingTime:15, difficulty:1, tags:["時短"],
+      ing:["豚バラ薄切り300g","大根1/2本","だし・しょうゆ・みりん各適量"],
+      steps:["大根を薄切りにする","豚肉と炒める","だしと調味料で手早く煮る"]},
+    {id:"z40", cat:"tofu", name:"5分で厚揚げの甘辛炒め", desc:"包丁いらずの爆速おかず。", cost5:500, genre:"japanese", weight:"hearty", img:"fried tofu sweet soy 5 minutes", cookingTime:5, difficulty:1, tags:["時短","節約"],
+      ing:["厚揚げ3枚","しょうゆ・みりん・砂糖各大さじ1.5"],
+      steps:["厚揚げを切る","フライパンで焼く","調味料を絡める"]},
+    {id:"z41", cat:"chicken", name:"やみつき鶏もも炭火風炒め", desc:"香ばしい焼き目がたまらない。", cost5:950, genre:"japanese", weight:"hearty", img:"grilled chicken thigh smoky salt", cookingTime:15, difficulty:1, tags:["おつまみ","ご飯が進む"],
+      ing:["鶏もも肉3枚","塩・こしょう・レモン各適量"],
+      steps:["鶏肉を高温でこんがり焼く","塩こしょうで味を調える","レモンを添える"]},
+    {id:"z42", cat:"tofu", name:"厚揚げのねぎま塩だれ", desc:"ビールにもご飯にも合う一品。", cost5:600, genre:"japanese", weight:"hearty", img:"fried tofu scallion salt sauce", cookingTime:12, difficulty:1, tags:["おつまみ"],
+      ing:["厚揚げ3枚","長ねぎ1本","塩・ごま油各適量"],
+      steps:["厚揚げを焼く","長ねぎを刻む","塩とごま油のたれをかける"]},
+    {id:"z43", cat:"pork", name:"豚バラの黒こしょう炒め", desc:"ピリッと効いた大人の味わい。", cost5:900, genre:"japanese", weight:"hearty", img:"pork belly black pepper stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"],
+      ing:["豚バラ薄切り350g","黒こしょう・しょうゆ各適量"],
+      steps:["豚バラを炒める","黒こしょうをたっぷりふる","しょうゆで味を調える"]},
+    {id:"z44", cat:"chicken", name:"鶏むね肉のスパイシーから揚げ", desc:"スパイスを効かせた大人のから揚げ。", cost5:900, genre:"japanese", weight:"hearty", img:"spicy chicken karaage", cookingTime:20, difficulty:2, tags:["おつまみ","ガツン系"],
+      ing:["鶏むね肉3枚","にんにく・カレー粉各適量","片栗粉適量"],
+      steps:["鶏肉に下味をつける","片栗粉をまぶす","カラッと揚げる"]},
+    {id:"z45", cat:"beef", name:"たたき牛肉のピリ辛だれ", desc:"お酒がすすむ一品。", cost5:1400, genre:"japanese", weight:"hearty", img:"beef tataki spicy sauce", cookingTime:15, difficulty:2, tags:["おつまみ","ご褒美"],
+      ing:["牛もも肉塊300g","ラー油・しょうゆ・にんにく各適量"],
+      steps:["牛肉の表面を焼く","薄切りにする","ピリ辛だれをかける"]},
+    {id:"z46", cat:"tofu", name:"厚揚げキムチのチーズ焼き", desc:"発酵食品×チーズの背徳コンビ。", cost5:750, genre:"chinese", weight:"hearty", img:"fried tofu kimchi cheese bake", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"],
+      ing:["厚揚げ3枚","キムチ150g","とろけるチーズ80g"],
+      steps:["厚揚げにキムチをのせる","チーズをのせる","トースターで焼く"]},
+    {id:"z47", cat:"pork", name:"豚こまのスタミナ炒め", desc:"にんにく香る食欲そそる炒め物。", cost5:850, genre:"japanese", weight:"hearty", img:"pork garlic stamina stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","スタミナ"],
+      ing:["豚こま切れ350g","にら1束","にんにく・しょうゆ各適量"],
+      steps:["にんにくを炒める","豚肉を加えて炒める","にらとしょうゆで仕上げる"]},
+    {id:"z48", cat:"chicken", name:"鶏もも肉のガーリック醤油ステーキ", desc:"にんにくの香りが食欲を誘う。", cost5:950, genre:"western", weight:"hearty", img:"chicken garlic soy steak", cookingTime:18, difficulty:1, tags:["おつまみ","ガツン系"],
+      ing:["鶏もも肉3枚","にんにく3かけ","しょうゆ・バター各適量"],
+      steps:["にんにくを揚げ焼きにする","鶏肉を焼く","しょうゆバターで仕上げる"]},
+    {id:"z49", cat:"beef", name:"牛肉のオイスター山椒炒め", desc:"痺れる山椒がクセになる。", cost5:1300, genre:"chinese", weight:"hearty", img:"beef oyster sichuan pepper stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","中華"],
+      ing:["牛切り落とし300g","オイスターソース大さじ2","山椒少々"],
+      steps:["牛肉を炒める","オイスターソースを加える","山椒をふって仕上げる"]},
+    {id:"z50", cat:"tofu", name:"厚揚げの熱々ねぎだく", desc:"アツアツを取り分けたいおつまみ。", cost5:600, genre:"japanese", weight:"hearty", img:"fried tofu scallion hot oil", cookingTime:10, difficulty:1, tags:["おつまみ","時短"],
+      ing:["厚揚げ3枚","長ねぎ2本","しょうゆ・ごま油各適量"],
+      steps:["厚揚げを焼く","刻みねぎをたっぷりのせる","しょうゆとごま油をかける"]},
+    {id:"z51", cat:"egg_natto", name:"なんでも野菜の卵とじ丼", desc:"冷蔵庫の野菜を何でも活用できる。", cost5:500, genre:"japanese", weight:"healthy", img:"leftover vegetable egg rice bowl", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","時短"],
+      ing:["卵5個","冷蔵庫の野菜適量","だし・しょうゆ・みりん各適量"],
+      steps:["野菜を切って炒める","だしと調味料を加える","卵でとじてごはんにのせる"]},
+    {id:"z52", cat:"pork", name:"余り野菜と豚こまのごった煮", desc:"半端に余った野菜の救済レシピ。", cost5:700, genre:"japanese", weight:"healthy", img:"leftover vegetable pork stew", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+      ing:["豚こま切れ300g","冷蔵庫の野菜適量","だし・しょうゆ各適量"],
+      steps:["野菜を一口大に切る","豚肉と炒める","だしとしょうゆで煮る"]},
+    {id:"z53", cat:"cabbage", name:"キャベツ丸ごと消費のくたくた煮", desc:"キャベツ1玉をペロリと消費。", cost5:600, genre:"japanese", weight:"healthy", img:"whole cabbage consomme stew", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+      ing:["キャベツ1個","ベーコンまたはウインナー100g","コンソメ1個"],
+      steps:["キャベツをくし切りにする","ベーコンと一緒に煮る","コンソメで味を調える"]},
+    {id:"z54", cat:"egg_natto", name:"卵たっぷりオムレツ丼", desc:"卵が余っている時の救済丼。", cost5:550, genre:"japanese", weight:"healthy", img:"leftover omelette rice bowl", cookingTime:10, difficulty:1, tags:["冷蔵庫一掃","時短"],
+      ing:["卵6個","冷蔵庫の具材適量","ケチャップ適量"],
+      steps:["具材を炒める","卵でオムレツを作る","ごはんにのせてケチャップをかける"]},
+    {id:"z55", cat:"tofu", name:"豆腐消費の担々風煮込み", desc:"豆腐を使い切る濃厚煮込み。", cost5:750, genre:"chinese", weight:"hearty", img:"tofu tantan style stew", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","ガツン系"],
+      ing:["豆腐1.5丁","豚ひき肉200g","豆板醤・ごまペースト各適量"],
+      steps:["ひき肉を炒める","調味料を加える","豆腐を加えて煮込む"]},
+    {id:"z56", cat:"carrot", name:"にんじん大量消費のきんぴら丼", desc:"余りがちなにんじんをまとめて消費。", cost5:500, genre:"japanese", weight:"healthy", img:"carrot kinpira rice bowl leftover", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","丼"],
+      ing:["にんじん4本","しょうゆ・みりん各大さじ2","ごま油適量"],
+      steps:["にんじんを細切りにする","ごま油で炒める","調味料で味を調えごはんにのせる"]},
+    {id:"z57", cat:"daikon", name:"大根1本消費のそぼろあんかけ", desc:"大根を無駄なく使い切る。", cost5:700, genre:"japanese", weight:"healthy", img:"daikon minced meat sauce leftover", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+      ing:["大根1本","鶏ひき肉200g","だし・片栗粉各適量"],
+      steps:["大根を厚めに切って下ゆでする","ひき肉を炒める","だしを加えてとろみをつけ大根にかける"]},
+    {id:"z58", cat:"egg_natto", name:"もやし救済のとろ玉炒め", desc:"安いもやしを美味しく消費。", cost5:450, genre:"chinese", weight:"healthy", img:"bean sprout egg leftover stir fry", cookingTime:8, difficulty:1, tags:["冷蔵庫一掃","時短","節約"],
+      ing:["もやし2袋","卵5個","オイスターソース大さじ2"],
+      steps:["もやしを炒める","卵を加える","オイスターソースで味を調える"]},
+    {id:"z59", cat:"onion", name:"玉ねぎ大量消費のオニオン肉巻き", desc:"玉ねぎが余っている時に。", cost5:900, genre:"japanese", weight:"hearty", img:"onion pork roll leftover", cookingTime:15, difficulty:2, tags:["冷蔵庫一掃"],
+      ing:["玉ねぎ3個","豚薄切り肉15枚","しょうゆ・みりん各大さじ2"],
+      steps:["玉ねぎを豚肉で巻く","焼き固める","調味料を絡めて仕上げる"]},
+    {id:"z60", cat:"potato", name:"じゃがいも大量消費のカレー炒め", desc:"余りがちなじゃがいもをまとめて。", cost5:750, genre:"western", weight:"hearty", img:"potato curry powder leftover stir fry", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","カレー"],
+      ing:["じゃがいも6個","豚こま切れ250g","カレー粉大さじ1"],
+      steps:["じゃがいもを一口大に切る","豚肉と炒める","カレー粉で味を調える"]},
+    {id:"z61", cat:"beef", name:"なつかし給食風ミートソース", desc:"あの頃の給食を思い出す味。", cost5:1000, genre:"western", weight:"hearty", img:"nostalgic school meat sauce", cookingTime:25, difficulty:1, tags:["懐かし","昭和"],
+      ing:["合いびき肉350g","玉ねぎ1個","トマト缶1缶","ケチャップ大さじ2"],
+      steps:["玉ねぎを炒める","ひき肉を加える","トマト缶とケチャップで煮込む"]},
+    {id:"z62", cat:"pork", name:"昭和の味！ポークチャップ", desc:"ケチャップだれが懐かしい洋食屋の味。", cost5:900, genre:"western", weight:"hearty", img:"showa pork chop ketchup", cookingTime:15, difficulty:1, tags:["懐かし","昭和"],
+      ing:["豚ロース5枚","ケチャップ・ウスターソース各大さじ2","玉ねぎ1/2個"],
+      steps:["豚肉を焼く","玉ねぎを炒める","ケチャップソースを絡める"]},
+    {id:"z63", cat:"egg_natto", name:"ツナコーンの卵とじ丼", desc:"平成の定番おうちご飯。", cost5:550, genre:"japanese", weight:"healthy", img:"tuna corn egg rice bowl nostalgic", cookingTime:10, difficulty:1, tags:["懐かし","平成","丼"],
+      ing:["卵5個","ツナ缶1個","コーン缶1缶","しょうゆ適量"],
+      steps:["ツナとコーンを炒める","しょうゆで味を調える","卵でとじてごはんにのせる"]},
+    {id:"z64", cat:"pork", name:"昭和の洋食屋さんナポリタン炒め", desc:"ケチャップ味の懐かしい炒め物。", cost5:850, genre:"western", weight:"hearty", img:"napolitan style stir fry nostalgic", cookingTime:15, difficulty:1, tags:["懐かし","昭和"],
+      ing:["豚こまorウインナー250g","ピーマン2個","ケチャップ大さじ4"],
+      steps:["具材を炒める","ケチャップを加える","味をなじませて仕上げる"]},
+    {id:"z65", cat:"cabbage", name:"なつかしのケチャップ焼きそば風キャベツ炒め", desc:"ソース焼きそばのケチャップ版。", cost5:800, genre:"western", weight:"hearty", img:"ketchup cabbage stir fry nostalgic", cookingTime:15, difficulty:1, tags:["懐かし"],
+      ing:["キャベツ1/2個","豚こま切れ250g","ケチャップ・ウスターソース各大さじ2"],
+      steps:["キャベツと豚肉を炒める","ケチャップとソースを加える","味をなじませて仕上げる"]},
+    {id:"z66", cat:"pork", name:"お母さんのしょうが焼き決定版", desc:"どこか懐かしい王道の味。", cost5:900, genre:"japanese", weight:"hearty", img:"classic pork ginger yaki", cookingTime:12, difficulty:1, tags:["懐かし","定番"],
+      ing:["豚ロース薄切り10枚","しょうが2かけ","しょうゆ・みりん各大さじ3"],
+      steps:["しょうがをすりおろしてたれを作る","豚肉を焼く","たれを絡めて仕上げる"]},
+    {id:"z67", cat:"beef", name:"平成ファミレス風ハンバーグデミグラス", desc:"あの頃のファミレスの味を再現。", cost5:1200, genre:"western", weight:"hearty", img:"family restaurant hamburger demiglace", cookingTime:25, difficulty:2, tags:["懐かし","平成","ご褒美"],
+      ing:["合いびき肉500g","玉ねぎ1個","デミグラスソース1缶"],
+      steps:["玉ねぎを炒めてひき肉と混ぜる","成形して焼く","デミグラスソースをかける"]},
+    {id:"z68", cat:"egg_natto", name:"昭和のふんわり甘い卵焼き", desc:"砂糖の効いた懐かしい甘い卵焼き。", cost5:400, genre:"japanese", weight:"healthy", img:"sweet tamagoyaki nostalgic", cookingTime:10, difficulty:1, tags:["懐かし","昭和"],
+      ing:["卵6個","砂糖大さじ3","だし少々"],
+      steps:["卵と砂糖、だしを混ぜる","卵焼き器で焼く","層にしながら巻いていく"]},
+    {id:"z69", cat:"potato", name:"なつかし給食のポークカレーシチュー", desc:"給食で人気だったカレーシチュー。", cost5:1000, genre:"western", weight:"hearty", img:"school curry stew nostalgic", cookingTime:25, difficulty:1, tags:["懐かし","昭和"],
+      ing:["豚こま切れ300g","じゃがいも4個","カレールー・シチュールー各半分"],
+      steps:["豚肉と野菜を炒める","水を加えて煮る","ルーを溶かして仕上げる"]},
+    {id:"z70", cat:"potato", name:"平成なつかしコロッケ風じゃがいも煮", desc:"コロッケの味をそのまま煮物に。", cost5:800, genre:"japanese", weight:"hearty", img:"korokke style potato stew nostalgic", cookingTime:20, difficulty:1, tags:["懐かし","平成"],
+      ing:["じゃがいも5個","合いびき肉200g","玉ねぎ1個","しょうゆ・みりん各大さじ2"],
+      steps:["じゃがいもと玉ねぎを炒める","ひき肉を加える","調味料で煮る"]},
+    {id:"z71", cat:"chicken", name:"韓国風ヤンニョムチキン", desc:"甘辛だれがクセになる韓国屋台の味。", cost5:1000, genre:"chinese", weight:"hearty", img:"korean yangnyeom chicken", cookingTime:20, difficulty:2, tags:["世界旅行","韓国","ガツン系"],
+      ing:["鶏もも肉3枚","片栗粉適量","コチュジャン・ケチャップ・はちみつ各大さじ2"],
+      steps:["鶏肉に片栗粉をまぶして揚げ焼きにする","たれを合わせる","鶏肉に絡める"]},
+    {id:"z72", cat:"pork", name:"台湾風豚バラの魯肉飯", desc:"甘辛く煮込んだ台湾の定番丼。", cost5:900, genre:"chinese", weight:"hearty", img:"taiwanese luroufan pork rice", cookingTime:30, difficulty:2, tags:["世界旅行","台湾","丼"],
+      ing:["豚バラ薄切り350g","しょうゆ・砂糖各大さじ3","五香粉少々"],
+      steps:["豚バラを細切りにして炒める","調味料を加える","じっくり煮込んでごはんにのせる"]},
+    {id:"z73", cat:"beef", name:"タイ風ガパオライス", desc:"バジルとナンプラーが香る本格屋台飯。", cost5:1100, genre:"chinese", weight:"hearty", img:"thai gapao rice basil", cookingTime:15, difficulty:1, tags:["世界旅行","タイ","丼"],
+      ing:["合いびき肉350g","バジル・ナンプラー各適量","ピーマン2個"],
+      steps:["ひき肉とピーマンを炒める","ナンプラーで味を調える","バジルを加えてごはんにのせる"]},
+    {id:"z74", cat:"beef", name:"メキシコ風タコライス", desc:"スパイシーな挽き肉とチーズが決め手。", cost5:1100, genre:"western", weight:"hearty", img:"mexican taco rice", cookingTime:15, difficulty:1, tags:["世界旅行","メキシコ","丼"],
+      ing:["合いびき肉400g","チリパウダー・ケチャップ各大さじ2","チーズ・レタス各適量"],
+      steps:["ひき肉をスパイスで炒める","レタスとチーズを用意する","ごはんにのせて盛り付ける"]},
+    {id:"z75", cat:"beef", name:"ハワイ風ロコモコ丼", desc:"ハンバーグと目玉焼きの南国丼。", cost5:1200, genre:"western", weight:"hearty", img:"hawaiian loco moco", cookingTime:20, difficulty:1, tags:["世界旅行","ハワイ","丼"],
+      ing:["合いびき肉400g","卵5個","デミグラスソースまたはグレイビー適量"],
+      steps:["ハンバーグを成形して焼く","目玉焼きを焼く","ごはんにのせてソースをかける"]},
+    {id:"z76", cat:"chicken", name:"イタリア風チキンカチャトーレ", desc:"トマトとハーブが香る煮込み料理。", cost5:1000, genre:"western", weight:"hearty", img:"italian chicken cacciatore", cookingTime:30, difficulty:2, tags:["世界旅行","イタリア"],
+      ing:["鶏もも肉3枚","トマト缶1缶","玉ねぎ1個","ハーブ適量"],
+      steps:["鶏肉を焼く","玉ねぎを炒める","トマト缶とハーブで煮込む"]},
+    {id:"z77", cat:"pork", name:"韓国屋台風豚こまヤンニョム炒め", desc:"甘辛だれで韓国屋台の味を再現。", cost5:900, genre:"chinese", weight:"hearty", img:"korean street pork yangnyeom", cookingTime:15, difficulty:1, tags:["世界旅行","韓国"],
+      ing:["豚こま切れ350g","コチュジャン・しょうゆ・砂糖各大さじ2"],
+      steps:["豚肉を炒める","調味料を合わせる","絡めて照りを出す"]},
+    {id:"z78", cat:"pork", name:"ガーリックタイ風豚肉炒め", desc:"にんにくとナンプラーの本格屋台味。", cost5:900, genre:"chinese", weight:"hearty", img:"thai garlic pork moo krathiam", cookingTime:15, difficulty:1, tags:["世界旅行","タイ"],
+      ing:["豚こま切れ350g","にんにく3かけ","ナンプラー・砂糖各大さじ1"],
+      steps:["にんにくを揚げ炒める","豚肉を加えて炒める","ナンプラーと砂糖で味を調える"]},
+    {id:"z79", cat:"tofu", name:"台湾風豆腐と卵の香味炒め", desc:"台湾家庭料理の優しい味わい。", cost5:650, genre:"chinese", weight:"hearty", img:"taiwanese tofu egg stir fry", cookingTime:12, difficulty:1, tags:["世界旅行","台湾"],
+      ing:["木綿豆腐1.5丁","卵3個","長ねぎ・しょうゆ各適量"],
+      steps:["豆腐を崩しながら焼く","卵を加える","長ねぎとしょうゆで味を調える"]},
+    {id:"z80", cat:"chicken", name:"イタリア風鶏もも肉のトマトチーズ焼き", desc:"チーズがとろけるイタリアンメイン。", cost5:1000, genre:"western", weight:"hearty", img:"italian chicken tomato cheese bake", cookingTime:25, difficulty:2, tags:["世界旅行","イタリア","ご褒美"],
+      ing:["鶏もも肉3枚","トマト缶1缶","とろけるチーズ100g"],
+      steps:["鶏肉を焼く","トマト缶を加えて煮る","チーズをのせて焼く"]},
+    {id:"z81", cat:"chicken", name:"鶏むね肉と豆腐のヘルシー蒸し", desc:"低脂質で満足感のある一皿。", cost5:750, genre:"japanese", weight:"healthy", img:"chicken tofu steamed healthy", cookingTime:15, difficulty:1, tags:["ヘルシー","高タンパク"],
+      ing:["鶏むね肉2枚","絹豆腐1丁","ポン酢適量"],
+      steps:["鶏肉と豆腐を並べて蒸す","そぎ切りにする","ポン酢をかける"]},
+    {id:"z82", cat:"chicken", name:"蒸し鶏とたっぷりきのこの中華あん", desc:"きのこの旨みでヘルシーに満足。", cost5:800, genre:"chinese", weight:"healthy", img:"steamed chicken mushroom chinese sauce", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["鶏むね肉2枚","しめじ・えのき各1パック","中華だし・片栗粉各適量"],
+      steps:["鶏肉を蒸す","きのこを煮る","とろみをつけて鶏肉にかける"]},
+    {id:"z83", cat:"tofu", name:"豆腐と卵のふわふわ茶碗蒸し風", desc:"優しい味わいのヘルシーメイン。", cost5:600, genre:"japanese", weight:"healthy", img:"tofu egg chawanmushi healthy", cookingTime:20, difficulty:2, tags:["ヘルシー"],
+      ing:["絹豆腐1丁","卵5個","だし400ml"],
+      steps:["豆腐を崩す","卵とだしを混ぜる","蒸し器でふんわり蒸す"]},
+    {id:"z84", cat:"chicken", name:"鶏むね肉と野菜のポン酢蒸し", desc:"さっぱりヘルシーな蒸し料理。", cost5:800, genre:"japanese", weight:"healthy", img:"chicken vegetable ponzu steamed", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["鶏むね肉2枚","冷蔵庫の野菜適量","ポン酢適量"],
+      steps:["鶏肉と野菜を並べる","酒をふって蒸す","ポン酢をかける"]},
+    {id:"z85", cat:"tofu", name:"豆腐とひき肉の低カロリー中華煮", desc:"ひき肉少なめでもコクのある一品。", cost5:650, genre:"chinese", weight:"healthy", img:"tofu minced chicken low calorie chinese", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["絹豆腐1.5丁","鶏ひき肉150g","中華だし・片栗粉各適量"],
+      steps:["鶏ひき肉を炒める","だしを加える","豆腐を加えてとろみをつける"]},
+    {id:"z86", cat:"chicken", name:"鶏むねともやしのさっぱり酢炒め", desc:"酢の効果でさっぱり食べられる。", cost5:700, genre:"chinese", weight:"healthy", img:"chicken bean sprout vinegar stir fry", cookingTime:12, difficulty:1, tags:["ヘルシー","時短"],
+      ing:["鶏むね肉2枚","もやし2袋","酢・しょうゆ各大さじ2"],
+      steps:["鶏肉をそぎ切りにして炒める","もやしを加える","酢としょうゆで味を調える"]},
+    {id:"z87", cat:"tofu", name:"厚揚げと野菜のヘルシー煮浸し", desc:"だしの効いた優しい味。", cost5:600, genre:"japanese", weight:"healthy", img:"fried tofu vegetable healthy simmered", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["厚揚げ3枚","冷蔵庫の野菜適量","だし・しょうゆ各適量"],
+      steps:["厚揚げと野菜を切る","だしで煮る","しょうゆで味を調える"]},
+    {id:"z88", cat:"chicken", name:"鶏むね肉のハーブ蒸し温野菜添え", desc:"見た目も華やかなヘルシーメイン。", cost5:800, genre:"western", weight:"healthy", img:"chicken herb steamed vegetables", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["鶏むね肉2枚","ハーブ適量","ブロッコリーなど温野菜適量"],
+      steps:["鶏肉にハーブをまぶして蒸す","野菜を蒸す","一緒に盛り付ける"]},
+    {id:"z89", cat:"chicken", name:"豆腐と鶏むねの低脂質つくね", desc:"豆腐でヘルシーに仕上げたつくね。", cost5:750, genre:"japanese", weight:"healthy", img:"chicken tofu tsukune low fat", cookingTime:20, difficulty:2, tags:["ヘルシー","高タンパク"],
+      ing:["鶏むねひき肉300g","絹豆腐1/2丁","しょうゆ・みりん各適量"],
+      steps:["ひき肉と豆腐を混ぜる","成形して焼く","たれを絡める"]},
+    {id:"z90", cat:"tofu", name:"蒸し野菜と豆腐のポン酢がけ", desc:"シンプルで飽きのこないヘルシー主菜。", cost5:600, genre:"japanese", weight:"healthy", img:"steamed tofu vegetable ponzu", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+      ing:["絹豆腐1.5丁","冷蔵庫の野菜適量","ポン酢適量"],
+      steps:["野菜と豆腐を蒸す","食べやすく切る","ポン酢をかける"]},
+    {id:"z91", cat:"beef", name:"週末のごちそう厚切り牛ステーキ", desc:"特別な日にふさわしい贅沢な一皿。", cost5:2200, genre:"western", weight:"hearty", img:"thick beef steak special", cookingTime:15, difficulty:2, tags:["ご褒美","週末"],
+      ing:["牛ロース厚切り5枚","にんにく・バター各適量","塩こしょう適量"],
+      steps:["牛肉を室温に戻す","にんにくとバターで焼く","塩こしょうで仕上げる"]},
+    {id:"z92", cat:"beef", name:"給料日のローストビーフ丼", desc:"見た目も豪華な特別な日の丼。", cost5:1800, genre:"western", weight:"hearty", img:"roast beef rice bowl payday", cookingTime:30, difficulty:2, tags:["ご褒美"],
+      ing:["牛もも肉塊500g","にんにく・しょうゆ各適量","ごはん5膳"],
+      steps:["牛肉の表面を焼き固める","低温でじっくり火を通す","薄切りにしてごはんにのせる"]},
+    {id:"z93", cat:"chicken", name:"特別な日の鶏もも肉のごちそう焼き", desc:"皮パリッと仕上げるごちそう焼き。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken thigh crispy special occasion", cookingTime:20, difficulty:2, tags:["ご褒美"],
+      ing:["鶏もも肉3枚","塩・にんにく各適量","レモン適量"],
+      steps:["鶏肉の皮をパリッと焼く","裏返して火を通す","レモンを添える"]},
+    {id:"z94", cat:"beef", name:"ご褒美チーズハンバーグステーキ", desc:"とろけるチーズで贅沢に。", cost5:1300, genre:"western", weight:"hearty", img:"hamburger steak cheese special", cookingTime:25, difficulty:2, tags:["ご褒美"],
+      ing:["合いびき肉500g","とろけるチーズ100g","デミグラスソース1缶"],
+      steps:["ハンバーグを成形して焼く","チーズをのせる","デミグラスソースをかける"]},
+    {id:"z95", cat:"pork", name:"特別な日の豚肩ロース厚切りステーキ", desc:"ジューシーな厚切り肉のごちそう。", cost5:1400, genre:"western", weight:"hearty", img:"pork shoulder thick steak special", cookingTime:20, difficulty:2, tags:["ご褒美"],
+      ing:["豚肩ロース厚切り5枚","にんにく・バター各適量"],
+      steps:["豚肉を室温に戻す","にんにくバターで焼く","休ませてから切る"]},
+    {id:"z96", cat:"tofu", name:"ごちそう厚揚げの鉄板ステーキ風", desc:"厚揚げが立派なごちそうに変身。", cost5:700, genre:"western", weight:"hearty", img:"fried tofu teppan steak special", cookingTime:15, difficulty:1, tags:["ご褒美","節約"],
+      ing:["厚揚げ3枚","にんにく・バター・しょうゆ各適量"],
+      steps:["厚揚げを厚めに切る","にんにくバターで焼く","しょうゆで香りをつける"]},
+    {id:"z97", cat:"pork", name:"週末のスペシャル黒酢豚", desc:"コクのある黒酢だれの本格酢豚。", cost5:1200, genre:"chinese", weight:"hearty", img:"black vinegar sweet sour pork special", cookingTime:25, difficulty:2, tags:["ご褒美","中華"],
+      ing:["豚ロース350g","黒酢・しょうゆ・砂糖各大さじ2","ピーマン・玉ねぎ各適量"],
+      steps:["豚肉を揚げ焼きにする","野菜を炒める","黒酢だれを絡める"]},
+    {id:"z98", cat:"beef", name:"記念日の牛肉と彩り野菜のグリル", desc:"見た目も華やかな記念日メニュー。", cost5:1800, genre:"western", weight:"hearty", img:"beef colorful vegetable grill anniversary", cookingTime:20, difficulty:2, tags:["ご褒美","記念日"],
+      ing:["牛肉塊400g","パプリカ・アスパラなど適量","塩こしょう・オリーブオイル各適量"],
+      steps:["牛肉と野菜を切る","グリルまたはフライパンで焼く","塩こしょうで味を調える"]},
+    {id:"z99", cat:"chicken", name:"とっておきの鶏もも肉のガーリックバター焼き", desc:"香ばしいガーリックバターが決め手。", cost5:950, genre:"western", weight:"hearty", img:"chicken garlic butter special", cookingTime:18, difficulty:1, tags:["ご褒美"],
+      ing:["鶏もも肉3枚","にんにく3かけ","バター20g"],
+      steps:["にんにくをスライスして炒める","鶏肉を焼く","バターとにんにくで仕上げる"]},
+    {id:"z100", cat:"beef", name:"ご褒美の牛肉しゃぶしゃぶ風鍋", desc:"上質な牛肉を贅沢に楽しむ鍋。", cost5:1900, genre:"japanese", weight:"hearty", img:"beef shabu shabu special hot pot", cookingTime:20, difficulty:1, tags:["ご褒美","鍋"],
+      ing:["牛薄切り肉500g","白菜・長ねぎなど適量","昆布だし・ポン酢適量"],
+      steps:["昆布だしを煮立てる","野菜を煮る","牛肉をさっとくぐらせポン酢でいただく"]}
   ];
 
   var LS_CUSTOM = "konndate_custom_v1";
@@ -2543,6 +2849,7 @@ footer.note{
       tag: document.getElementById("tag" + s),
       genreBadge: document.getElementById("genre" + s),
       weightBadge: document.getElementById("weight" + s),
+      tagBadge: document.getElementById("tagBadge" + s),
       photoWrap: document.getElementById("photoWrap" + s),
       photo: document.getElementById("photo" + s),
       photoEmpty: document.getElementById("photoEmpty" + s),
@@ -2794,6 +3101,12 @@ footer.note{
       }else{
         els.weightBadge.hidden = true;
       }
+      if(menu.tags && menu.tags.length > 0){
+        els.tagBadge.hidden = false;
+        els.tagBadge.textContent = "✨ " + menu.tags[0];
+      }else{
+        els.tagBadge.hidden = true;
+      }
 
       fillRecipe(els, menu);
       setShopLink(els, menu);
@@ -2862,6 +3175,7 @@ footer.note{
       els.tag.hidden = true;
       els.genreBadge.hidden = true;
       els.weightBadge.hidden = true;
+      els.tagBadge.hidden = true;
       els.desc.textContent = "";
       els.recipe.hidden = true;
       els.shopLink.hidden = true;
@@ -3038,6 +3352,5 @@ footer.note{
   renderCustomList();
 })();
 </script>
-
 </body>
 </html>
