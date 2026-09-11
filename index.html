@@ -3231,7 +3231,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         return m.tags && m.tags.some(function(t){ return ["育ち盛り","ご褒美"].indexOf(t) !== -1; });
       }}
   ];
-  var LS_PHOTO_CACHE = "konndate_photo_cache_v2";
+  var LS_PHOTO_CACHE = "konndate_photo_cache_v3";
   var SERVING_OPTIONS = [1, 2, 3, 4, 5];
   var BASE_SERVINGS = 5;
 
@@ -3281,6 +3281,19 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var unsplashKey = "-Es-nrgH78WhEwxwEHN-4wYh2k1jOcX4DhxijEWHBAg";
   var photoCache = safeGet(LS_PHOTO_CACHE, {});
 
+  // True if this exact Unsplash photo URL is already showing under a
+  // *different* search keyword. Unsplash's catalog for narrow queries like
+  // "chicken breast herb stew" is thin, so many different dishes' keywords
+  // can resolve to the very same top photo unless we actively avoid repeats.
+  function isPhotoUrlTaken(url){
+    for(var k in photoCache){
+      if(Object.prototype.hasOwnProperty.call(photoCache, k) && photoCache[k] && photoCache[k].url === url){
+        return true;
+      }
+    }
+    return false;
+  }
+
   function fetchPhoto(keyword, done){
     if(!keyword){ done(null); return; }
     if(Object.prototype.hasOwnProperty.call(photoCache, keyword)){
@@ -3289,13 +3302,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }
     if(!unsplashKey){ done(null); return; }
     var url = "https://api.unsplash.com/search/photos?query=" + encodeURIComponent(keyword) +
-      "&per_page=1&orientation=landscape&client_id=" + encodeURIComponent(unsplashKey);
+      "&per_page=8&orientation=landscape&client_id=" + encodeURIComponent(unsplashKey);
     fetch(url).then(function(res){
       if(!res.ok) throw new Error("unsplash error " + res.status);
       return res.json();
     }).then(function(data){
-      var r = data.results && data.results[0];
-      var photo = (r && r.urls && r.urls.small) ? {
+      var results = (data.results || []).filter(function(r){ return r && r.urls && r.urls.small; });
+      // Prefer the first result whose photo isn't already used by another
+      // dish's cached keyword; if every candidate is already taken, fall
+      // back to the top result so a photo still always shows.
+      var r = results.filter(function(r){ return !isPhotoUrlTaken(r.urls.small); })[0] || results[0];
+      var photo = r ? {
         url: r.urls.small,
         name: (r.user && r.user.name) || "",
         profileUrl: (r.user && r.user.links && r.user.links.html) || "https://unsplash.com",
