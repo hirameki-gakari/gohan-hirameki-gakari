@@ -340,6 +340,29 @@ section{margin-bottom:22px;}
 .recipe li{margin-bottom:3px;}
 .recipe li:last-child{margin-bottom:0;}
 
+.shop-link{
+  margin:10px 0 0;
+  font-size:13px;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.shop-link a{
+  color:var(--accent);
+  font-weight:700;
+  text-decoration:none;
+}
+.shop-link a:hover, .shop-link a:focus-visible{text-decoration:underline;}
+.ad-badge{
+  font-size:10px;
+  font-weight:700;
+  color:var(--text-muted);
+  border:1px solid var(--border);
+  border-radius:4px;
+  padding:1px 5px;
+  letter-spacing:.04em;
+}
+
 .btn{
   font-family:inherit;
   border:none;
@@ -580,6 +603,10 @@ footer.note{
             <ol id="stepMain"></ol>
           </div>
         </div>
+        <p class="shop-link" id="shopLinkMain" hidden>
+          <a id="shopLinkAMain" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <span class="ad-badge">広告</span>
+        </p>
       </div>
 
       <div class="dish-block" id="blockSide1" hidden>
@@ -607,6 +634,10 @@ footer.note{
             <ol id="stepSide1"></ol>
           </div>
         </div>
+        <p class="shop-link" id="shopLinkSide1" hidden>
+          <a id="shopLinkASide1" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <span class="ad-badge">広告</span>
+        </p>
       </div>
 
       <div class="dish-block" id="blockSide2" hidden>
@@ -634,6 +665,10 @@ footer.note{
             <ol id="stepSide2"></ol>
           </div>
         </div>
+        <p class="shop-link" id="shopLinkSide2" hidden>
+          <a id="shopLinkASide2" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <span class="ad-badge">広告</span>
+        </p>
       </div>
     </div>
   </section>
@@ -1777,12 +1812,40 @@ footer.note{
       ingLabel: document.getElementById("ingLabel" + s),
       ingList: document.getElementById("ing" + s),
       stepWrap: document.getElementById("stepWrap" + s),
-      stepList: document.getElementById("step" + s)
+      stepList: document.getElementById("step" + s),
+      shopLink: document.getElementById("shopLink" + s),
+      shopLinkA: document.getElementById("shopLinkA" + s)
     };
   });
 
   var budgetBox = document.getElementById("budgetBox");
   var budgetAmount = document.getElementById("budgetAmount");
+
+  var RAKUTEN_TRACK_ID = "576dc035.8884949c.576dc036.1f25228c";
+
+  function primaryIngredientKeyword(menu){
+    var ing = menu.ing || [];
+    if(ing.length === 0) return null;
+    var first = ing[0];
+    var cleaned = first.replace(/[0-9０-９./]+.*$/, "").trim();
+    return cleaned || first;
+  }
+
+  function rakutenSearchLink(keyword){
+    var searchUrl = "https://search.rakuten.co.jp/search/mall/" + encodeURIComponent(keyword) + "/";
+    return "https://hb.afl.rakuten.co.jp/ichiba/" + RAKUTEN_TRACK_ID + "/?pc=" + encodeURIComponent(searchUrl);
+  }
+
+  function setShopLink(els, menu){
+    var keyword = primaryIngredientKeyword(menu);
+    if(!keyword){
+      els.shopLink.hidden = true;
+      return;
+    }
+    els.shopLinkA.href = rakutenSearchLink(keyword);
+    els.shopLinkA.textContent = "🛒 " + keyword + "を楽天で探す";
+    els.shopLink.hidden = false;
+  }
 
   var currentPicks = null;
   var spinTimer = null;
@@ -1948,6 +2011,7 @@ footer.note{
       els.tag.style.setProperty("--dot", cat.dot);
       els.tag.style.setProperty("--chip-bg", cat.bg);
       fillRecipe(els, menu);
+      setShopLink(els, menu);
       setPhotoLoading(els);
 
       var keyword = menu.img || menu.name;
@@ -2010,6 +2074,7 @@ footer.note{
       els.tag.hidden = true;
       els.desc.textContent = "";
       els.recipe.hidden = true;
+      els.shopLink.hidden = true;
       setPhotoLoading(els);
     });
 
