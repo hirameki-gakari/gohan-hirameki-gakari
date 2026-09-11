@@ -1256,10 +1256,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   CATS.forEach(function(c){ CAT_MAP[c.id] = c; });
 
     var BASE_MENUS = [
-    {id:"b1", cat:"chicken", name:"鶏の照り焼き", desc:"フライパン一つで作れる定番。", cost5:950, genre:"japanese", weight:"hearty", img:"chicken teriyaki japanese",
+    {id:"b1", cat:"chicken", name:"鶏の照り焼き", desc:"フライパン一つで作れる定番。", cost5:950, genre:"japanese", weight:"hearty", img:"chicken teriyaki japanese", photoUrl:"https://images.unsplash.com/photo-1609183480237-ccbb2d7c5772?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE2MjEzM3ww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Tomoyo S", photoCreditUrl:"https://unsplash.com/@lifetofood", photoDownloadLocation:"https://api.unsplash.com/photos/VhuC3z2o8vQ/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE2MjEzM3ww",
       ing:["鶏もも肉3枚","しょうゆ大さじ4","みりん大さじ4","砂糖大さじ1.5","油少々"],
       steps:["鶏肉を皮目から焼き色がつくまで焼く","余分な油を拭き取る","しょうゆ・みりん・砂糖を加えて煮絡める","食べやすく切って盛る"]},
-    {id:"b2", cat:"chicken", name:"鶏むね肉の塩麹焼き", desc:"パサつかずやわらかい。", cost5:750, genre:"japanese", weight:"healthy", img:"grilled chicken breast",
+    {id:"b2", cat:"chicken", name:"鶏むね肉の塩麹焼き", desc:"パサつかずやわらかい。", cost5:750, genre:"japanese", weight:"healthy", img:"grilled chicken breast", photoUrl:"https://images.unsplash.com/photo-1670398564097-0762e1b30b3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGNoaWNrZW4lMjBicmVhc3R8ZW58MHwwfHx8MTc4OTE2MjEzOHww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Elena Leya", photoCreditUrl:"https://unsplash.com/@foodistika", photoDownloadLocation:"https://api.unsplash.com/photos/DBVIb_rWUKw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGNoaWNrZW4lMjBicmVhc3R8ZW58MHwwfHx8MTc4OTE2MjEzOHww",
       ing:["鶏むね肉3枚","塩麹大さじ4","油少々"],
       steps:["鶏肉に塩麹をまぶし30分〜一晩置く","フライパンで両面焼く","中まで火が通ったら切って盛る"]},
     {id:"b3", cat:"chicken", name:"鶏と白菜のクリーム煮", desc:"冬に体が温まる一品。", cost5:1050, genre:"western", weight:"hearty", img:"chicken napa cabbage cream stew",
@@ -1322,7 +1322,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"b22", cat:"tofu", name:"麻婆豆腐", desc:"辛さは家族の好みで調整。", cost5:700, genre:"chinese", weight:"healthy", img:"mapo tofu",
       ing:["豆腐1.5丁","ひき肉150g","にら","豆板醤・しょうゆ・片栗粉"],
       steps:["ひき肉を炒める","調味料と水を加える","豆腐を加えて煮て水溶き片栗粉でとろみをつける"]},
-    {id:"b25", cat:"tofu", name:"豆腐ステーキ", desc:"豆腐がメインのボリューム一品。", cost5:500, genre:"western", weight:"hearty", img:"tofu steak pan seared",
+    {id:"b25", cat:"tofu", name:"豆腐ステーキ", desc:"豆腐がメインのボリューム一品。", cost5:500, genre:"western", weight:"hearty", img:"tofu steak pan seared", photoUrl:"https://images.unsplash.com/photo-1771762210858-e26a3152503e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9mdSUyMHN0ZWFrJTIwcGFuJTIwc2VhcmVkfGVufDB8MHx8fDE3ODkxNjIxNTB8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Kevin Wang", photoCreditUrl:"https://unsplash.com/@kevin_w_", photoDownloadLocation:"https://api.unsplash.com/photos/SVECRx4p1zs/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9mdSUyMHN0ZWFrJTIwcGFuJTIwc2VhcmVkfGVufDB8MHx8fDE3ODkxNjIxNTB8MA",
       ing:["木綿豆腐2丁","片栗粉少々","しょうゆ・みりん各大さじ2","バター10g","油"],
       steps:["豆腐の水気を切り片栗粉をまぶす","両面に焼き色をつける","しょうゆ・みりん・バターを加えて絡める"]},
     {id:"b26", cat:"tofu", name:"豆腐チャンプルー", desc:"豚肉と野菜も一緒に取れる。", cost5:750, genre:"japanese", weight:"healthy", img:"goya chanpuru tofu stir fry",
@@ -1337,7 +1337,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"b40", cat:"chicken", name:"チキン南蛮", desc:"甘酢とタルタルで食べ応えあり。", cost5:1050, genre:"japanese", weight:"hearty", img:"chicken nanban fried chicken",
       ing:["鶏むね肉3枚","卵2個","酢・しょうゆ・砂糖各大さじ2","マヨネーズ大さじ4(タルタル用)"],
       steps:["鶏肉に衣をつけて揚げる","甘酢だれにくぐらせる","タルタルソースをかける"]},
-    {id:"b41", cat:"chicken", name:"鶏の味噌マヨ焼き", desc:"濃厚なたれでごはんが進む。", cost5:950, genre:"japanese", weight:"hearty", img:"miso mayo grilled chicken",
+    {id:"b41", cat:"chicken", name:"鶏の味噌マヨ焼き", desc:"濃厚なたれでごはんが進む。", cost5:950, genre:"japanese", weight:"hearty", img:"miso mayo grilled chicken", photoUrl:"https://images.unsplash.com/photo-1670398564097-0762e1b30b3a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWlzbyUyMG1heW8lMjBncmlsbGVkJTIwY2hpY2tlbnxlbnwwfDB8fHwxNzg5MTYyMTM0fDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Elena Leya", photoCreditUrl:"https://unsplash.com/@foodistika", photoDownloadLocation:"https://api.unsplash.com/photos/DBVIb_rWUKw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWlzbyUyMG1heW8lMjBncmlsbGVkJTIwY2hpY2tlbnxlbnwwfDB8fHwxNzg5MTYyMTM0fDA",
       ing:["鶏もも肉3枚","味噌大さじ3","マヨネーズ大さじ3","みりん大さじ2"],
       steps:["調味料を合わせてたれを作る","鶏肉に塗って焼く","焼き色がついたら盛る"]},
     {id:"b42", cat:"chicken", name:"鶏と大根の煮物", desc:"大根1本を使い切れる。", cost5:900, genre:"japanese", weight:"hearty", img:"chicken daikon simmered",
@@ -1385,7 +1385,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"b56", cat:"chicken", name:"鶏とかぼちゃの煮物", desc:"かぼちゃの甘みが染みる。", cost5:950, genre:"japanese", weight:"hearty", img:"chicken pumpkin simmered",
       ing:["鶏もも肉2枚","かぼちゃ1/2個","だし400ml","しょうゆ・みりん各大さじ2"],
       steps:["鶏肉とかぼちゃを炒める","だしと調味料を加えて煮る","かぼちゃが柔らかくなるまで煮る"]},
-    {id:"b57", cat:"chicken", name:"鶏のガーリックステーキ", desc:"にんにく香る食べ応えのある一品。", cost5:1000, genre:"western", weight:"hearty", img:"garlic chicken steak",
+    {id:"b57", cat:"chicken", name:"鶏のガーリックステーキ", desc:"にんにく香る食べ応えのある一品。", cost5:1000, genre:"western", weight:"hearty", img:"garlic chicken steak", photoUrl:"https://images.unsplash.com/photo-1677051707481-d0d4447ccd6c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z2FybGljJTIwY2hpY2tlbiUyMHN0ZWFrfGVufDB8MHx8fDE3ODkxNjIxMzV8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Hasnain Shafique", photoCreditUrl:"https://unsplash.com/@hasnain793", photoDownloadLocation:"https://api.unsplash.com/photos/P13meALsgqk/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z2FybGljJTIwY2hpY2tlbiUyMHN0ZWFrfGVufDB8MHx8fDE3ODkxNjIxMzV8MA",
       ing:["鶏もも肉3枚","にんにく3かけ","しょうゆ大さじ2","バター10g"],
       steps:["にんにくを薄切りにして香りを出す","鶏肉を皮目から焼く","しょうゆとバターで仕上げる"]},
     {id:"b58", cat:"chicken", name:"鶏とトマトのチーズ煮", desc:"チーズでコクをプラス。", cost5:1100, genre:"western", weight:"hearty", img:"chicken tomato cheese stew",
@@ -1502,7 +1502,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"b95", cat:"beef", name:"牛肉ともやしの中華炒め", desc:"安いもやしでボリュームアップ。", cost5:1300, genre:"chinese", weight:"hearty", img:"beef bean sprout stir fry",
       ing:["牛切り落とし300g","もやし2袋","オイスターソース大さじ2"],
       steps:["もやしを炒める","牛肉を加えて炒める","オイスターソースで味を調える"]},
-    {id:"b96", cat:"beef", name:"牛肉のステーキ定食", desc:"ごちそう感のあるメイン。", cost5:2000, genre:"western", weight:"hearty", img:"beef steak plate",
+    {id:"b96", cat:"beef", name:"牛肉のステーキ定食", desc:"ごちそう感のあるメイン。", cost5:2000, genre:"western", weight:"hearty", img:"beef steak plate", photoUrl:"https://images.unsplash.com/photo-1546964124-0cce460f38ef?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVlZiUyMHN0ZWFrJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTE2MjEzNnww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Loija Nguyen", photoCreditUrl:"https://unsplash.com/@loija", photoDownloadLocation:"https://api.unsplash.com/photos/NYBnDWeOX2c/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVlZiUyMHN0ZWFrJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTE2MjEzNnww",
       ing:["牛肩ロース5枚","塩こしょう適量","にんにく1かけ"],
       steps:["牛肉を室温に戻す","強火で両面焼く","塩こしょうとにんにくで仕上げる"]},
     {id:"b97", cat:"beef", name:"牛肉とトマトの卵炒め", desc:"トマトの酸味と卵の甘みが合う。", cost5:1350, genre:"japanese", weight:"hearty", img:"beef tomato egg stir fry",
@@ -1862,7 +1862,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"cb2", cat:"cabbage", name:"キャベツと豚肉の重ね蒸し", desc:"キャベツをたっぷり消費できる。", cost5:800, genre:"japanese", weight:"healthy", img:"cabbage pork steamed layers",
       ing:["キャベツ1個","豚バラ薄切り300g","酒大さじ2","ポン酢適量"],
       steps:["キャベツと豚肉を交互に鍋へ重ねる","酒を振って蒸し焼きにする","ポン酢でいただく"]},
-    {id:"cb3", cat:"cabbage", name:"お好み焼き", desc:"キャベツたっぷりの定番粉もの。", cost5:800, genre:"japanese", weight:"hearty", img:"okonomiyaki cabbage pancake",
+    {id:"cb3", cat:"cabbage", name:"お好み焼き", desc:"キャベツたっぷりの定番粉もの。", cost5:800, genre:"japanese", weight:"hearty", img:"okonomiyaki cabbage pancake", photoUrl:"https://images.unsplash.com/photo-1764520406362-b1673b2213bf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8b2tvbm9taXlha2klMjBjYWJiYWdlJTIwcGFuY2FrZXxlbnwwfDB8fHwxNzg5MTYyMTUxfDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Yosuke Ota", photoCreditUrl:"https://unsplash.com/@yosuke_ota", photoDownloadLocation:"https://api.unsplash.com/photos/IveJAkyk7q8/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8b2tvbm9taXlha2klMjBjYWJiYWdlJTIwcGFuY2FrZXxlbnwwfDB8fHwxNzg5MTYyMTUxfDA",
       ing:["キャベツ1/2個","小麦粉150g","卵3個","豚薄切り肉200g"],
       steps:["キャベツを刻んで生地と混ぜる","豚肉をのせて焼く","ソースとマヨネーズをかける"]},
     {id:"cb4", cat:"cabbage", name:"キャベツと鶏肉のクリーム煮", desc:"優しい味わいの冬の一品。", cost5:900, genre:"western", weight:"hearty", img:"cabbage chicken cream stew",
@@ -2075,7 +2075,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"gw13", cat:"chicken", name:"鶏もも肉のハーブロースト", desc:"香ばしく焼き上げたごちそうメイン。", cost5:900, genre:"western", weight:"hearty", img:"herb roast chicken thigh",
       ing:["鶏もも肉3枚","にんにく・乾燥ハーブ各適量","オリーブオイル大さじ2"],
       steps:["鶏肉にハーブとにんにくをすり込む","オリーブオイルで焼く","中まで火を通して仕上げる"]},
-    {id:"gw14", cat:"beef", name:"牛肉のガーリックステーキ", desc:"にんにく香る贅沢なステーキ。", cost5:1800, genre:"western", weight:"hearty", img:"beef garlic steak",
+    {id:"gw14", cat:"beef", name:"牛肉のガーリックステーキ", desc:"にんにく香る贅沢なステーキ。", cost5:1800, genre:"western", weight:"hearty", img:"beef garlic steak", photoUrl:"https://images.unsplash.com/photo-1690983323804-08889bd1601d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVlZiUyMGdhcmxpYyUyMHN0ZWFrfGVufDB8MHx8fDE3ODkxNjIxMzd8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Sergey Kotenev", photoCreditUrl:"https://unsplash.com/@sergeykotenev", photoDownloadLocation:"https://api.unsplash.com/photos/STlZqfOGT7k/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVlZiUyMGdhcmxpYyUyMHN0ZWFrfGVufDB8MHx8fDE3ODkxNjIxMzd8MA",
       ing:["牛肩ロース5枚","にんにく3かけ","バター15g","しょうゆ大さじ1"],
       steps:["にんにくを薄切りにして香りを出す","牛肉を焼く","バターとしょうゆで仕上げる"]},
     {id:"gw15", cat:"tomato", name:"トマトと豆腐のカプレーゼ風", desc:"火を使わず作れる軽い前菜風。", cost5:500, genre:"western", weight:"healthy", img:"tomato tofu caprese",
@@ -2720,7 +2720,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"z1", cat:"pork", name:"悪魔のねぎ塩豚カルビ", desc:"ねぎ塩だれがやみつきになる背徳の一皿。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","バズり","時短"], img:"pork belly scallion salt grilled",
       ing:["豚バラ焼肉用400g","長ねぎ2本","ごま油・塩・レモン汁各適量"],
       steps:["長ねぎを刻んでねぎ塩だれを作る","豚バラを香ばしく焼く","たれをたっぷりかける"]},
-    {id:"z2", cat:"chicken", name:"にんにく味噌マヨ鶏もも焼き", desc:"濃厚だれでご飯が止まらない。", cost5:950, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["ガツン系","ご飯が進む"], img:"chicken garlic miso mayo grilled",
+    {id:"z2", cat:"chicken", name:"にんにく味噌マヨ鶏もも焼き", desc:"濃厚だれでご飯が止まらない。", cost5:950, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["ガツン系","ご飯が進む"], img:"chicken garlic miso mayo grilled", photoUrl:"https://images.unsplash.com/photo-1609183480237-ccbb2d7c5772?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMGdhcmxpYyUyMG1pc28lMjBtYXlvJTIwZ3JpbGxlZHxlbnwwfDB8fHwxNzg5MTYyMTM3fDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Tomoyo S", photoCreditUrl:"https://unsplash.com/@lifetofood", photoDownloadLocation:"https://api.unsplash.com/photos/VhuC3z2o8vQ/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMGdhcmxpYyUyMG1pc28lMjBtYXlvJTIwZ3JpbGxlZHxlbnwwfDB8fHwxNzg5MTYyMTM3fDA",
       ing:["鶏もも肉3枚","にんにく2かけ","味噌・マヨネーズ各大さじ3"],
       steps:["にんにくをすりおろす","調味料を混ぜてだれを作る","鶏肉を焼いてだれを絡める"]},
     {id:"z3", cat:"pork", name:"とろ卵チーズ豚丼", desc:"とろける卵とチーズの背徳丼。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","丼"], img:"pork cheese egg rice bowl",
@@ -3023,43 +3023,43 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"fs2", cat:"fish", name:"鮭ときのこのホイル焼き", desc:"包んで焼くだけで洗い物も少なく、あっさり食べられる。", cost5:1100, genre:"japanese", weight:"healthy", img:"salmon mushroom foil bake",
       ing:["生鮭4切れ","しめじ・えのき合わせて2袋","バター20g","しょうゆ大さじ2","酒大さじ2"],
       steps:["アルミホイルに鮭ときのこをのせる","酒をふり、バターをのせて包む","グリルまたはオーブンで火が通るまで焼き、仕上げにしょうゆをかける"]},
-    {id:"fs3", cat:"fish", name:"鮭のちゃんちゃん焼き", desc:"野菜もたっぷり摂れる北海道生まれの鉄板焼き。", cost5:1200, genre:"japanese", weight:"hearty", img:"salmon chanchan yaki vegetables",
+    {id:"fs3", cat:"fish", name:"鮭のちゃんちゃん焼き", desc:"野菜もたっぷり摂れる北海道生まれの鉄板焼き。", cost5:1200, genre:"japanese", weight:"hearty", img:"salmon chanchan yaki vegetables", photoUrl:"https://images.unsplash.com/photo-1676300185165-3f543c1fcb72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2FsbW9uJTIwY2hhbmNoYW4lMjB5YWtpJTIwdmVnZXRhYmxlc3xlbnwwfDB8fHwxNzg5MTYyMTQwfDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Orkun Orcan", photoCreditUrl:"https://unsplash.com/@orkunorcan", photoDownloadLocation:"https://api.unsplash.com/photos/3ru16c1mSsU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2FsbW9uJTIwY2hhbmNoYW4lMjB5YWtpJTIwdmVnZXRhYmxlc3xlbnwwfDB8fHwxNzg5MTYyMTQwfDA",
       ing:["生鮭4切れ","キャベツ1/3個","もやし1袋","にんじん1/2本","味噌大さじ3","みりん・酒各大さじ2","バター20g"],
       steps:["フライパンに野菜を敷き、鮭をのせる","酒をふって蓋をし蒸し焼きにする","味噌・みりんを溶いたたれをかけ、バターをのせて仕上げる"]},
-    {id:"fs4", cat:"fish", name:"ぶりの照り焼き", desc:"ごはんが進む甘辛だれの定番魚料理。", cost5:1250, genre:"japanese", weight:"hearty", img:"buri yellowtail teriyaki",
+    {id:"fs4", cat:"fish", name:"ぶりの照り焼き", desc:"ごはんが進む甘辛だれの定番魚料理。", cost5:1250, genre:"japanese", weight:"hearty", img:"buri yellowtail teriyaki", photoUrl:"https://images.unsplash.com/photo-1682568514232-f3b76d3e9db2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8eWVsbG93dGFpbCUyMHRlcml5YWtpJTIwZmlzaHxlbnwwfDB8fHwxNzg5MTYyMTgyfDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Xavier Chng", photoCreditUrl:"https://unsplash.com/@cohesionsingapore", photoDownloadLocation:"https://api.unsplash.com/photos/2H6tiu4Rgno/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8eWVsbG93dGFpbCUyMHRlcml5YWtpJTIwZmlzaHxlbnwwfDB8fHwxNzg5MTYyMTgyfDA",
       ing:["ぶり4切れ","しょうゆ大さじ3","みりん大さじ3","砂糖大さじ1","片栗粉少々"],
       steps:["ぶりに薄く片栗粉をまぶす","フライパンで両面を焼く","しょうゆ・みりん・砂糖を加えてとろみがつくまで煮絡める"]},
-    {id:"fs5", cat:"fish", name:"さばの味噌煮", desc:"甘辛い味噌だれが染みた、魚料理の王道。", cost5:900, genre:"japanese", weight:"hearty", img:"saba mackerel miso simmered",
+    {id:"fs5", cat:"fish", name:"さばの味噌煮", desc:"甘辛い味噌だれが染みた、魚料理の王道。", cost5:900, genre:"japanese", weight:"hearty", img:"saba mackerel miso simmered", photoUrl:"https://images.unsplash.com/photo-1567087978459-8a8eeac7bc75?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWFja2VyZWwlMjBzaW1tZXJlZCUyMGZpc2h8ZW58MHwwfHx8MTc4OTE2MjE4M3ww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Ben Wicks", photoCreditUrl:"https://unsplash.com/@profwicks", photoDownloadLocation:"https://api.unsplash.com/photos/3NU0OTivB9E/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWFja2VyZWwlMjBzaW1tZXJlZCUyMGZpc2h8ZW58MHwwfHx8MTc4OTE2MjE4M3ww",
       ing:["さば4切れ","味噌大さじ3","砂糖・みりん各大さじ2","しょうが1かけ","水150ml"],
       steps:["さばに熱湯をかけて臭みを取る","水・しょうが・調味料を煮立てる","さばを加えて落し蓋をし、たれをかけながら煮る"]},
-    {id:"fs6", cat:"fish", name:"さばの竜田揚げ", desc:"下味をしっかりつけて揚げる、ご飯にもお酒にも合う一品。", cost5:950, genre:"japanese", weight:"hearty", img:"saba mackerel tatsutaage fried",
+    {id:"fs6", cat:"fish", name:"さばの竜田揚げ", desc:"下味をしっかりつけて揚げる、ご飯にもお酒にも合う一品。", cost5:950, genre:"japanese", weight:"hearty", img:"saba mackerel tatsutaage fried", photoUrl:"https://images.unsplash.com/photo-1661939252817-ebb73304f4c7?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2FiYSUyMG1hY2tlcmVsJTIwdGF0c3V0YWFnZSUyMGZyaWVkfGVufDB8MHx8fDE3ODkxNjIxNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Design4business", photoCreditUrl:"https://unsplash.com/@design4business", photoDownloadLocation:"https://api.unsplash.com/photos/xnxS_he76E4/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2FiYSUyMG1hY2tlcmVsJTIwdGF0c3V0YWFnZSUyMGZyaWVkfGVufDB8MHx8fDE3ODkxNjIxNDJ8MA",
       ing:["さば4切れ","しょうゆ・酒各大さじ2","しょうが少々","片栗粉適量","揚げ油"],
       steps:["さばをしょうゆ・酒・しょうがに15分ほど漬ける","汁気を切り片栗粉をまぶす","170℃の油でカリッと揚げる"]},
-    {id:"fs7", cat:"fish", name:"たらのバター醤油焼き", desc:"淡白なたらを香ばしいバター醤油で仕上げる。", cost5:900, genre:"western", weight:"healthy", img:"cod butter soy sauce grilled",
+    {id:"fs7", cat:"fish", name:"たらのバター醤油焼き", desc:"淡白なたらを香ばしいバター醤油で仕上げる。", cost5:900, genre:"western", weight:"healthy", img:"cod butter soy sauce grilled", photoUrl:"https://images.unsplash.com/photo-1598511796432-32663d0875bd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y29kJTIwYnV0dGVyJTIwc295JTIwc2F1Y2UlMjBncmlsbGVkfGVufDB8MHx8fDE3ODkxNjIxNDN8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Sam Moghadam", photoCreditUrl:"https://unsplash.com/@sammoghadam", photoDownloadLocation:"https://api.unsplash.com/photos/eJS829agC88/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y29kJTIwYnV0dGVyJTIwc295JTIwc2F1Y2UlMjBncmlsbGVkfGVufDB8MHx8fDE3ODkxNjIxNDN8MA",
       ing:["生たら4切れ","塩・こしょう各少々","小麦粉適量","バター20g","しょうゆ大さじ1.5"],
       steps:["たらに塩こしょうをして小麦粉を薄くまぶす","バターで両面を焼く","仕上げにしょうゆを回しかけて香りを立たせる"]},
-    {id:"fs8", cat:"fish", name:"あじの蒲焼き風", desc:"甘辛だれでうなぎ風に仕立てた食べやすい一皿。", cost5:850, genre:"japanese", weight:"hearty", img:"aji horse mackerel kabayaki style",
+    {id:"fs8", cat:"fish", name:"あじの蒲焼き風", desc:"甘辛だれでうなぎ風に仕立てた食べやすい一皿。", cost5:850, genre:"japanese", weight:"hearty", img:"aji horse mackerel kabayaki style", photoUrl:"https://images.unsplash.com/photo-1733483629047-ac6bc4ba56a9?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YWppJTIwaG9yc2UlMjBtYWNrZXJlbCUyMGthYmF5YWtpJTIwc3R5bGV8ZW58MHwwfHx8MTc4OTE2MjE0NHww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"CodingChef", photoCreditUrl:"https://unsplash.com/@codingchef", photoDownloadLocation:"https://api.unsplash.com/photos/EGF90XSDJIc/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YWppJTIwaG9yc2UlMjBtYWNrZXJlbCUyMGthYmF5YWtpJTIwc3R5bGV8ZW58MHwwfHx8MTc4OTE2MjE0NHww",
       ing:["あじ開き4尾","しょうゆ・みりん各大さじ2","砂糖大さじ1","片栗粉少々"],
       steps:["あじに片栗粉を薄くまぶす","フライパンで皮目から焼く","しょうゆ・みりん・砂糖のたれを加えて絡める"]},
-    {id:"fs9", cat:"fish", name:"あじのごまみりん漬け焼き", desc:"ごまの香りとみりんの甘みでさっぱりと。", cost5:850, genre:"japanese", weight:"healthy", img:"aji horse mackerel sesame grilled",
+    {id:"fs9", cat:"fish", name:"あじのごまみりん漬け焼き", desc:"ごまの香りとみりんの甘みでさっぱりと。", cost5:850, genre:"japanese", weight:"healthy", img:"aji horse mackerel sesame grilled", photoUrl:"https://images.unsplash.com/photo-1600699899970-b1c9fadd8f9e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMG1hY2tlcmVsJTIwZmlzaHxlbnwwfDB8fHwxNzg5MTYyMTg0fDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Alex Teixeira", photoCreditUrl:"https://unsplash.com/@alex_wsul", photoDownloadLocation:"https://api.unsplash.com/photos/N8-bMqUMS8g/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMG1hY2tlcmVsJTIwZmlzaHxlbnwwfDB8fHwxNzg5MTYyMTg0fDA",
       ing:["あじ開き4尾","すりごま大さじ2","しょうゆ・みりん各大さじ1.5"],
       steps:["調味料とごまを混ぜてあじを30分漬ける","魚焼きグリルで焼き色がつくまで焼く"]},
-    {id:"fs10", cat:"fish", name:"さわらの西京漬け風焼き", desc:"甘い味噌床で漬けて焼く、上品な和の一皿。", cost5:1000, genre:"japanese", weight:"healthy", img:"sawara spanish mackerel saikyo miso",
+    {id:"fs10", cat:"fish", name:"さわらの西京漬け風焼き", desc:"甘い味噌床で漬けて焼く、上品な和の一皿。", cost5:1000, genre:"japanese", weight:"healthy", img:"sawara spanish mackerel saikyo miso", photoUrl:"https://images.unsplash.com/photo-1718942899999-b3da4177ee2a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGZpc2glMjBtaXNvfGVufDB8MHx8fDE3ODkxNjIxODV8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Michael Lock", photoCreditUrl:"https://unsplash.com/@milo_photo", photoDownloadLocation:"https://api.unsplash.com/photos/hVnClpnYUUk/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGZpc2glMjBtaXNvfGVufDB8MHx8fDE3ODkxNjIxODV8MA",
       ing:["さわら4切れ","白味噌大さじ4","みりん大さじ2","砂糖大さじ1"],
       steps:["味噌・みりん・砂糖を混ぜて漬け床を作る","さわらを1時間〜一晩漬ける","味噌を軽く拭き取り、焦がさないように焼く"]},
-    {id:"fs11", cat:"fish", name:"えびマヨ", desc:"プリプリのえびを甘めのマヨソースで、子どもにも人気。", cost5:1300, genre:"chinese", weight:"hearty", img:"shrimp mayo chinese style",
+    {id:"fs11", cat:"fish", name:"えびマヨ", desc:"プリプリのえびを甘めのマヨソースで、子どもにも人気。", cost5:1300, genre:"chinese", weight:"hearty", img:"shrimp mayo chinese style", photoUrl:"https://images.unsplash.com/photo-1719784521210-64b4e8d38fe8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwbWF5byUyMGNoaW5lc2UlMjBzdHlsZXxlbnwwfDB8fHwxNzg5MTYyMTQ2fDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Buddy AN", photoCreditUrl:"https://unsplash.com/@stbuddyp", photoDownloadLocation:"https://api.unsplash.com/photos/Kanf2WyRhPU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwbWF5byUyMGNoaW5lc2UlMjBzdHlsZXxlbnwwfDB8fHwxNzg5MTYyMTQ2fDA",
       ing:["むきえび400g","片栗粉適量","マヨネーズ大さじ4","ケチャップ大さじ1","練乳大さじ1"],
       steps:["えびに片栗粉をまぶして揚げ焼きにする","マヨネーズ・ケチャップ・練乳を混ぜてソースを作る","えびとソースを絡める"]},
-    {id:"fs12", cat:"fish", name:"えびとブロッコリーのガーリック炒め", desc:"にんにくの香りが食欲をそそる、彩りの良い一皿。", cost5:1250, genre:"western", weight:"healthy", img:"shrimp broccoli garlic saute",
+    {id:"fs12", cat:"fish", name:"えびとブロッコリーのガーリック炒め", desc:"にんにくの香りが食欲をそそる、彩りの良い一皿。", cost5:1250, genre:"western", weight:"healthy", img:"shrimp broccoli garlic saute", photoUrl:"https://images.unsplash.com/photo-1595117796900-e3bb784ea0db?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwYnJvY2NvbGklMjBnYXJsaWMlMjBzYXV0ZXxlbnwwfDB8fHwxNzg5MTYyMTQ3fDA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Dan Dennis", photoCreditUrl:"https://unsplash.com/@cameramandan83", photoDownloadLocation:"https://api.unsplash.com/photos/uYoOxs9TfH0/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwYnJvY2NvbGklMjBnYXJsaWMlMjBzYXV0ZXxlbnwwfDB8fHwxNzg5MTYyMTQ3fDA",
       ing:["むきえび350g","ブロッコリー1株","にんにく2かけ","オリーブオイル大さじ2","塩・こしょう各少々"],
       steps:["ブロッコリーを下ゆでする","オリーブオイルでにんにくを香りが立つまで炒める","えびとブロッコリーを加えて炒め、塩こしょうで味を調える"]},
-    {id:"fs13", cat:"fish", name:"いかのにんにく醤油炒め", desc:"ぷりぷりのいかをパンチのある味付けで。", cost5:900, genre:"japanese", weight:"hearty", img:"squid garlic soy sauce stir fry",
+    {id:"fs13", cat:"fish", name:"いかのにんにく醤油炒め", desc:"ぷりぷりのいかをパンチのある味付けで。", cost5:900, genre:"japanese", weight:"hearty", img:"squid garlic soy sauce stir fry", photoUrl:"https://images.unsplash.com/photo-1656743231107-785ab76719cd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3F1aWQlMjBnYXJsaWMlMjBzb3klMjBzYXVjZSUyMHN0aXIlMjBmcnl8ZW58MHwwfHx8MTc4OTE2MjE0N3ww&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"ji jiali", photoCreditUrl:"https://unsplash.com/@jijiali", photoDownloadLocation:"https://api.unsplash.com/photos/AqjNm3UGvIc/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3F1aWQlMjBnYXJsaWMlMjBzb3klMjBzYXVjZSUyMHN0aXIlMjBmcnl8ZW58MHwwfHx8MTc4OTE2MjE0N3ww",
       ing:["いか2杯","にんにく2かけ","しょうゆ大さじ2","バター10g"],
       steps:["いかを輪切りにする","にんにくを油で炒めて香りを出す","いかを加えて手早く炒め、しょうゆとバターで仕上げる"]},
-    {id:"fs14", cat:"fish", name:"いかとセロリの中華炒め", desc:"セロリの香りが爽やかな中華風炒め物。", cost5:900, genre:"chinese", weight:"healthy", img:"squid celery chinese stir fry",
+    {id:"fs14", cat:"fish", name:"いかとセロリの中華炒め", desc:"セロリの香りが爽やかな中華風炒め物。", cost5:900, genre:"chinese", weight:"healthy", img:"squid celery chinese stir fry", photoUrl:"https://images.unsplash.com/photo-1710508818784-d73e21e7eaa3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3F1aWQlMjBzdGlyJTIwZnJ5fGVufDB8MHx8fDE3ODkxNjIxODZ8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Sxanghai Joe", photoCreditUrl:"https://unsplash.com/@sxanghai", photoDownloadLocation:"https://api.unsplash.com/photos/akiwIv-HMkU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3F1aWQlMjBzdGlyJTIwZnJ5fGVufDB8MHx8fDE3ODkxNjIxODZ8MA",
       ing:["いか2杯","セロリ2本","しょうが少々","鶏ガラスープの素・酒各大さじ1"],
       steps:["いかとセロリを食べやすく切る","しょうがを炒めて香りを出す","いかとセロリを加えて手早く炒め、調味料で味を調える"]},
-    {id:"fs15", cat:"fish", name:"まぐろの漬け丼", desc:"漬けだれに絡めるだけで、ごちそう感のある一杯に。", cost5:1400, genre:"japanese", weight:"healthy", img:"tuna zuke donburi",
+    {id:"fs15", cat:"fish", name:"まぐろの漬け丼", desc:"漬けだれに絡めるだけで、ごちそう感のある一杯に。", cost5:1400, genre:"japanese", weight:"healthy", img:"tuna zuke donburi", photoUrl:"https://images.unsplash.com/photo-1707555427106-d443fdcc1e6e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMHp1a2UlMjBkb25idXJpfGVufDB8MHx8fDE3ODkxNjIxNDl8MA&ixlib=rb-4.1.0&q=80&w=1080", photoCredit:"Kouji Tsuru", photoCreditUrl:"https://unsplash.com/@pafuxu", photoDownloadLocation:"https://api.unsplash.com/photos/K_lZQ4bAoRc/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMHp1a2UlMjBkb25idXJpfGVufDB8MHx8fDE3ODkxNjIxNDl8MA",
       ing:["まぐろ刺身用400g","しょうゆ大さじ3","みりん・酒各大さじ1","ごはん5膳","刻みのり・わさび各適量"],
       steps:["みりんと酒を煮切ってしょうゆと合わせる","まぐろを漬けだれに15分ほど漬ける","ごはんにのせ、のりとわさびを添える"]},
     {id:"fs16", cat:"fish", name:"まぐろのステーキ黒こしょう風味", desc:"表面だけ香ばしく焼いて中はレアに仕上げるごちそう。", cost5:1500, genre:"western", weight:"hearty", img:"tuna steak black pepper",
@@ -3160,7 +3160,31 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       steps:["厚揚げを一口大に切って焼く","調味料を煮立てる","厚揚げに絡める"]},
     {id:"hv6", cat:"burdock", role:"side", name:"ごぼうの唐揚げ", desc:"香ばしく揚げたやみつき副菜。", cost5:400, genre:"japanese", weight:"hearty", cookingTime:15, img:"burdock fried karaage style",
       ing:["ごぼう1本","片栗粉適量","しょうゆ・みりん各大さじ1"],
-      steps:["ごぼうを斜め切りにする","下味をつけて片栗粉をまぶす","揚げ焼きにする"]}
+      steps:["ごぼうを斜め切りにする","下味をつけて片栗粉をまぶす","揚げ焼きにする"]},
+    {id:"nd1", cat:"pork", name:"豚バラと白菜のクリームパスタ", desc:"とろとろ白菜と豚バラの優しいコク。", cost5:1100, genre:"western", weight:"hearty", cookingTime:20, tags:["麺類"], img:"pork napa cabbage cream pasta",
+      ing:["パスタ400g","豚バラ薄切り250g","白菜1/4株","牛乳300ml","コンソメ1個"],
+      steps:["パスタを表示時間通りゆでる","豚バラと白菜を炒める","牛乳とコンソメを加えて煮詰める","ゆでたパスタを絡める"]},
+    {id:"nd2", cat:"tomato", name:"トマトとツナの冷製パスタ", desc:"さっぱり食べられる夏向きの一皿。", cost5:900, genre:"western", weight:"healthy", cookingTime:15, tags:["麺類","時短"], img:"tomato tuna cold pasta",
+      ing:["パスタ400g","トマト3個","ツナ缶2缶","にんにく1かけ","オリーブオイル大さじ3"],
+      steps:["パスタをゆでて冷水で締める","トマトを角切りにする","にんにくとオリーブオイルでソースを作る","全て和える"]},
+    {id:"nd3", cat:"beef", name:"牛こまときのこのペペロンチーノ", desc:"にんにくと唐辛子がきいた大人味。", cost5:1200, genre:"western", weight:"hearty", cookingTime:20, tags:["麺類"], img:"beef mushroom peperoncino pasta",
+      ing:["パスタ400g","牛こま切れ250g","しめじ・えのき1袋","にんにく2かけ","赤唐辛子1本"],
+      steps:["パスタをゆでる","にんにくと唐辛子を油で炒める","牛肉ときのこを加えて炒める","パスタと和える"]},
+    {id:"nd4", cat:"egg_natto", name:"卵とベーコンのカルボナーラ風", desc:"濃厚な卵とチーズのコク。", cost5:1000, genre:"western", weight:"hearty", cookingTime:20, tags:["麺類"], img:"egg bacon carbonara pasta",
+      ing:["パスタ400g","ベーコン100g","卵3個","粉チーズ大さじ4","黒こしょう適量"],
+      steps:["パスタをゆでる","ベーコンを炒める","卵と粉チーズを混ぜておく","火を止めてパスタとソースを手早く絡める"]},
+    {id:"nd5", cat:"chicken", name:"鶏肉と野菜のしょうゆラーメン", desc:"ほっとするあっさりしょうゆ味。", cost5:1000, genre:"japanese", weight:"healthy", cookingTime:20, tags:["麺類"], img:"chicken vegetable shoyu ramen",
+      ing:["中華麺4玉","鶏もも肉2枚","長ねぎ1本","もやし1袋","しょうゆだし4カップ"],
+      steps:["鶏肉を一口大に切って焼く","だしを温めてしょうゆで味を調える","麺をゆでて器に盛る","具材とスープをかける"]},
+    {id:"nd6", cat:"pork", name:"豚バラの味噌ラーメン", desc:"コクのある味噌スープが体を温める。", cost5:1050, genre:"japanese", weight:"hearty", cookingTime:20, tags:["麺類","ガツン系"], img:"pork miso ramen",
+      ing:["中華麺4玉","豚バラ薄切り250g","もやし1袋","味噌大さじ4","鶏ガラスープの素大さじ2"],
+      steps:["豚バラを炒める","スープを煮立てて味噌を溶く","麺をゆでて器に盛る","具材とスープをかける"]},
+    {id:"nd7", cat:"chives", name:"ニラとひき肉の担々麺風", desc:"ピリ辛ごまだれがクセになる。", cost5:1000, genre:"chinese", weight:"hearty", cookingTime:20, tags:["麺類"], img:"chinese tantanmen minced meat",
+      ing:["中華麺4玉","豚ひき肉200g","ニラ1束","練りごま大さじ4","豆板醤大さじ1"],
+      steps:["ひき肉と豆板醤を炒める","練りごまとスープを合わせる","麺をゆでて器に盛る","ひき肉とニラをのせる"]},
+    {id:"nd8", cat:"pork", name:"豚肉と野菜の醤油焼きそば", desc:"みんな大好きな定番の味。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:15, tags:["麺類","時短"], img:"pork vegetable yakisoba",
+      ing:["焼きそば麺4玉","豚こま切れ250g","キャベツ1/4個","もやし1袋","焼きそばソース1袋"],
+      steps:["豚肉と野菜を炒める","麺を加えてほぐしながら炒める","ソースを絡める","お好みで青のりをかける"]}
   ];
 
   var LS_CUSTOM = "konndate_custom_v1";
@@ -3289,6 +3313,25 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(!downloadLocation || !unsplashKey) return;
     var sep = downloadLocation.indexOf("?") === -1 ? "?" : "&";
     fetch(downloadLocation + sep + "client_id=" + encodeURIComponent(unsplashKey)).catch(function(){});
+  }
+
+  // Curated/self-hosted photos take priority over the live Unsplash search
+  // fallback. As the photo master project (photo_ledger_100.csv) adds more
+  // dishes with a `photoUrl`, they are picked up automatically here with no
+  // other code changes needed; dishes without one keep working exactly as
+  // before via the live keyword search.
+  function resolvePhoto(menu, done){
+    if(menu.photoUrl){
+      done({
+        url: menu.photoUrl,
+        name: menu.photoCredit || "",
+        profileUrl: menu.photoCreditUrl || "https://unsplash.com",
+        downloadLocation: menu.photoDownloadLocation || null
+      });
+      return;
+    }
+    var keyword = menu.img || menu.name;
+    fetchPhoto(keyword, done);
   }
 
   function allMenus(){
@@ -3852,8 +3895,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       setShopLink(els, menu);
       setPhotoLoading(els);
 
-      var keyword = menu.img || menu.name;
-      fetchPhoto(keyword, function(photo){
+      resolvePhoto(menu, function(photo){
         if(requestId !== comboRequestId) return;
         if(photo && photo.url){
           setPhotoReady(els, photo, menu.name);
@@ -4076,8 +4118,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       listEl.appendChild(card);
 
       var sourceMenu = allMenus().find(function(m){ return m.name === name; });
-      var keyword = (sourceMenu && sourceMenu.img) || name;
-      fetchPhoto(keyword, function(photo){
+      var photoSource = sourceMenu || {img: name};
+      resolvePhoto(photoSource, function(photo){
         if(photo && photo.url){
           img.onload = function(){ img.classList.add("loaded"); };
           img.src = photo.url;
