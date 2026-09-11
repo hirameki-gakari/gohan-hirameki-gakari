@@ -687,25 +687,20 @@ footer.site-footer .footer-note{
   opacity:.75;
   margin:0 0 8px;
 }
+footer.site-footer .footer-links{
+  font-size:11.5px;
+  margin:0 0 10px;
+}
+footer.site-footer .footer-links a{
+  color:var(--accent-strong);
+  text-decoration:underline;
+}
 footer.site-footer .footer-copyright{
   font-size:11px;
   color:var(--text-muted);
   opacity:.6;
   margin:0;
 }
-footer.site-footer .sister-link{
-  margin-top:16px;
-  padding-top:16px;
-  border-top:1px dashed var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
-  font-size:12.5px;
-  color:var(--text-muted);
-}
-footer.site-footer .sister-link .spark{flex:none; color:var(--accent-strong);}
-footer.site-footer .sister-link a{color:var(--text); font-weight:600; text-decoration:underline;}
 
 @media (prefers-reduced-motion: reduce){
   .dish-name{transition:none;}
@@ -1207,11 +1202,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <p class="footer-name">ごはんのひらめき係</p>
     <p class="footer-tagline">今日の夕飯を、ちょっと楽しく。</p>
     <p class="footer-note">登録した献立と履歴は、この端末のブラウザ内だけに保存されます。</p>
-    <p class="footer-copyright">© ごはんのひらめき係</p>
-    <div class="sister-link">
-      <svg class="spark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M4.5 12h3M16.5 12h3M6.5 6.5l2 2M15.5 15.5l2 2M17.5 6.5l-2 2M8.5 15.5l-2 2"/><circle cx="12" cy="12" r="3.2"/></svg>
-      外で食べる日は → <a href="https://hirameki-gakari.github.io/omise-hirameki-gakari/">お店のひらめき係</a>
-    </div>
+    <p class="footer-links"><a href="https://hirameki-gakari.github.io/omise-hirameki-gakari/">姉妹サービス「お店のひらめき係」(今日、どこで食べようを決める)</a></p>
+    <p class="footer-copyright">© ひらめき係</p>
   </footer>
 </div>
 
