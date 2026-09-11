@@ -51,6 +51,12 @@
   --c-chives-bg:#D9E8DE;
   --c-daikon:#9A9C8C;
   --c-daikon-bg:#E9EAE1;
+  --c-fish:#3E6E8E;
+  --c-fish-bg:#D9E5EC;
+
+  --accent-warm:#C96A3E;
+  --accent-warm-strong:#A8532E;
+  --accent-warm-soft:#F3E0D2;
 }
 
 @media (prefers-color-scheme: dark){
@@ -98,6 +104,12 @@
     --c-chives-bg:#1F3327;
     --c-daikon:#C6C7B8;
     --c-daikon-bg:#33342C;
+    --c-fish:#7FADC7;
+    --c-fish-bg:#22333D;
+
+    --accent-warm:#E8A17A;
+    --accent-warm-strong:#F0B896;
+    --accent-warm-soft:#3D2C22;
   }
 }
 :root[data-theme="dark"]{
@@ -144,9 +156,16 @@
   --c-chives-bg:#1F3327;
   --c-daikon:#C6C7B8;
   --c-daikon-bg:#33342C;
+  --c-fish:#7FADC7;
+  --c-fish-bg:#22333D;
+
+  --accent-warm:#E8A17A;
+  --accent-warm-strong:#F0B896;
+  --accent-warm-soft:#3D2C22;
 }
 
 *{box-sizing:border-box;}
+[hidden]{display:none !important;}
 body{
   margin:0;
   background:var(--bg);
@@ -642,6 +661,224 @@ footer.note{
   .dish-photo.is-loading{animation:none;}
   .dish-photo img{transition:none;}
 }
+
+/* ===== mood section ===== */
+.mood-section{margin-bottom:24px;}
+.mood-heading{
+  font-family:"Shippori Mincho", serif;
+  font-weight:700;
+  font-size:clamp(18px,5vw,21px);
+  text-align:center;
+  margin:0 0 14px;
+  text-wrap:balance;
+}
+.mood-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.mood-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+  min-height:64px;
+  padding:12px 8px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:16px;
+  cursor:pointer;
+  font-family:inherit;
+  color:var(--text);
+  transition:border-color .15s, background .15s, transform .1s;
+}
+.mood-card:active{transform:scale(.97);}
+.mood-card[aria-pressed="true"]{
+  border-color:var(--accent-warm);
+  background:var(--accent-warm-soft);
+}
+.mood-card:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
+.mood-card-emoji{font-size:22px;line-height:1;}
+.mood-card-label{font-size:12.5px;font-weight:700;text-align:center;}
+
+/* ===== result card ===== */
+.result-eyebrow{
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.1em;
+  color:var(--accent-warm);
+  margin:0 0 4px;
+  text-align:center;
+}
+.mood-greeting{
+  font-size:13px;
+  color:var(--text-muted);
+  margin:0 0 14px;
+  text-align:center;
+}
+.dish-block-main{animation:resultReveal .35s ease both;}
+.sides-row{animation:resultReveal .4s ease both;}
+@keyframes resultReveal{
+  from{opacity:0; transform:translateY(14px);}
+  to{opacity:1; transform:translateY(0);}
+}
+@media (prefers-reduced-motion: reduce){
+  .dish-block-main, .sides-row{animation:none;}
+}
+
+.main-meta-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-bottom:12px;
+}
+.meta-pill{
+  font-size:12px;
+  font-weight:700;
+  padding:4px 11px;
+  border-radius:999px;
+  background:var(--surface-2);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.weight-pill{
+  background:var(--accent-warm-soft);
+  color:var(--accent-warm-strong);
+  border-color:transparent;
+}
+
+.sides-heading{
+  font-size:13px;
+  font-weight:700;
+  color:var(--text-muted);
+  text-align:left;
+  margin:4px 0 10px;
+  padding-top:14px;
+  border-top:1px solid var(--border);
+}
+.sides-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:14px;
+}
+.dish-block-side{
+  padding:0;
+  border-top:none !important;
+}
+.dish-block-side .dish-photo{aspect-ratio:4/3;margin-bottom:8px;}
+.dish-block-side .dish-name{font-size:14.5px;margin-bottom:3px;}
+.dish-block-side .dish-desc{font-size:12px;margin-bottom:8px;}
+.dish-block-side .dish-head{margin-bottom:6px;gap:5px;}
+.dish-block-side .dish-role{display:none;}
+@media (max-width:360px){
+  .sides-row{grid-template-columns:1fr;}
+}
+
+.recipe-summary{
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+  color:var(--text-muted);
+  list-style:none;
+  padding:2px 0;
+}
+.recipe-summary::-webkit-details-marker{display:none;}
+.recipe-body{
+  text-align:left;
+  background:var(--surface-2);
+  border-radius:14px;
+  padding:16px 18px;
+  margin-top:10px;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* ===== advanced filters (collapsed by default) ===== */
+details.advanced-filters{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:4px 18px;
+  margin-bottom:22px;
+}
+details.advanced-filters summary{
+  cursor:pointer;
+  padding:14px 0;
+  font-weight:700;
+  font-size:14px;
+  list-style:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+details.advanced-filters summary::-webkit-details-marker{display:none;}
+details.advanced-filters summary .chevron{
+  color:var(--text-muted);
+  transition:transform .15s;
+}
+details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
+.advanced-body{
+  padding-bottom:18px;
+  display:flex;
+  flex-direction:column;
+  gap:18px;
+}
+.advanced-body section{margin-bottom:0;}
+
+/* ===== decide CTA / decided panel ===== */
+.btn-decide{
+  font-size:16.5px;
+  padding:17px 20px;
+  background:var(--accent-warm-strong);
+  box-shadow:0 4px 14px rgba(0,0,0,.12);
+}
+.btn-tertiary{
+  background:transparent;
+  color:var(--text-muted);
+  font-weight:600;
+  padding:10px 20px;
+}
+.decided-panel{
+  display:flex;
+  flex-direction:column;
+  gap:9px;
+  animation:resultReveal .3s ease both;
+}
+@media (prefers-reduced-motion: reduce){ .decided-panel{animation:none;} }
+.decided-message{
+  text-align:center;
+  font-weight:700;
+  font-size:14.5px;
+  margin:0 0 2px;
+}
+.decided-panel .btn[disabled]{
+  opacity:.55;
+  cursor:not-allowed;
+}
+
+/* ===== history cards ===== */
+.history-cards{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.history-card{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:11px 14px;
+}
+.history-card .history-tagdot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--dot,var(--accent));
+  flex-shrink:0;
+}
 </style>
 </head>
 <body>
@@ -649,40 +886,31 @@ footer.note{
   <header class="hero">
     <div class="eyebrow">今日のごはん、決めよう</div>
     <h1>ごはんのひらめき係</h1>
-    <p>冷蔵庫にある食材から、今夜の主菜と副菜を代わりに考えます。</p>
   </header>
 
-  <section>
-    <p class="section-label">人数</p>
-    <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
+  <section class="mood-section">
+    <p class="mood-heading">🍚 今日、どんなごはんにする？</p>
+    <div class="mood-grid" id="moodGrid" role="group" aria-label="今日の気分"></div>
   </section>
 
   <section>
-    <p class="section-label">主菜の食材で絞る(選ばなければ全部から)</p>
-    <div class="chips" id="categoryChips" role="group" aria-label="主菜の食材カテゴリで絞り込み"></div>
-  </section>
+    <div class="card roulette-card" id="rouletteCard">
+      <p class="result-eyebrow">✨ 今日のひらめき</p>
+      <p class="mood-greeting" id="moodGreeting" hidden></p>
+      <p class="combo-intro" id="comboIntro">気分を選ぶと、今日のひらめきが届きます。</p>
 
-  <section>
-    <p class="section-label">料理のジャンル(選ばなければ全部から)</p>
-    <div class="chips" id="genreChips" role="group" aria-label="料理のジャンルで絞り込み"></div>
-  </section>
-
-  <section>
-    <p class="section-label">ボリューム感(選ばなければ全部から)</p>
-    <div class="chips" id="weightChips" role="group" aria-label="ヘルシーかがっつりかで絞り込み"></div>
-  </section>
-
-  <section>
-    <div class="card roulette-card">
-      <p class="combo-intro" id="comboIntro">ボタンを押すと、主菜1品＋副菜2品の組み合わせを提案します。</p>
-
-      <div class="dish-block" id="blockMain" hidden>
+      <div class="dish-block dish-block-main" id="blockMain" hidden>
         <div class="dish-head">
           <span class="dish-role">主菜</span>
           <span class="dish-tag" id="tagMain"></span>
           <span class="meta-badge" id="genreMain" hidden></span>
           <span class="meta-badge" id="weightMain" hidden></span>
           <span class="meta-badge tag-badge" id="tagBadgeMain" hidden></span>
+        </div>
+        <div class="main-meta-row" id="mainMetaRow">
+          <span class="meta-pill weight-pill" id="weightPillMain" hidden></span>
+          <span class="meta-pill" id="timePillMain" hidden>⏱ <span id="timeValueMain"></span>分</span>
+          <span class="meta-pill" id="pricePillMain" hidden>💰 約<span id="priceValueMain"></span>円</span>
         </div>
         <div class="dish-photo" id="photoWrapMain">
           <img id="photoMain" alt="" loading="lazy" />
@@ -694,23 +922,28 @@ footer.note{
         </div>
         <p class="dish-name" id="nameMain"></p>
         <p class="dish-desc" id="descMain"></p>
-        <div class="recipe" id="recipeMain" hidden>
-          <div id="ingWrapMain">
-            <p class="recipe-label" id="ingLabelMain">材料(5人分目安)</p>
-            <ul id="ingMain"></ul>
+        <details class="recipe" id="recipeMain" hidden>
+          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <div class="recipe-body">
+            <div id="ingWrapMain">
+              <p class="recipe-label" id="ingLabelMain">材料(5人分目安)</p>
+              <ul id="ingMain"></ul>
+            </div>
+            <div id="stepWrapMain">
+              <p class="recipe-label">作り方</p>
+              <ol id="stepMain"></ol>
+            </div>
           </div>
-          <div id="stepWrapMain">
-            <p class="recipe-label">作り方</p>
-            <ol id="stepMain"></ol>
-          </div>
-        </div>
+        </details>
         <p class="shop-link" id="shopLinkMain" hidden>
           <a id="shopLinkAMain" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
 
-      <div class="dish-block" id="blockSide1" hidden>
+      <p class="sides-heading" id="sidesHeading" hidden>一緒に作るなら</p>
+      <div class="sides-row">
+      <div class="dish-block dish-block-side" id="blockSide1" hidden>
         <div class="dish-head">
           <span class="dish-role">副菜①</span>
           <span class="dish-tag" id="tagSide1"></span>
@@ -728,23 +961,26 @@ footer.note{
         </div>
         <p class="dish-name" id="nameSide1"></p>
         <p class="dish-desc" id="descSide1"></p>
-        <div class="recipe" id="recipeSide1" hidden>
-          <div id="ingWrapSide1">
-            <p class="recipe-label" id="ingLabelSide1">材料(5人分目安)</p>
-            <ul id="ingSide1"></ul>
+        <details class="recipe" id="recipeSide1" hidden>
+          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <div class="recipe-body">
+            <div id="ingWrapSide1">
+              <p class="recipe-label" id="ingLabelSide1">材料(5人分目安)</p>
+              <ul id="ingSide1"></ul>
+            </div>
+            <div id="stepWrapSide1">
+              <p class="recipe-label">作り方</p>
+              <ol id="stepSide1"></ol>
+            </div>
           </div>
-          <div id="stepWrapSide1">
-            <p class="recipe-label">作り方</p>
-            <ol id="stepSide1"></ol>
-          </div>
-        </div>
+        </details>
         <p class="shop-link" id="shopLinkSide1" hidden>
           <a id="shopLinkASide1" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
 
-      <div class="dish-block" id="blockSide2" hidden>
+      <div class="dish-block dish-block-side" id="blockSide2" hidden>
         <div class="dish-head">
           <span class="dish-role">副菜②</span>
           <span class="dish-tag" id="tagSide2"></span>
@@ -762,27 +998,56 @@ footer.note{
         </div>
         <p class="dish-name" id="nameSide2"></p>
         <p class="dish-desc" id="descSide2"></p>
-        <div class="recipe" id="recipeSide2" hidden>
-          <div id="ingWrapSide2">
-            <p class="recipe-label" id="ingLabelSide2">材料(5人分目安)</p>
-            <ul id="ingSide2"></ul>
+        <details class="recipe" id="recipeSide2" hidden>
+          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <div class="recipe-body">
+            <div id="ingWrapSide2">
+              <p class="recipe-label" id="ingLabelSide2">材料(5人分目安)</p>
+              <ul id="ingSide2"></ul>
+            </div>
+            <div id="stepWrapSide2">
+              <p class="recipe-label">作り方</p>
+              <ol id="stepSide2"></ol>
+            </div>
           </div>
-          <div id="stepWrapSide2">
-            <p class="recipe-label">作り方</p>
-            <ol id="stepSide2"></ol>
-          </div>
-        </div>
+        </details>
         <p class="shop-link" id="shopLinkSide2" hidden>
           <a id="shopLinkASide2" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
+      </div>
     </div>
   </section>
 
+  <details class="advanced-filters" id="advancedFilters">
+    <summary>🔧 もっと細かく選ぶ <span class="chevron">▾</span></summary>
+    <div class="advanced-body">
+      <section>
+        <p class="section-label">人数</p>
+        <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
+      </section>
+
+      <section>
+        <p class="section-label">主菜の食材で絞る(選ばなければ全部から)</p>
+        <div class="chips" id="categoryChips" role="group" aria-label="主菜の食材カテゴリで絞り込み"></div>
+      </section>
+
+      <section>
+        <p class="section-label">料理のジャンル(選ばなければ全部から)</p>
+        <div class="chips" id="genreChips" role="group" aria-label="料理のジャンルで絞り込み"></div>
+      </section>
+
+      <section>
+        <p class="section-label">ボリューム感(選ばなければ全部から)</p>
+        <div class="chips" id="weightChips" role="group" aria-label="ヘルシーかがっつりかで絞り込み"></div>
+      </section>
+    </div>
+  </details>
+
   <section>
-    <p class="section-label">📖 献立履歴</p>
-    <ul class="history-list" id="historyList"></ul>
+    <p class="section-label">🕘 最近の晩ごはん</p>
+    <div class="history-cards" id="historyList"></div>
   </section>
 
   <section>
@@ -841,13 +1106,20 @@ footer.note{
       <span class="budget-caveat">(店舗や地域により変動します)</span>
     </div>
 
-    <button class="btn btn-primary" id="spinBtn">今夜の組み合わせを決める</button>
+    <button class="btn btn-primary" id="spinBtn">✨ ひらめく</button>
 
     <div class="btn-row" id="decideRow" hidden>
       <button class="btn btn-secondary" id="againBtn">🔄 もう一度ひらめく</button>
-      <button class="btn btn-primary" id="confirmBtn">🍽️ これに決定！</button>
+      <button class="btn btn-primary btn-decide" id="confirmBtn">🍚 今日これに決定！</button>
     </div>
-    <button class="btn btn-secondary" id="shareBtn" hidden>📤 この献立をシェア</button>
+
+    <div class="decided-panel" id="decidedPanel" hidden>
+      <p class="decided-message">✅ 今日の晩ごはんが決まりました！</p>
+      <button class="btn btn-primary" id="shareBtn">📱 家族に送る</button>
+      <button class="btn btn-secondary" id="shoppingListBtn" disabled>🛒 買い物リストを見る(準備中)</button>
+      <button class="btn btn-tertiary" id="newDayBtn">🔄 別の日の献立を考える</button>
+    </div>
+
     <p class="empty-note" id="emptyNote" hidden>その条件の候補がありません。カテゴリを増やしてください。</p>
   </div>
   <div class="toast" id="toast" hidden></div>
@@ -858,22 +1130,23 @@ footer.note{
   "use strict";
 
   var CATS = [
-    {id:"chicken", label:"鶏肉", dot:"var(--c-chicken)", bg:"var(--c-chicken-bg)"},
-    {id:"pork", label:"豚肉", dot:"var(--c-pork)", bg:"var(--c-pork-bg)"},
-    {id:"beef", label:"牛肉", dot:"var(--c-beef)", bg:"var(--c-beef-bg)"},
-    {id:"egg_natto", label:"卵・納豆", dot:"var(--c-egg)", bg:"var(--c-egg-bg)"},
-    {id:"tofu", label:"豆腐", dot:"var(--c-tofu)", bg:"var(--c-tofu-bg)"},
-    {id:"onion", label:"たまねぎ", dot:"var(--c-onion)", bg:"var(--c-onion-bg)"},
-    {id:"carrot", label:"にんじん", dot:"var(--c-carrot)", bg:"var(--c-carrot-bg)"},
-    {id:"green_onion", label:"長ネギ", dot:"var(--c-negi)", bg:"var(--c-negi-bg)"},
-    {id:"tomato", label:"トマト", dot:"var(--c-tomato)", bg:"var(--c-tomato-bg)"},
-    {id:"lettuce", label:"レタス", dot:"var(--c-lettuce)", bg:"var(--c-lettuce-bg)"},
-    {id:"cabbage", label:"キャベツ", dot:"var(--c-cabbage)", bg:"var(--c-cabbage-bg)"},
-    {id:"potato", label:"じゃがいも", dot:"var(--c-potato)", bg:"var(--c-potato-bg)"},
-    {id:"burdock", label:"ごぼう", dot:"var(--c-burdock)", bg:"var(--c-burdock-bg)"},
-    {id:"bell_pepper", label:"ピーマン", dot:"var(--c-pepper)", bg:"var(--c-pepper-bg)"},
-    {id:"chives", label:"ニラ", dot:"var(--c-chives)", bg:"var(--c-chives-bg)"},
-    {id:"daikon", label:"大根", dot:"var(--c-daikon)", bg:"var(--c-daikon-bg)"}
+    {id:"chicken", label:"鶏肉", dot:"var(--c-chicken)", bg:"var(--c-chicken-bg)", emoji:"🍗"},
+    {id:"pork", label:"豚肉", dot:"var(--c-pork)", bg:"var(--c-pork-bg)", emoji:"🥩"},
+    {id:"beef", label:"牛肉", dot:"var(--c-beef)", bg:"var(--c-beef-bg)", emoji:"🥩"},
+    {id:"fish", label:"魚・魚介", dot:"var(--c-fish)", bg:"var(--c-fish-bg)", emoji:"🐟"},
+    {id:"egg_natto", label:"卵・納豆", dot:"var(--c-egg)", bg:"var(--c-egg-bg)", emoji:"🥚"},
+    {id:"tofu", label:"豆腐", dot:"var(--c-tofu)", bg:"var(--c-tofu-bg)", emoji:"🧊"},
+    {id:"onion", label:"たまねぎ", dot:"var(--c-onion)", bg:"var(--c-onion-bg)", emoji:"🧅"},
+    {id:"carrot", label:"にんじん", dot:"var(--c-carrot)", bg:"var(--c-carrot-bg)", emoji:"🥕"},
+    {id:"green_onion", label:"長ネギ", dot:"var(--c-negi)", bg:"var(--c-negi-bg)", emoji:"🌱"},
+    {id:"tomato", label:"トマト", dot:"var(--c-tomato)", bg:"var(--c-tomato-bg)", emoji:"🍅"},
+    {id:"lettuce", label:"レタス", dot:"var(--c-lettuce)", bg:"var(--c-lettuce-bg)", emoji:"🥬"},
+    {id:"cabbage", label:"キャベツ", dot:"var(--c-cabbage)", bg:"var(--c-cabbage-bg)", emoji:"🥬"},
+    {id:"potato", label:"じゃがいも", dot:"var(--c-potato)", bg:"var(--c-potato-bg)", emoji:"🥔"},
+    {id:"burdock", label:"ごぼう", dot:"var(--c-burdock)", bg:"var(--c-burdock-bg)", emoji:"🌱"},
+    {id:"bell_pepper", label:"ピーマン", dot:"var(--c-pepper)", bg:"var(--c-pepper-bg)", emoji:"🫑"},
+    {id:"chives", label:"ニラ", dot:"var(--c-chives)", bg:"var(--c-chives-bg)", emoji:"🌿"},
+    {id:"daikon", label:"大根", dot:"var(--c-daikon)", bg:"var(--c-daikon-bg)", emoji:"🥬"}
   ];
   var CAT_MAP = {};
   CATS.forEach(function(c){ CAT_MAP[c.id] = c; });
@@ -2340,306 +2613,360 @@ footer.note{
     {id:"fx12", cat:"tofu", name:"豆腐の四川風煮込み", desc:"ピリ辛でご飯が進む煮込み。", cost5:750, genre:"chinese", weight:"hearty", img:"tofu sichuan stew",
       ing:["木綿豆腐1.5丁","豚ひき肉200g","豆板醤大さじ1.5","長ねぎ1本"],
       steps:["ひき肉と豆板醤を炒める","豆腐を加えて煮る","長ねぎを散らして仕上げる"]},
-    {id:"z1", cat:"pork", name:"悪魔のねぎ塩豚カルビ", desc:"ねぎ塩だれがやみつきになる背徳の一皿。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork belly scallion salt grilled", cookingTime:15, difficulty:1, tags:["ガツン系","バズり","時短"],
+    {id:"z1", cat:"pork", name:"悪魔のねぎ塩豚カルビ", desc:"ねぎ塩だれがやみつきになる背徳の一皿。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","バズり","時短"], img:"pork belly scallion salt grilled",
       ing:["豚バラ焼肉用400g","長ねぎ2本","ごま油・塩・レモン汁各適量"],
       steps:["長ねぎを刻んでねぎ塩だれを作る","豚バラを香ばしく焼く","たれをたっぷりかける"]},
-    {id:"z2", cat:"chicken", name:"にんにく味噌マヨ鶏もも焼き", desc:"濃厚だれでご飯が止まらない。", cost5:950, genre:"japanese", weight:"hearty", img:"chicken garlic miso mayo grilled", cookingTime:20, difficulty:1, tags:["ガツン系","ご飯が進む"],
+    {id:"z2", cat:"chicken", name:"にんにく味噌マヨ鶏もも焼き", desc:"濃厚だれでご飯が止まらない。", cost5:950, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["ガツン系","ご飯が進む"], img:"chicken garlic miso mayo grilled",
       ing:["鶏もも肉3枚","にんにく2かけ","味噌・マヨネーズ各大さじ3"],
       steps:["にんにくをすりおろす","調味料を混ぜてだれを作る","鶏肉を焼いてだれを絡める"]},
-    {id:"z3", cat:"pork", name:"とろ卵チーズ豚丼", desc:"とろける卵とチーズの背徳丼。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork cheese egg rice bowl", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","丼"],
+    {id:"z3", cat:"pork", name:"とろ卵チーズ豚丼", desc:"とろける卵とチーズの背徳丼。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","丼"], img:"pork cheese egg rice bowl",
       ing:["豚バラ薄切り350g","卵5個","とろけるチーズ100g","しょうゆ・みりん各大さじ3"],
       steps:["豚肉を甘辛く炒める","ごはんにのせてチーズをのせる","半熟卵をのせて仕上げる"]},
-    {id:"z4", cat:"pork", name:"焦がし醤油バター豚こま", desc:"香ばしい焦がし醤油とバターの黄金コンビ。", cost5:900, genre:"japanese", weight:"hearty", img:"pork butter soy caramelized", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"],
+    {id:"z4", cat:"pork", name:"焦がし醤油バター豚こま", desc:"香ばしい焦がし醤油とバターの黄金コンビ。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"], img:"pork butter soy caramelized",
       ing:["豚こま切れ400g","バター20g","しょうゆ大さじ3","にんにく1かけ"],
       steps:["豚こまを強火で炒める","バターとにんにくを加える","しょうゆを鍋肌から回し入れ焦がし香をつける"]},
-    {id:"z5", cat:"pork", name:"ご飯泥棒！甘辛肉味噌", desc:"作り置きにも便利な万能そぼろ。", cost5:850, genre:"japanese", weight:"hearty", img:"pork mince sweet miso", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","時短"],
+    {id:"z5", cat:"pork", name:"ご飯泥棒！甘辛肉味噌", desc:"作り置きにも便利な万能そぼろ。", cost5:850, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","ご飯が進む","時短"], img:"pork mince sweet miso",
       ing:["豚ひき肉400g","味噌・みりん・砂糖各大さじ2","長ねぎ1本"],
       steps:["ひき肉を炒める","調味料を加えて煮詰める","刻んだねぎを混ぜる"]},
-    {id:"z6", cat:"beef", name:"チーズ爆発ハンバーグ", desc:"切った瞬間チーズがとろけ出す。", cost5:1200, genre:"western", weight:"hearty", img:"hamburger steak cheese stuffed", cookingTime:25, difficulty:2, tags:["ガツン系","ご褒美"],
+    {id:"z6", cat:"beef", name:"チーズ爆発ハンバーグ", desc:"切った瞬間チーズがとろけ出す。", cost5:1200, genre:"western", weight:"hearty", cookingTime:25, difficulty:2, tags:["ガツン系","ご褒美"], img:"hamburger steak cheese stuffed",
       ing:["合いびき肉500g","とろけるチーズ100g","玉ねぎ1個","デミグラスソース1缶"],
       steps:["玉ねぎを炒めてひき肉と混ぜる","チーズを包んで成形する","焼いてデミグラスソースをかける"]},
-    {id:"z7", cat:"pork", name:"カリカリ豚のねぎポン酢", desc:"表面カリカリ、中はジューシー。", cost5:950, genre:"japanese", weight:"hearty", img:"crispy pork belly scallion ponzu", cookingTime:15, difficulty:1, tags:["ガツン系","さっぱり"],
+    {id:"z7", cat:"pork", name:"カリカリ豚のねぎポン酢", desc:"表面カリカリ、中はジューシー。", cost5:950, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["ガツン系","さっぱり"], img:"crispy pork belly scallion ponzu",
       ing:["豚バラ薄切り350g","長ねぎ1本","ポン酢大さじ4"],
       steps:["豚バラをカリカリに焼く","刻みねぎをたっぷりのせる","ポン酢をかける"]},
-    {id:"z8", cat:"beef", name:"焼肉のタレ肉炒め", desc:"市販のたれで簡単ガツン系。", cost5:1300, genre:"japanese", weight:"hearty", img:"beef yakiniku sauce stir fry", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"],
+    {id:"z8", cat:"beef", name:"焼肉のタレ肉炒め", desc:"市販のたれで簡単ガツン系。", cost5:1300, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["ガツン系","時短","ご飯が進む"], img:"beef yakiniku sauce stir fry",
       ing:["牛カルビ用400g","焼肉のたれ大さじ4","玉ねぎ1個"],
       steps:["玉ねぎを炒める","牛肉を加えて炒める","焼肉のたれを絡めて仕上げる"]},
-    {id:"z9", cat:"chicken", name:"悪魔のよだれ鶏丼", desc:"ピリ辛ラー油だれが後を引く。", cost5:900, genre:"chinese", weight:"hearty", img:"yodare chicken spicy rice bowl", cookingTime:20, difficulty:2, tags:["ガツン系","バズり","丼"],
+    {id:"z9", cat:"chicken", name:"悪魔のよだれ鶏丼", desc:"ピリ辛ラー油だれが後を引く。", cost5:900, genre:"chinese", weight:"hearty", cookingTime:20, difficulty:2, tags:["ガツン系","バズり","丼"], img:"yodare chicken spicy rice bowl",
       ing:["鶏もも肉3枚","長ねぎ・しょうが各適量","ラー油・しょうゆ・酢各大さじ2"],
       steps:["鶏肉を茹でて蒸し鶏にする","薬味とたれを合わせる","ごはんにのせてたれをかける"]},
-    {id:"z10", cat:"chicken", name:"溶岩チーズタッカルビ", desc:"辛うまチキンにとろけるチーズ。", cost5:1100, genre:"chinese", weight:"hearty", img:"cheese dakgalbi korean chicken", cookingTime:25, difficulty:2, tags:["ガツン系","バズり","韓国"],
+    {id:"z10", cat:"chicken", name:"溶岩チーズタッカルビ", desc:"辛うまチキンにとろけるチーズ。", cost5:1100, genre:"chinese", weight:"hearty", cookingTime:25, difficulty:2, tags:["ガツン系","バズり","韓国"], img:"cheese dakgalbi korean chicken",
       ing:["鶏もも肉3枚","コチュジャン大さじ3","キャベツ1/4個","とろけるチーズ150g"],
       steps:["鶏肉とコチュジャンだれを絡める","キャベツと炒める","チーズをのせて蒸し焼きにする"]},
-    {id:"z11", cat:"pork", name:"スタミナ爆盛り豚こまキャベツ炒め", desc:"野菜も肉もたっぷり食べられる。", cost5:1000, genre:"japanese", weight:"hearty", img:"pork cabbage stamina stir fry large portion", cookingTime:15, difficulty:1, tags:["育ち盛り","ボリューム","ご飯が進む"],
+    {id:"z11", cat:"pork", name:"スタミナ爆盛り豚こまキャベツ炒め", desc:"野菜も肉もたっぷり食べられる。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","ボリューム","ご飯が進む"], img:"pork cabbage stamina stir fry large portion",
       ing:["豚こま切れ500g","キャベツ1/2個","にんにく・しょうゆ各適量"],
       steps:["キャベツをざく切りにする","豚肉とにんにくを炒める","キャベツを加えてしょうゆで味を調える"]},
-    {id:"z12", cat:"chicken", name:"鶏むね肉の高タンパク竜田揚げ", desc:"むね肉でもジューシーな竜田揚げ。", cost5:900, genre:"japanese", weight:"hearty", img:"chicken breast tatsuta age high protein", cookingTime:20, difficulty:1, tags:["育ち盛り","高タンパク"],
+    {id:"z12", cat:"chicken", name:"鶏むね肉の高タンパク竜田揚げ", desc:"むね肉でもジューシーな竜田揚げ。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["育ち盛り","高タンパク"], img:"chicken breast tatsuta age high protein",
       ing:["鶏むね肉4枚","しょうゆ・酒各大さじ3","片栗粉適量"],
       steps:["鶏肉をそぎ切りにして下味をつける","片栗粉をまぶす","カラッと揚げる"]},
-    {id:"z13", cat:"beef", name:"牛肉どっさり焼肉丼", desc:"育ち盛りも満足のボリューム丼。", cost5:1600, genre:"japanese", weight:"hearty", img:"beef yakiniku rice bowl large", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"],
+    {id:"z13", cat:"beef", name:"牛肉どっさり焼肉丼", desc:"育ち盛りも満足のボリューム丼。", cost5:1600, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"], img:"beef yakiniku rice bowl large",
       ing:["牛カルビ用450g","焼肉のたれ大さじ4","ごはん5膳"],
       steps:["牛肉を焼肉のたれに漬ける","強火で焼く","ごはんにたっぷりのせる"]},
-    {id:"z14", cat:"pork", name:"がっつりポークソテー大盛りソース", desc:"厚切り肉にたっぷりソースをかけて。", cost5:1100, genre:"western", weight:"hearty", img:"pork saute thick sauce large", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"],
+    {id:"z14", cat:"pork", name:"がっつりポークソテー大盛りソース", desc:"厚切り肉にたっぷりソースをかけて。", cost5:1100, genre:"western", weight:"hearty", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"], img:"pork saute thick sauce large",
       ing:["豚ロース厚切り5枚","ケチャップ・ウスターソース各大さじ2","バター15g"],
       steps:["豚肉を焼く","ソースを合わせる","肉にたっぷりかける"]},
-    {id:"z15", cat:"chicken", name:"鶏もも肉のスタミナ塩だれ炒め", desc:"にんにく香るスタミナ満点おかず。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken garlic salt stamina stir fry", cookingTime:15, difficulty:1, tags:["育ち盛り","スタミナ"],
+    {id:"z15", cat:"chicken", name:"鶏もも肉のスタミナ塩だれ炒め", desc:"にんにく香るスタミナ満点おかず。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","スタミナ"], img:"chicken garlic salt stamina stir fry",
       ing:["鶏もも肉3枚","にんにく2かけ","塩・ごま油各適量"],
       steps:["鶏肉を一口大に切る","にんにくと炒める","塩とごま油で味を調える"]},
-    {id:"z16", cat:"pork", name:"ボリューム満点！豚バラ卵とじ丼", desc:"食べ盛りにうれしい大満足丼。", cost5:1050, genre:"japanese", weight:"hearty", img:"pork belly egg rice bowl hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"],
+    {id:"z16", cat:"pork", name:"ボリューム満点！豚バラ卵とじ丼", desc:"食べ盛りにうれしい大満足丼。", cost5:1050, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["育ち盛り","丼","ボリューム"], img:"pork belly egg rice bowl hearty",
       ing:["豚バラ薄切り350g","卵6個","玉ねぎ1個","だし・しょうゆ・みりん各適量"],
       steps:["玉ねぎと豚肉を煮る","調味料で味を調える","卵でとじてごはんにのせる"]},
-    {id:"z17", cat:"chicken", name:"パワー全開！鶏むねチキンステーキ", desc:"厚みを活かしたジューシーステーキ。", cost5:900, genre:"western", weight:"hearty", img:"chicken breast steak garlic butter", cookingTime:18, difficulty:1, tags:["育ち盛り","高タンパク"],
+    {id:"z17", cat:"chicken", name:"パワー全開！鶏むねチキンステーキ", desc:"厚みを活かしたジューシーステーキ。", cost5:900, genre:"western", weight:"hearty", cookingTime:18, difficulty:1, tags:["育ち盛り","高タンパク"], img:"chicken breast steak garlic butter",
       ing:["鶏むね肉4枚","にんにく・バター各適量","しょうゆ大さじ2"],
       steps:["鶏肉を観音開きにする","両面を香ばしく焼く","にんにくバターじょうゆで仕上げる"]},
-    {id:"z18", cat:"onion", name:"部活男子のキーマカレー", desc:"スパイス香る食べ応え満点カレー。", cost5:1000, genre:"western", weight:"hearty", img:"keema curry hearty", cookingTime:25, difficulty:2, tags:["育ち盛り","カレー"],
+    {id:"z18", cat:"onion", name:"部活男子のキーマカレー", desc:"スパイス香る食べ応え満点カレー。", cost5:1000, genre:"western", weight:"hearty", cookingTime:25, difficulty:2, tags:["育ち盛り","カレー"], img:"keema curry hearty",
       ing:["合いびき肉400g","玉ねぎ2個","カレールー1/2箱","トマト缶1/2缶"],
       steps:["玉ねぎを炒める","ひき肉を加えて炒める","トマト缶とカレールーを加えて煮込む"]},
-    {id:"z19", cat:"chicken", name:"鶏もも肉と厚揚げのボリューム煮", desc:"たんぱく質しっかりの満足おかず。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken fried tofu hearty simmered", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"],
+    {id:"z19", cat:"chicken", name:"鶏もも肉と厚揚げのボリューム煮", desc:"たんぱく質しっかりの満足おかず。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム"], img:"chicken fried tofu hearty simmered",
       ing:["鶏もも肉3枚","厚揚げ3枚","だし・しょうゆ・みりん各適量"],
       steps:["鶏肉と厚揚げを炒める","だしを加える","調味料で味を調えて煮込む"]},
-    {id:"z20", cat:"pork", name:"豚肩ロースの厚切りジューシーステーキ", desc:"かぶりつきたくなる厚切り肉。", cost5:1300, genre:"japanese", weight:"hearty", img:"pork shoulder thick steak", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム","ご褒美"],
+    {id:"z20", cat:"pork", name:"豚肩ロースの厚切りジューシーステーキ", desc:"かぶりつきたくなる厚切り肉。", cost5:1300, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["育ち盛り","ボリューム","ご褒美"], img:"pork shoulder thick steak",
       ing:["豚肩ロース厚切り5枚","にんにく・しょうゆ・みりん各適量"],
       steps:["豚肉を室温に戻す","両面を焼く","にんにくじょうゆだれを絡める"]},
-    {id:"z21", cat:"pork", name:"豚こまの照り焼き風ステーキ仕立て", desc:"安い豚こまが厚切り肉風に大変身。", cost5:750, genre:"japanese", weight:"hearty", img:"pork scraps steak style teriyaki", cookingTime:15, difficulty:1, tags:["節約","豪華見え"],
+    {id:"z21", cat:"pork", name:"豚こまの照り焼き風ステーキ仕立て", desc:"安い豚こまが厚切り肉風に大変身。", cost5:750, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["節約","豪華見え"], img:"pork scraps steak style teriyaki",
       ing:["豚こま切れ400g","片栗粉適量","しょうゆ・みりん各大さじ2"],
       steps:["豚こまを丸くまとめて片栗粉をまぶす","焼き固める","照り焼きだれを絡める"]},
-    {id:"z22", cat:"chicken", name:"鶏むね肉のとろとろ油淋鶏風", desc:"むね肉が驚くほどしっとり仕上がる。", cost5:800, genre:"chinese", weight:"hearty", img:"chicken breast youlinji budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+    {id:"z22", cat:"chicken", name:"鶏むね肉のとろとろ油淋鶏風", desc:"むね肉が驚くほどしっとり仕上がる。", cost5:800, genre:"chinese", weight:"hearty", cookingTime:20, difficulty:2, tags:["節約","豪華見え"], img:"chicken breast youlinji budget",
       ing:["鶏むね肉3枚","片栗粉適量","しょうゆ・酢・砂糖各大さじ2"],
       steps:["鶏肉をそぎ切りにして片栗粉をまぶす","揚げ焼きにする","甘酢だれをかける"]},
-    {id:"z23", cat:"tofu", name:"厚揚げのステーキ風ガーリックソース", desc:"厚揚げが立派なメインになる。", cost5:600, genre:"western", weight:"hearty", img:"fried tofu steak garlic sauce", cookingTime:12, difficulty:1, tags:["節約","豪華見え"],
+    {id:"z23", cat:"tofu", name:"厚揚げのステーキ風ガーリックソース", desc:"厚揚げが立派なメインになる。", cost5:600, genre:"western", weight:"hearty", cookingTime:12, difficulty:1, tags:["節約","豪華見え"], img:"fried tofu steak garlic sauce",
       ing:["厚揚げ3枚","にんにく2かけ","バター・しょうゆ各適量"],
       steps:["厚揚げを厚めに切って焼く","にんにくを炒める","バターしょうゆだれをかける"]},
-    {id:"z24", cat:"tofu", name:"豆腐とひき肉のふわとろ中華丼", desc:"少ない肉でも満足感たっぷり。", cost5:650, genre:"chinese", weight:"hearty", img:"tofu mince chinese rice bowl", cookingTime:15, difficulty:1, tags:["節約","丼","豪華見え"],
+    {id:"z24", cat:"tofu", name:"豆腐とひき肉のふわとろ中華丼", desc:"少ない肉でも満足感たっぷり。", cost5:650, genre:"chinese", weight:"hearty", cookingTime:15, difficulty:1, tags:["節約","丼","豪華見え"], img:"tofu mince chinese rice bowl",
       ing:["木綿豆腐1.5丁","豚ひき肉150g","中華だし・片栗粉各適量"],
       steps:["ひき肉を炒める","だしと豆腐を加える","とろみをつけてごはんにかける"]},
-    {id:"z25", cat:"potato", name:"卵とじゃがいものボリュームオムレツ", desc:"ワンパンで作れる見栄えの良い一品。", cost5:600, genre:"western", weight:"hearty", img:"potato omelette budget spanish", cookingTime:15, difficulty:2, tags:["節約","豪華見え"],
+    {id:"z25", cat:"potato", name:"卵とじゃがいものボリュームオムレツ", desc:"ワンパンで作れる見栄えの良い一品。", cost5:600, genre:"western", weight:"hearty", cookingTime:15, difficulty:2, tags:["節約","豪華見え"], img:"potato omelette budget spanish",
       ing:["じゃがいも3個","卵6個","ベーコン60g"],
       steps:["じゃがいもを薄切りにして炒める","ベーコンを加える","卵を流し入れてふんわり焼く"]},
-    {id:"z26", cat:"pork", name:"もやしと豚バラの重ね蒸し", desc:"安い食材で野菜もたっぷり。", cost5:700, genre:"japanese", weight:"healthy", img:"bean sprout pork belly steamed budget", cookingTime:15, difficulty:1, tags:["節約","ヘルシー"],
+    {id:"z26", cat:"pork", name:"もやしと豚バラの重ね蒸し", desc:"安い食材で野菜もたっぷり。", cost5:700, genre:"japanese", weight:"healthy", cookingTime:15, difficulty:1, tags:["節約","ヘルシー"], img:"bean sprout pork belly steamed budget",
       ing:["もやし2袋","豚バラ薄切り250g","ポン酢適量"],
       steps:["もやしを敷いて豚肉をのせる","酒をふって蒸す","ポン酢をかける"]},
-    {id:"z27", cat:"chicken", name:"鶏むね肉の豪華照りマヨ焼き", desc:"マヨの効果でしっとりジューシー。", cost5:800, genre:"japanese", weight:"hearty", img:"chicken breast mayo teriyaki budget", cookingTime:15, difficulty:1, tags:["節約","豪華見え"],
+    {id:"z27", cat:"chicken", name:"鶏むね肉の豪華照りマヨ焼き", desc:"マヨの効果でしっとりジューシー。", cost5:800, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["節約","豪華見え"], img:"chicken breast mayo teriyaki budget",
       ing:["鶏むね肉3枚","マヨネーズ大さじ3","しょうゆ・みりん各大さじ2"],
       steps:["鶏肉にマヨネーズをまぶす","焼く","しょうゆとみりんで照りを出す"]},
-    {id:"z28", cat:"tofu", name:"厚揚げと卵のとろとろ丼", desc:"少ない材料で満足感のある丼。", cost5:550, genre:"japanese", weight:"healthy", img:"fried tofu egg rice bowl budget", cookingTime:12, difficulty:1, tags:["節約","丼","時短"],
+    {id:"z28", cat:"tofu", name:"厚揚げと卵のとろとろ丼", desc:"少ない材料で満足感のある丼。", cost5:550, genre:"japanese", weight:"healthy", cookingTime:12, difficulty:1, tags:["節約","丼","時短"], img:"fried tofu egg rice bowl budget",
       ing:["厚揚げ3枚","卵5個","だし・しょうゆ・みりん各適量"],
       steps:["厚揚げを一口大に切って煮る","調味料で味を調える","卵でとじてごはんにのせる"]},
-    {id:"z29", cat:"onion", name:"豚こまと玉ねぎのボリュームロール", desc:"豚こまを巻くだけで見た目が豪華に。", cost5:850, genre:"japanese", weight:"hearty", img:"pork onion roll teriyaki budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+    {id:"z29", cat:"onion", name:"豚こまと玉ねぎのボリュームロール", desc:"豚こまを巻くだけで見た目が豪華に。", cost5:850, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:2, tags:["節約","豪華見え"], img:"pork onion roll teriyaki budget",
       ing:["豚こま切れ400g","玉ねぎ2個","しょうゆ・みりん各大さじ2"],
       steps:["玉ねぎをくし切りにして豚肉で巻く","焼き固める","調味料を絡めて照りを出す"]},
-    {id:"z30", cat:"tofu", name:"卵と厚揚げの節約グラタン風", desc:"チーズでコクを出した節約グラタン。", cost5:700, genre:"western", weight:"hearty", img:"fried tofu egg gratin budget", cookingTime:20, difficulty:2, tags:["節約","豪華見え"],
+    {id:"z30", cat:"tofu", name:"卵と厚揚げの節約グラタン風", desc:"チーズでコクを出した節約グラタン。", cost5:700, genre:"western", weight:"hearty", cookingTime:20, difficulty:2, tags:["節約","豪華見え"], img:"fried tofu egg gratin budget",
       ing:["厚揚げ3枚","卵4個","とろけるチーズ80g","牛乳100ml"],
       steps:["厚揚げを耐熱皿に並べる","卵と牛乳を混ぜて流す","チーズをのせて焼く"]},
-    {id:"z31", cat:"chicken", name:"鶏むね肉の5分チンチキン", desc:"レンジだけで作れる時短メイン。", cost5:800, genre:"japanese", weight:"healthy", img:"microwave chicken breast quick", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+    {id:"z31", cat:"chicken", name:"鶏むね肉の5分チンチキン", desc:"レンジだけで作れる時短メイン。", cost5:800, genre:"japanese", weight:"healthy", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"], img:"microwave chicken breast quick",
       ing:["鶏むね肉2枚","酒大さじ1","ポン酢適量"],
       steps:["鶏肉に酒をふりラップをする","レンジで加熱する","そぎ切りにしてポン酢をかける"]},
-    {id:"z32", cat:"cabbage", name:"レンジで豚こまキャベツ蒸し", desc:"洗い物少なく10分で完成。", cost5:750, genre:"japanese", weight:"healthy", img:"microwave pork cabbage steamed quick", cookingTime:10, difficulty:1, tags:["時短","レンジ"],
+    {id:"z32", cat:"cabbage", name:"レンジで豚こまキャベツ蒸し", desc:"洗い物少なく10分で完成。", cost5:750, genre:"japanese", weight:"healthy", cookingTime:10, difficulty:1, tags:["時短","レンジ"], img:"microwave pork cabbage steamed quick",
       ing:["豚こま切れ250g","キャベツ1/4個","ポン酢適量"],
       steps:["キャベツと豚肉を交互に重ねる","レンジで加熱する","ポン酢をかける"]},
-    {id:"z33", cat:"egg_natto", name:"卵とツナの時短丼", desc:"火を使わず8分で完成。", cost5:500, genre:"japanese", weight:"healthy", img:"egg tuna quick rice bowl", cookingTime:8, difficulty:1, tags:["時短","丼"],
+    {id:"z33", cat:"egg_natto", name:"卵とツナの時短丼", desc:"火を使わず8分で完成。", cost5:500, genre:"japanese", weight:"healthy", cookingTime:8, difficulty:1, tags:["時短","丼"], img:"egg tuna quick rice bowl",
       ing:["卵4個","ツナ缶2個","しょうゆ・マヨネーズ各適量"],
       steps:["卵を半熟にゆでる","ツナと調味料を混ぜる","ごはんにのせる"]},
-    {id:"z34", cat:"chicken", name:"フライパン1つで鶏もも照り焼き丼", desc:"洗い物少なく12分で完成。", cost5:900, genre:"japanese", weight:"hearty", img:"chicken teriyaki rice bowl quick", cookingTime:12, difficulty:1, tags:["時短","丼"],
+    {id:"z34", cat:"chicken", name:"フライパン1つで鶏もも照り焼き丼", desc:"洗い物少なく12分で完成。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["時短","丼"], img:"chicken teriyaki rice bowl quick",
       ing:["鶏もも肉2枚","しょうゆ・みりん各大さじ2","ごはん5膳"],
       steps:["鶏肉を焼く","調味料を加えて煮絡める","ごはんにのせる"]},
-    {id:"z35", cat:"tofu", name:"レンジ蒸し豆腐の香味だれ", desc:"レンジで作るヘルシー時短副菜級主菜。", cost5:500, genre:"chinese", weight:"healthy", img:"microwave tofu ginger scallion sauce", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+    {id:"z35", cat:"tofu", name:"レンジ蒸し豆腐の香味だれ", desc:"レンジで作るヘルシー時短副菜級主菜。", cost5:500, genre:"chinese", weight:"healthy", cookingTime:8, difficulty:1, tags:["時短","レンジ","ヘルシー"], img:"microwave tofu ginger scallion sauce",
       ing:["絹豆腐2丁","長ねぎ・しょうが各適量","しょうゆ・ごま油各大さじ1"],
       steps:["豆腐をレンジで温める","薬味とたれを合わせる","豆腐にかける"]},
-    {id:"z36", cat:"pork", name:"豚こまの爆速ねぎ塩炒め", desc:"包丁いらずで10分完成。", cost5:850, genre:"japanese", weight:"hearty", img:"pork scallion salt quick stir fry", cookingTime:10, difficulty:1, tags:["時短","ガツン系"],
+    {id:"z36", cat:"pork", name:"豚こまの爆速ねぎ塩炒め", desc:"包丁いらずで10分完成。", cost5:850, genre:"japanese", weight:"hearty", cookingTime:10, difficulty:1, tags:["時短","ガツン系"], img:"pork scallion salt quick stir fry",
       ing:["豚こま切れ350g","長ねぎ1本","塩・ごま油各適量"],
       steps:["長ねぎを切る","豚肉を強火で炒める","塩とごま油で味を調える"]},
-    {id:"z37", cat:"egg_natto", name:"卵ともやしの時短中華炒め", desc:"8分でできる節約時短おかず。", cost5:500, genre:"chinese", weight:"healthy", img:"egg bean sprout quick chinese stir fry", cookingTime:8, difficulty:1, tags:["時短","節約"],
+    {id:"z37", cat:"egg_natto", name:"卵ともやしの時短中華炒め", desc:"8分でできる節約時短おかず。", cost5:500, genre:"chinese", weight:"healthy", cookingTime:8, difficulty:1, tags:["時短","節約"], img:"egg bean sprout quick chinese stir fry",
       ing:["卵5個","もやし2袋","オイスターソース大さじ2"],
       steps:["もやしを炒める","卵を加える","オイスターソースで味を調える"]},
-    {id:"z38", cat:"chicken", name:"レンジで作る鶏むねの梅ポン蒸し", desc:"さっぱりヘルシーな時短メイン。", cost5:800, genre:"japanese", weight:"healthy", img:"microwave chicken plum ponzu", cookingTime:10, difficulty:1, tags:["時短","レンジ","ヘルシー"],
+    {id:"z38", cat:"chicken", name:"レンジで作る鶏むねの梅ポン蒸し", desc:"さっぱりヘルシーな時短メイン。", cost5:800, genre:"japanese", weight:"healthy", cookingTime:10, difficulty:1, tags:["時短","レンジ","ヘルシー"], img:"microwave chicken plum ponzu",
       ing:["鶏むね肉2枚","梅干し2個","ポン酢適量"],
       steps:["鶏肉に梅干しをのせてラップをする","レンジで加熱する","ポン酢をかけて仕上げる"]},
-    {id:"z39", cat:"daikon", name:"フライパン1つ豚バラ大根の時短煮", desc:"薄切り大根で煮込み時間を短縮。", cost5:900, genre:"japanese", weight:"hearty", img:"pork daikon quick simmered thin sliced", cookingTime:15, difficulty:1, tags:["時短"],
+    {id:"z39", cat:"daikon", name:"フライパン1つ豚バラ大根の時短煮", desc:"薄切り大根で煮込み時間を短縮。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["時短"], img:"pork daikon quick simmered thin sliced",
       ing:["豚バラ薄切り300g","大根1/2本","だし・しょうゆ・みりん各適量"],
       steps:["大根を薄切りにする","豚肉と炒める","だしと調味料で手早く煮る"]},
-    {id:"z40", cat:"tofu", name:"5分で厚揚げの甘辛炒め", desc:"包丁いらずの爆速おかず。", cost5:500, genre:"japanese", weight:"hearty", img:"fried tofu sweet soy 5 minutes", cookingTime:5, difficulty:1, tags:["時短","節約"],
+    {id:"z40", cat:"tofu", name:"5分で厚揚げの甘辛炒め", desc:"包丁いらずの爆速おかず。", cost5:500, genre:"japanese", weight:"hearty", cookingTime:5, difficulty:1, tags:["時短","節約"], img:"fried tofu sweet soy 5 minutes",
       ing:["厚揚げ3枚","しょうゆ・みりん・砂糖各大さじ1.5"],
       steps:["厚揚げを切る","フライパンで焼く","調味料を絡める"]},
-    {id:"z41", cat:"chicken", name:"やみつき鶏もも炭火風炒め", desc:"香ばしい焼き目がたまらない。", cost5:950, genre:"japanese", weight:"hearty", img:"grilled chicken thigh smoky salt", cookingTime:15, difficulty:1, tags:["おつまみ","ご飯が進む"],
+    {id:"z41", cat:"chicken", name:"やみつき鶏もも炭火風炒め", desc:"香ばしい焼き目がたまらない。", cost5:950, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:1, tags:["おつまみ","ご飯が進む"], img:"grilled chicken thigh smoky salt",
       ing:["鶏もも肉3枚","塩・こしょう・レモン各適量"],
       steps:["鶏肉を高温でこんがり焼く","塩こしょうで味を調える","レモンを添える"]},
-    {id:"z42", cat:"tofu", name:"厚揚げのねぎま塩だれ", desc:"ビールにもご飯にも合う一品。", cost5:600, genre:"japanese", weight:"hearty", img:"fried tofu scallion salt sauce", cookingTime:12, difficulty:1, tags:["おつまみ"],
+    {id:"z42", cat:"tofu", name:"厚揚げのねぎま塩だれ", desc:"ビールにもご飯にも合う一品。", cost5:600, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["おつまみ"], img:"fried tofu scallion salt sauce",
       ing:["厚揚げ3枚","長ねぎ1本","塩・ごま油各適量"],
       steps:["厚揚げを焼く","長ねぎを刻む","塩とごま油のたれをかける"]},
-    {id:"z43", cat:"pork", name:"豚バラの黒こしょう炒め", desc:"ピリッと効いた大人の味わい。", cost5:900, genre:"japanese", weight:"hearty", img:"pork belly black pepper stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"],
+    {id:"z43", cat:"pork", name:"豚バラの黒こしょう炒め", desc:"ピリッと効いた大人の味わい。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"], img:"pork belly black pepper stir fry",
       ing:["豚バラ薄切り350g","黒こしょう・しょうゆ各適量"],
       steps:["豚バラを炒める","黒こしょうをたっぷりふる","しょうゆで味を調える"]},
-    {id:"z44", cat:"chicken", name:"鶏むね肉のスパイシーから揚げ", desc:"スパイスを効かせた大人のから揚げ。", cost5:900, genre:"japanese", weight:"hearty", img:"spicy chicken karaage", cookingTime:20, difficulty:2, tags:["おつまみ","ガツン系"],
+    {id:"z44", cat:"chicken", name:"鶏むね肉のスパイシーから揚げ", desc:"スパイスを効かせた大人のから揚げ。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:2, tags:["おつまみ","ガツン系"], img:"spicy chicken karaage",
       ing:["鶏むね肉3枚","にんにく・カレー粉各適量","片栗粉適量"],
       steps:["鶏肉に下味をつける","片栗粉をまぶす","カラッと揚げる"]},
-    {id:"z45", cat:"beef", name:"たたき牛肉のピリ辛だれ", desc:"お酒がすすむ一品。", cost5:1400, genre:"japanese", weight:"hearty", img:"beef tataki spicy sauce", cookingTime:15, difficulty:2, tags:["おつまみ","ご褒美"],
+    {id:"z45", cat:"beef", name:"たたき牛肉のピリ辛だれ", desc:"お酒がすすむ一品。", cost5:1400, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:2, tags:["おつまみ","ご褒美"], img:"beef tataki spicy sauce",
       ing:["牛もも肉塊300g","ラー油・しょうゆ・にんにく各適量"],
       steps:["牛肉の表面を焼く","薄切りにする","ピリ辛だれをかける"]},
-    {id:"z46", cat:"tofu", name:"厚揚げキムチのチーズ焼き", desc:"発酵食品×チーズの背徳コンビ。", cost5:750, genre:"chinese", weight:"hearty", img:"fried tofu kimchi cheese bake", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"],
+    {id:"z46", cat:"tofu", name:"厚揚げキムチのチーズ焼き", desc:"発酵食品×チーズの背徳コンビ。", cost5:750, genre:"chinese", weight:"hearty", cookingTime:12, difficulty:1, tags:["おつまみ","ガツン系"], img:"fried tofu kimchi cheese bake",
       ing:["厚揚げ3枚","キムチ150g","とろけるチーズ80g"],
       steps:["厚揚げにキムチをのせる","チーズをのせる","トースターで焼く"]},
-    {id:"z47", cat:"pork", name:"豚こまのスタミナ炒め", desc:"にんにく香る食欲そそる炒め物。", cost5:850, genre:"japanese", weight:"hearty", img:"pork garlic stamina stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","スタミナ"],
+    {id:"z47", cat:"pork", name:"豚こまのスタミナ炒め", desc:"にんにく香る食欲そそる炒め物。", cost5:850, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["おつまみ","スタミナ"], img:"pork garlic stamina stir fry",
       ing:["豚こま切れ350g","にら1束","にんにく・しょうゆ各適量"],
       steps:["にんにくを炒める","豚肉を加えて炒める","にらとしょうゆで仕上げる"]},
-    {id:"z48", cat:"chicken", name:"鶏もも肉のガーリック醤油ステーキ", desc:"にんにくの香りが食欲を誘う。", cost5:950, genre:"western", weight:"hearty", img:"chicken garlic soy steak", cookingTime:18, difficulty:1, tags:["おつまみ","ガツン系"],
+    {id:"z48", cat:"chicken", name:"鶏もも肉のガーリック醤油ステーキ", desc:"にんにくの香りが食欲を誘う。", cost5:950, genre:"western", weight:"hearty", cookingTime:18, difficulty:1, tags:["おつまみ","ガツン系"], img:"chicken garlic soy steak",
       ing:["鶏もも肉3枚","にんにく3かけ","しょうゆ・バター各適量"],
       steps:["にんにくを揚げ焼きにする","鶏肉を焼く","しょうゆバターで仕上げる"]},
-    {id:"z49", cat:"beef", name:"牛肉のオイスター山椒炒め", desc:"痺れる山椒がクセになる。", cost5:1300, genre:"chinese", weight:"hearty", img:"beef oyster sichuan pepper stir fry", cookingTime:12, difficulty:1, tags:["おつまみ","中華"],
+    {id:"z49", cat:"beef", name:"牛肉のオイスター山椒炒め", desc:"痺れる山椒がクセになる。", cost5:1300, genre:"chinese", weight:"hearty", cookingTime:12, difficulty:1, tags:["おつまみ","中華"], img:"beef oyster sichuan pepper stir fry",
       ing:["牛切り落とし300g","オイスターソース大さじ2","山椒少々"],
       steps:["牛肉を炒める","オイスターソースを加える","山椒をふって仕上げる"]},
-    {id:"z50", cat:"tofu", name:"厚揚げの熱々ねぎだく", desc:"アツアツを取り分けたいおつまみ。", cost5:600, genre:"japanese", weight:"hearty", img:"fried tofu scallion hot oil", cookingTime:10, difficulty:1, tags:["おつまみ","時短"],
+    {id:"z50", cat:"tofu", name:"厚揚げの熱々ねぎだく", desc:"アツアツを取り分けたいおつまみ。", cost5:600, genre:"japanese", weight:"hearty", cookingTime:10, difficulty:1, tags:["おつまみ","時短"], img:"fried tofu scallion hot oil",
       ing:["厚揚げ3枚","長ねぎ2本","しょうゆ・ごま油各適量"],
       steps:["厚揚げを焼く","刻みねぎをたっぷりのせる","しょうゆとごま油をかける"]},
-    {id:"z51", cat:"egg_natto", name:"なんでも野菜の卵とじ丼", desc:"冷蔵庫の野菜を何でも活用できる。", cost5:500, genre:"japanese", weight:"healthy", img:"leftover vegetable egg rice bowl", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","時短"],
+    {id:"z51", cat:"egg_natto", name:"なんでも野菜の卵とじ丼", desc:"冷蔵庫の野菜を何でも活用できる。", cost5:500, genre:"japanese", weight:"healthy", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","時短"], img:"leftover vegetable egg rice bowl",
       ing:["卵5個","冷蔵庫の野菜適量","だし・しょうゆ・みりん各適量"],
       steps:["野菜を切って炒める","だしと調味料を加える","卵でとじてごはんにのせる"]},
-    {id:"z52", cat:"pork", name:"余り野菜と豚こまのごった煮", desc:"半端に余った野菜の救済レシピ。", cost5:700, genre:"japanese", weight:"healthy", img:"leftover vegetable pork stew", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+    {id:"z52", cat:"pork", name:"余り野菜と豚こまのごった煮", desc:"半端に余った野菜の救済レシピ。", cost5:700, genre:"japanese", weight:"healthy", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"], img:"leftover vegetable pork stew",
       ing:["豚こま切れ300g","冷蔵庫の野菜適量","だし・しょうゆ各適量"],
       steps:["野菜を一口大に切る","豚肉と炒める","だしとしょうゆで煮る"]},
-    {id:"z53", cat:"cabbage", name:"キャベツ丸ごと消費のくたくた煮", desc:"キャベツ1玉をペロリと消費。", cost5:600, genre:"japanese", weight:"healthy", img:"whole cabbage consomme stew", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+    {id:"z53", cat:"cabbage", name:"キャベツ丸ごと消費のくたくた煮", desc:"キャベツ1玉をペロリと消費。", cost5:600, genre:"japanese", weight:"healthy", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"], img:"whole cabbage consomme stew",
       ing:["キャベツ1個","ベーコンまたはウインナー100g","コンソメ1個"],
       steps:["キャベツをくし切りにする","ベーコンと一緒に煮る","コンソメで味を調える"]},
-    {id:"z54", cat:"egg_natto", name:"卵たっぷりオムレツ丼", desc:"卵が余っている時の救済丼。", cost5:550, genre:"japanese", weight:"healthy", img:"leftover omelette rice bowl", cookingTime:10, difficulty:1, tags:["冷蔵庫一掃","時短"],
+    {id:"z54", cat:"egg_natto", name:"卵たっぷりオムレツ丼", desc:"卵が余っている時の救済丼。", cost5:550, genre:"japanese", weight:"healthy", cookingTime:10, difficulty:1, tags:["冷蔵庫一掃","時短"], img:"leftover omelette rice bowl",
       ing:["卵6個","冷蔵庫の具材適量","ケチャップ適量"],
       steps:["具材を炒める","卵でオムレツを作る","ごはんにのせてケチャップをかける"]},
-    {id:"z55", cat:"tofu", name:"豆腐消費の担々風煮込み", desc:"豆腐を使い切る濃厚煮込み。", cost5:750, genre:"chinese", weight:"hearty", img:"tofu tantan style stew", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","ガツン系"],
+    {id:"z55", cat:"tofu", name:"豆腐消費の担々風煮込み", desc:"豆腐を使い切る濃厚煮込み。", cost5:750, genre:"chinese", weight:"hearty", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","ガツン系"], img:"tofu tantan style stew",
       ing:["豆腐1.5丁","豚ひき肉200g","豆板醤・ごまペースト各適量"],
       steps:["ひき肉を炒める","調味料を加える","豆腐を加えて煮込む"]},
-    {id:"z56", cat:"carrot", name:"にんじん大量消費のきんぴら丼", desc:"余りがちなにんじんをまとめて消費。", cost5:500, genre:"japanese", weight:"healthy", img:"carrot kinpira rice bowl leftover", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","丼"],
+    {id:"z56", cat:"carrot", name:"にんじん大量消費のきんぴら丼", desc:"余りがちなにんじんをまとめて消費。", cost5:500, genre:"japanese", weight:"healthy", cookingTime:12, difficulty:1, tags:["冷蔵庫一掃","丼"], img:"carrot kinpira rice bowl leftover",
       ing:["にんじん4本","しょうゆ・みりん各大さじ2","ごま油適量"],
       steps:["にんじんを細切りにする","ごま油で炒める","調味料で味を調えごはんにのせる"]},
-    {id:"z57", cat:"daikon", name:"大根1本消費のそぼろあんかけ", desc:"大根を無駄なく使い切る。", cost5:700, genre:"japanese", weight:"healthy", img:"daikon minced meat sauce leftover", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"],
+    {id:"z57", cat:"daikon", name:"大根1本消費のそぼろあんかけ", desc:"大根を無駄なく使い切る。", cost5:700, genre:"japanese", weight:"healthy", cookingTime:20, difficulty:1, tags:["冷蔵庫一掃"], img:"daikon minced meat sauce leftover",
       ing:["大根1本","鶏ひき肉200g","だし・片栗粉各適量"],
       steps:["大根を厚めに切って下ゆでする","ひき肉を炒める","だしを加えてとろみをつけ大根にかける"]},
-    {id:"z58", cat:"egg_natto", name:"もやし救済のとろ玉炒め", desc:"安いもやしを美味しく消費。", cost5:450, genre:"chinese", weight:"healthy", img:"bean sprout egg leftover stir fry", cookingTime:8, difficulty:1, tags:["冷蔵庫一掃","時短","節約"],
+    {id:"z58", cat:"egg_natto", name:"もやし救済のとろ玉炒め", desc:"安いもやしを美味しく消費。", cost5:450, genre:"chinese", weight:"healthy", cookingTime:8, difficulty:1, tags:["冷蔵庫一掃","時短","節約"], img:"bean sprout egg leftover stir fry",
       ing:["もやし2袋","卵5個","オイスターソース大さじ2"],
       steps:["もやしを炒める","卵を加える","オイスターソースで味を調える"]},
-    {id:"z59", cat:"onion", name:"玉ねぎ大量消費のオニオン肉巻き", desc:"玉ねぎが余っている時に。", cost5:900, genre:"japanese", weight:"hearty", img:"onion pork roll leftover", cookingTime:15, difficulty:2, tags:["冷蔵庫一掃"],
+    {id:"z59", cat:"onion", name:"玉ねぎ大量消費のオニオン肉巻き", desc:"玉ねぎが余っている時に。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:15, difficulty:2, tags:["冷蔵庫一掃"], img:"onion pork roll leftover",
       ing:["玉ねぎ3個","豚薄切り肉15枚","しょうゆ・みりん各大さじ2"],
       steps:["玉ねぎを豚肉で巻く","焼き固める","調味料を絡めて仕上げる"]},
-    {id:"z60", cat:"potato", name:"じゃがいも大量消費のカレー炒め", desc:"余りがちなじゃがいもをまとめて。", cost5:750, genre:"western", weight:"hearty", img:"potato curry powder leftover stir fry", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","カレー"],
+    {id:"z60", cat:"potato", name:"じゃがいも大量消費のカレー炒め", desc:"余りがちなじゃがいもをまとめて。", cost5:750, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["冷蔵庫一掃","カレー"], img:"potato curry powder leftover stir fry",
       ing:["じゃがいも6個","豚こま切れ250g","カレー粉大さじ1"],
       steps:["じゃがいもを一口大に切る","豚肉と炒める","カレー粉で味を調える"]},
-    {id:"z61", cat:"beef", name:"なつかし給食風ミートソース", desc:"あの頃の給食を思い出す味。", cost5:1000, genre:"western", weight:"hearty", img:"nostalgic school meat sauce", cookingTime:25, difficulty:1, tags:["懐かし","昭和"],
+    {id:"z61", cat:"beef", name:"なつかし給食風ミートソース", desc:"あの頃の給食を思い出す味。", cost5:1000, genre:"western", weight:"hearty", cookingTime:25, difficulty:1, tags:["懐かし","昭和"], img:"nostalgic school meat sauce",
       ing:["合いびき肉350g","玉ねぎ1個","トマト缶1缶","ケチャップ大さじ2"],
       steps:["玉ねぎを炒める","ひき肉を加える","トマト缶とケチャップで煮込む"]},
-    {id:"z62", cat:"pork", name:"昭和の味！ポークチャップ", desc:"ケチャップだれが懐かしい洋食屋の味。", cost5:900, genre:"western", weight:"hearty", img:"showa pork chop ketchup", cookingTime:15, difficulty:1, tags:["懐かし","昭和"],
+    {id:"z62", cat:"pork", name:"昭和の味！ポークチャップ", desc:"ケチャップだれが懐かしい洋食屋の味。", cost5:900, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["懐かし","昭和"], img:"showa pork chop ketchup",
       ing:["豚ロース5枚","ケチャップ・ウスターソース各大さじ2","玉ねぎ1/2個"],
       steps:["豚肉を焼く","玉ねぎを炒める","ケチャップソースを絡める"]},
-    {id:"z63", cat:"egg_natto", name:"ツナコーンの卵とじ丼", desc:"平成の定番おうちご飯。", cost5:550, genre:"japanese", weight:"healthy", img:"tuna corn egg rice bowl nostalgic", cookingTime:10, difficulty:1, tags:["懐かし","平成","丼"],
+    {id:"z63", cat:"egg_natto", name:"ツナコーンの卵とじ丼", desc:"平成の定番おうちご飯。", cost5:550, genre:"japanese", weight:"healthy", cookingTime:10, difficulty:1, tags:["懐かし","平成","丼"], img:"tuna corn egg rice bowl nostalgic",
       ing:["卵5個","ツナ缶1個","コーン缶1缶","しょうゆ適量"],
       steps:["ツナとコーンを炒める","しょうゆで味を調える","卵でとじてごはんにのせる"]},
-    {id:"z64", cat:"pork", name:"昭和の洋食屋さんナポリタン炒め", desc:"ケチャップ味の懐かしい炒め物。", cost5:850, genre:"western", weight:"hearty", img:"napolitan style stir fry nostalgic", cookingTime:15, difficulty:1, tags:["懐かし","昭和"],
+    {id:"z64", cat:"pork", name:"昭和の洋食屋さんナポリタン炒め", desc:"ケチャップ味の懐かしい炒め物。", cost5:850, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["懐かし","昭和"], img:"napolitan style stir fry nostalgic",
       ing:["豚こまorウインナー250g","ピーマン2個","ケチャップ大さじ4"],
       steps:["具材を炒める","ケチャップを加える","味をなじませて仕上げる"]},
-    {id:"z65", cat:"cabbage", name:"なつかしのケチャップ焼きそば風キャベツ炒め", desc:"ソース焼きそばのケチャップ版。", cost5:800, genre:"western", weight:"hearty", img:"ketchup cabbage stir fry nostalgic", cookingTime:15, difficulty:1, tags:["懐かし"],
+    {id:"z65", cat:"cabbage", name:"なつかしのケチャップ焼きそば風キャベツ炒め", desc:"ソース焼きそばのケチャップ版。", cost5:800, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["懐かし"], img:"ketchup cabbage stir fry nostalgic",
       ing:["キャベツ1/2個","豚こま切れ250g","ケチャップ・ウスターソース各大さじ2"],
       steps:["キャベツと豚肉を炒める","ケチャップとソースを加える","味をなじませて仕上げる"]},
-    {id:"z66", cat:"pork", name:"お母さんのしょうが焼き決定版", desc:"どこか懐かしい王道の味。", cost5:900, genre:"japanese", weight:"hearty", img:"classic pork ginger yaki", cookingTime:12, difficulty:1, tags:["懐かし","定番"],
+    {id:"z66", cat:"pork", name:"お母さんのしょうが焼き決定版", desc:"どこか懐かしい王道の味。", cost5:900, genre:"japanese", weight:"hearty", cookingTime:12, difficulty:1, tags:["懐かし","定番"], img:"classic pork ginger yaki",
       ing:["豚ロース薄切り10枚","しょうが2かけ","しょうゆ・みりん各大さじ3"],
       steps:["しょうがをすりおろしてたれを作る","豚肉を焼く","たれを絡めて仕上げる"]},
-    {id:"z67", cat:"beef", name:"平成ファミレス風ハンバーグデミグラス", desc:"あの頃のファミレスの味を再現。", cost5:1200, genre:"western", weight:"hearty", img:"family restaurant hamburger demiglace", cookingTime:25, difficulty:2, tags:["懐かし","平成","ご褒美"],
+    {id:"z67", cat:"beef", name:"平成ファミレス風ハンバーグデミグラス", desc:"あの頃のファミレスの味を再現。", cost5:1200, genre:"western", weight:"hearty", cookingTime:25, difficulty:2, tags:["懐かし","平成","ご褒美"], img:"family restaurant hamburger demiglace",
       ing:["合いびき肉500g","玉ねぎ1個","デミグラスソース1缶"],
       steps:["玉ねぎを炒めてひき肉と混ぜる","成形して焼く","デミグラスソースをかける"]},
-    {id:"z68", cat:"egg_natto", name:"昭和のふんわり甘い卵焼き", desc:"砂糖の効いた懐かしい甘い卵焼き。", cost5:400, genre:"japanese", weight:"healthy", img:"sweet tamagoyaki nostalgic", cookingTime:10, difficulty:1, tags:["懐かし","昭和"],
+    {id:"z68", cat:"egg_natto", name:"昭和のふんわり甘い卵焼き", desc:"砂糖の効いた懐かしい甘い卵焼き。", cost5:400, genre:"japanese", weight:"healthy", cookingTime:10, difficulty:1, tags:["懐かし","昭和"], img:"sweet tamagoyaki nostalgic",
       ing:["卵6個","砂糖大さじ3","だし少々"],
       steps:["卵と砂糖、だしを混ぜる","卵焼き器で焼く","層にしながら巻いていく"]},
-    {id:"z69", cat:"potato", name:"なつかし給食のポークカレーシチュー", desc:"給食で人気だったカレーシチュー。", cost5:1000, genre:"western", weight:"hearty", img:"school curry stew nostalgic", cookingTime:25, difficulty:1, tags:["懐かし","昭和"],
+    {id:"z69", cat:"potato", name:"なつかし給食のポークカレーシチュー", desc:"給食で人気だったカレーシチュー。", cost5:1000, genre:"western", weight:"hearty", cookingTime:25, difficulty:1, tags:["懐かし","昭和"], img:"school curry stew nostalgic",
       ing:["豚こま切れ300g","じゃがいも4個","カレールー・シチュールー各半分"],
       steps:["豚肉と野菜を炒める","水を加えて煮る","ルーを溶かして仕上げる"]},
-    {id:"z70", cat:"potato", name:"平成なつかしコロッケ風じゃがいも煮", desc:"コロッケの味をそのまま煮物に。", cost5:800, genre:"japanese", weight:"hearty", img:"korokke style potato stew nostalgic", cookingTime:20, difficulty:1, tags:["懐かし","平成"],
+    {id:"z70", cat:"potato", name:"平成なつかしコロッケ風じゃがいも煮", desc:"コロッケの味をそのまま煮物に。", cost5:800, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["懐かし","平成"], img:"korokke style potato stew nostalgic",
       ing:["じゃがいも5個","合いびき肉200g","玉ねぎ1個","しょうゆ・みりん各大さじ2"],
       steps:["じゃがいもと玉ねぎを炒める","ひき肉を加える","調味料で煮る"]},
-    {id:"z71", cat:"chicken", name:"韓国風ヤンニョムチキン", desc:"甘辛だれがクセになる韓国屋台の味。", cost5:1000, genre:"chinese", weight:"hearty", img:"korean yangnyeom chicken", cookingTime:20, difficulty:2, tags:["世界旅行","韓国","ガツン系"],
+    {id:"z71", cat:"chicken", name:"韓国風ヤンニョムチキン", desc:"甘辛だれがクセになる韓国屋台の味。", cost5:1000, genre:"chinese", weight:"hearty", cookingTime:20, difficulty:2, tags:["世界旅行","韓国","ガツン系"], img:"korean yangnyeom chicken",
       ing:["鶏もも肉3枚","片栗粉適量","コチュジャン・ケチャップ・はちみつ各大さじ2"],
       steps:["鶏肉に片栗粉をまぶして揚げ焼きにする","たれを合わせる","鶏肉に絡める"]},
-    {id:"z72", cat:"pork", name:"台湾風豚バラの魯肉飯", desc:"甘辛く煮込んだ台湾の定番丼。", cost5:900, genre:"chinese", weight:"hearty", img:"taiwanese luroufan pork rice", cookingTime:30, difficulty:2, tags:["世界旅行","台湾","丼"],
+    {id:"z72", cat:"pork", name:"台湾風豚バラの魯肉飯", desc:"甘辛く煮込んだ台湾の定番丼。", cost5:900, genre:"chinese", weight:"hearty", cookingTime:30, difficulty:2, tags:["世界旅行","台湾","丼"], img:"taiwanese luroufan pork rice",
       ing:["豚バラ薄切り350g","しょうゆ・砂糖各大さじ3","五香粉少々"],
       steps:["豚バラを細切りにして炒める","調味料を加える","じっくり煮込んでごはんにのせる"]},
-    {id:"z73", cat:"beef", name:"タイ風ガパオライス", desc:"バジルとナンプラーが香る本格屋台飯。", cost5:1100, genre:"chinese", weight:"hearty", img:"thai gapao rice basil", cookingTime:15, difficulty:1, tags:["世界旅行","タイ","丼"],
+    {id:"z73", cat:"beef", name:"タイ風ガパオライス", desc:"バジルとナンプラーが香る本格屋台飯。", cost5:1100, genre:"chinese", weight:"hearty", cookingTime:15, difficulty:1, tags:["世界旅行","タイ","丼"], img:"thai gapao rice basil",
       ing:["合いびき肉350g","バジル・ナンプラー各適量","ピーマン2個"],
       steps:["ひき肉とピーマンを炒める","ナンプラーで味を調える","バジルを加えてごはんにのせる"]},
-    {id:"z74", cat:"beef", name:"メキシコ風タコライス", desc:"スパイシーな挽き肉とチーズが決め手。", cost5:1100, genre:"western", weight:"hearty", img:"mexican taco rice", cookingTime:15, difficulty:1, tags:["世界旅行","メキシコ","丼"],
+    {id:"z74", cat:"beef", name:"メキシコ風タコライス", desc:"スパイシーな挽き肉とチーズが決め手。", cost5:1100, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["世界旅行","メキシコ","丼"], img:"mexican taco rice",
       ing:["合いびき肉400g","チリパウダー・ケチャップ各大さじ2","チーズ・レタス各適量"],
       steps:["ひき肉をスパイスで炒める","レタスとチーズを用意する","ごはんにのせて盛り付ける"]},
-    {id:"z75", cat:"beef", name:"ハワイ風ロコモコ丼", desc:"ハンバーグと目玉焼きの南国丼。", cost5:1200, genre:"western", weight:"hearty", img:"hawaiian loco moco", cookingTime:20, difficulty:1, tags:["世界旅行","ハワイ","丼"],
+    {id:"z75", cat:"beef", name:"ハワイ風ロコモコ丼", desc:"ハンバーグと目玉焼きの南国丼。", cost5:1200, genre:"western", weight:"hearty", cookingTime:20, difficulty:1, tags:["世界旅行","ハワイ","丼"], img:"hawaiian loco moco",
       ing:["合いびき肉400g","卵5個","デミグラスソースまたはグレイビー適量"],
       steps:["ハンバーグを成形して焼く","目玉焼きを焼く","ごはんにのせてソースをかける"]},
-    {id:"z76", cat:"chicken", name:"イタリア風チキンカチャトーレ", desc:"トマトとハーブが香る煮込み料理。", cost5:1000, genre:"western", weight:"hearty", img:"italian chicken cacciatore", cookingTime:30, difficulty:2, tags:["世界旅行","イタリア"],
+    {id:"z76", cat:"chicken", name:"イタリア風チキンカチャトーレ", desc:"トマトとハーブが香る煮込み料理。", cost5:1000, genre:"western", weight:"hearty", cookingTime:30, difficulty:2, tags:["世界旅行","イタリア"], img:"italian chicken cacciatore",
       ing:["鶏もも肉3枚","トマト缶1缶","玉ねぎ1個","ハーブ適量"],
       steps:["鶏肉を焼く","玉ねぎを炒める","トマト缶とハーブで煮込む"]},
-    {id:"z77", cat:"pork", name:"韓国屋台風豚こまヤンニョム炒め", desc:"甘辛だれで韓国屋台の味を再現。", cost5:900, genre:"chinese", weight:"hearty", img:"korean street pork yangnyeom", cookingTime:15, difficulty:1, tags:["世界旅行","韓国"],
+    {id:"z77", cat:"pork", name:"韓国屋台風豚こまヤンニョム炒め", desc:"甘辛だれで韓国屋台の味を再現。", cost5:900, genre:"chinese", weight:"hearty", cookingTime:15, difficulty:1, tags:["世界旅行","韓国"], img:"korean street pork yangnyeom",
       ing:["豚こま切れ350g","コチュジャン・しょうゆ・砂糖各大さじ2"],
       steps:["豚肉を炒める","調味料を合わせる","絡めて照りを出す"]},
-    {id:"z78", cat:"pork", name:"ガーリックタイ風豚肉炒め", desc:"にんにくとナンプラーの本格屋台味。", cost5:900, genre:"chinese", weight:"hearty", img:"thai garlic pork moo krathiam", cookingTime:15, difficulty:1, tags:["世界旅行","タイ"],
+    {id:"z78", cat:"pork", name:"ガーリックタイ風豚肉炒め", desc:"にんにくとナンプラーの本格屋台味。", cost5:900, genre:"chinese", weight:"hearty", cookingTime:15, difficulty:1, tags:["世界旅行","タイ"], img:"thai garlic pork moo krathiam",
       ing:["豚こま切れ350g","にんにく3かけ","ナンプラー・砂糖各大さじ1"],
       steps:["にんにくを揚げ炒める","豚肉を加えて炒める","ナンプラーと砂糖で味を調える"]},
-    {id:"z79", cat:"tofu", name:"台湾風豆腐と卵の香味炒め", desc:"台湾家庭料理の優しい味わい。", cost5:650, genre:"chinese", weight:"hearty", img:"taiwanese tofu egg stir fry", cookingTime:12, difficulty:1, tags:["世界旅行","台湾"],
+    {id:"z79", cat:"tofu", name:"台湾風豆腐と卵の香味炒め", desc:"台湾家庭料理の優しい味わい。", cost5:650, genre:"chinese", weight:"hearty", cookingTime:12, difficulty:1, tags:["世界旅行","台湾"], img:"taiwanese tofu egg stir fry",
       ing:["木綿豆腐1.5丁","卵3個","長ねぎ・しょうゆ各適量"],
       steps:["豆腐を崩しながら焼く","卵を加える","長ねぎとしょうゆで味を調える"]},
-    {id:"z80", cat:"chicken", name:"イタリア風鶏もも肉のトマトチーズ焼き", desc:"チーズがとろけるイタリアンメイン。", cost5:1000, genre:"western", weight:"hearty", img:"italian chicken tomato cheese bake", cookingTime:25, difficulty:2, tags:["世界旅行","イタリア","ご褒美"],
+    {id:"z80", cat:"chicken", name:"イタリア風鶏もも肉のトマトチーズ焼き", desc:"チーズがとろけるイタリアンメイン。", cost5:1000, genre:"western", weight:"hearty", cookingTime:25, difficulty:2, tags:["世界旅行","イタリア","ご褒美"], img:"italian chicken tomato cheese bake",
       ing:["鶏もも肉3枚","トマト缶1缶","とろけるチーズ100g"],
       steps:["鶏肉を焼く","トマト缶を加えて煮る","チーズをのせて焼く"]},
-    {id:"z81", cat:"chicken", name:"鶏むね肉と豆腐のヘルシー蒸し", desc:"低脂質で満足感のある一皿。", cost5:750, genre:"japanese", weight:"healthy", img:"chicken tofu steamed healthy", cookingTime:15, difficulty:1, tags:["ヘルシー","高タンパク"],
+    {id:"z81", cat:"chicken", name:"鶏むね肉と豆腐のヘルシー蒸し", desc:"低脂質で満足感のある一皿。", cost5:750, genre:"japanese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー","高タンパク"], img:"chicken tofu steamed healthy",
       ing:["鶏むね肉2枚","絹豆腐1丁","ポン酢適量"],
       steps:["鶏肉と豆腐を並べて蒸す","そぎ切りにする","ポン酢をかける"]},
-    {id:"z82", cat:"chicken", name:"蒸し鶏とたっぷりきのこの中華あん", desc:"きのこの旨みでヘルシーに満足。", cost5:800, genre:"chinese", weight:"healthy", img:"steamed chicken mushroom chinese sauce", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z82", cat:"chicken", name:"蒸し鶏とたっぷりきのこの中華あん", desc:"きのこの旨みでヘルシーに満足。", cost5:800, genre:"chinese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"steamed chicken mushroom chinese sauce",
       ing:["鶏むね肉2枚","しめじ・えのき各1パック","中華だし・片栗粉各適量"],
       steps:["鶏肉を蒸す","きのこを煮る","とろみをつけて鶏肉にかける"]},
-    {id:"z83", cat:"tofu", name:"豆腐と卵のふわふわ茶碗蒸し風", desc:"優しい味わいのヘルシーメイン。", cost5:600, genre:"japanese", weight:"healthy", img:"tofu egg chawanmushi healthy", cookingTime:20, difficulty:2, tags:["ヘルシー"],
+    {id:"z83", cat:"tofu", name:"豆腐と卵のふわふわ茶碗蒸し風", desc:"優しい味わいのヘルシーメイン。", cost5:600, genre:"japanese", weight:"healthy", cookingTime:20, difficulty:2, tags:["ヘルシー"], img:"tofu egg chawanmushi healthy",
       ing:["絹豆腐1丁","卵5個","だし400ml"],
       steps:["豆腐を崩す","卵とだしを混ぜる","蒸し器でふんわり蒸す"]},
-    {id:"z84", cat:"chicken", name:"鶏むね肉と野菜のポン酢蒸し", desc:"さっぱりヘルシーな蒸し料理。", cost5:800, genre:"japanese", weight:"healthy", img:"chicken vegetable ponzu steamed", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z84", cat:"chicken", name:"鶏むね肉と野菜のポン酢蒸し", desc:"さっぱりヘルシーな蒸し料理。", cost5:800, genre:"japanese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"chicken vegetable ponzu steamed",
       ing:["鶏むね肉2枚","冷蔵庫の野菜適量","ポン酢適量"],
       steps:["鶏肉と野菜を並べる","酒をふって蒸す","ポン酢をかける"]},
-    {id:"z85", cat:"tofu", name:"豆腐とひき肉の低カロリー中華煮", desc:"ひき肉少なめでもコクのある一品。", cost5:650, genre:"chinese", weight:"healthy", img:"tofu minced chicken low calorie chinese", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z85", cat:"tofu", name:"豆腐とひき肉の低カロリー中華煮", desc:"ひき肉少なめでもコクのある一品。", cost5:650, genre:"chinese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"tofu minced chicken low calorie chinese",
       ing:["絹豆腐1.5丁","鶏ひき肉150g","中華だし・片栗粉各適量"],
       steps:["鶏ひき肉を炒める","だしを加える","豆腐を加えてとろみをつける"]},
-    {id:"z86", cat:"chicken", name:"鶏むねともやしのさっぱり酢炒め", desc:"酢の効果でさっぱり食べられる。", cost5:700, genre:"chinese", weight:"healthy", img:"chicken bean sprout vinegar stir fry", cookingTime:12, difficulty:1, tags:["ヘルシー","時短"],
+    {id:"z86", cat:"chicken", name:"鶏むねともやしのさっぱり酢炒め", desc:"酢の効果でさっぱり食べられる。", cost5:700, genre:"chinese", weight:"healthy", cookingTime:12, difficulty:1, tags:["ヘルシー","時短"], img:"chicken bean sprout vinegar stir fry",
       ing:["鶏むね肉2枚","もやし2袋","酢・しょうゆ各大さじ2"],
       steps:["鶏肉をそぎ切りにして炒める","もやしを加える","酢としょうゆで味を調える"]},
-    {id:"z87", cat:"tofu", name:"厚揚げと野菜のヘルシー煮浸し", desc:"だしの効いた優しい味。", cost5:600, genre:"japanese", weight:"healthy", img:"fried tofu vegetable healthy simmered", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z87", cat:"tofu", name:"厚揚げと野菜のヘルシー煮浸し", desc:"だしの効いた優しい味。", cost5:600, genre:"japanese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"fried tofu vegetable healthy simmered",
       ing:["厚揚げ3枚","冷蔵庫の野菜適量","だし・しょうゆ各適量"],
       steps:["厚揚げと野菜を切る","だしで煮る","しょうゆで味を調える"]},
-    {id:"z88", cat:"chicken", name:"鶏むね肉のハーブ蒸し温野菜添え", desc:"見た目も華やかなヘルシーメイン。", cost5:800, genre:"western", weight:"healthy", img:"chicken herb steamed vegetables", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z88", cat:"chicken", name:"鶏むね肉のハーブ蒸し温野菜添え", desc:"見た目も華やかなヘルシーメイン。", cost5:800, genre:"western", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"chicken herb steamed vegetables",
       ing:["鶏むね肉2枚","ハーブ適量","ブロッコリーなど温野菜適量"],
       steps:["鶏肉にハーブをまぶして蒸す","野菜を蒸す","一緒に盛り付ける"]},
-    {id:"z89", cat:"chicken", name:"豆腐と鶏むねの低脂質つくね", desc:"豆腐でヘルシーに仕上げたつくね。", cost5:750, genre:"japanese", weight:"healthy", img:"chicken tofu tsukune low fat", cookingTime:20, difficulty:2, tags:["ヘルシー","高タンパク"],
+    {id:"z89", cat:"chicken", name:"豆腐と鶏むねの低脂質つくね", desc:"豆腐でヘルシーに仕上げたつくね。", cost5:750, genre:"japanese", weight:"healthy", cookingTime:20, difficulty:2, tags:["ヘルシー","高タンパク"], img:"chicken tofu tsukune low fat",
       ing:["鶏むねひき肉300g","絹豆腐1/2丁","しょうゆ・みりん各適量"],
       steps:["ひき肉と豆腐を混ぜる","成形して焼く","たれを絡める"]},
-    {id:"z90", cat:"tofu", name:"蒸し野菜と豆腐のポン酢がけ", desc:"シンプルで飽きのこないヘルシー主菜。", cost5:600, genre:"japanese", weight:"healthy", img:"steamed tofu vegetable ponzu", cookingTime:15, difficulty:1, tags:["ヘルシー"],
+    {id:"z90", cat:"tofu", name:"蒸し野菜と豆腐のポン酢がけ", desc:"シンプルで飽きのこないヘルシー主菜。", cost5:600, genre:"japanese", weight:"healthy", cookingTime:15, difficulty:1, tags:["ヘルシー"], img:"steamed tofu vegetable ponzu",
       ing:["絹豆腐1.5丁","冷蔵庫の野菜適量","ポン酢適量"],
       steps:["野菜と豆腐を蒸す","食べやすく切る","ポン酢をかける"]},
-    {id:"z91", cat:"beef", name:"週末のごちそう厚切り牛ステーキ", desc:"特別な日にふさわしい贅沢な一皿。", cost5:2200, genre:"western", weight:"hearty", img:"thick beef steak special", cookingTime:15, difficulty:2, tags:["ご褒美","週末"],
+    {id:"z91", cat:"beef", name:"週末のごちそう厚切り牛ステーキ", desc:"特別な日にふさわしい贅沢な一皿。", cost5:2200, genre:"western", weight:"hearty", cookingTime:15, difficulty:2, tags:["ご褒美","週末"], img:"thick beef steak special",
       ing:["牛ロース厚切り5枚","にんにく・バター各適量","塩こしょう適量"],
       steps:["牛肉を室温に戻す","にんにくとバターで焼く","塩こしょうで仕上げる"]},
-    {id:"z92", cat:"beef", name:"給料日のローストビーフ丼", desc:"見た目も豪華な特別な日の丼。", cost5:1800, genre:"western", weight:"hearty", img:"roast beef rice bowl payday", cookingTime:30, difficulty:2, tags:["ご褒美"],
+    {id:"z92", cat:"beef", name:"給料日のローストビーフ丼", desc:"見た目も豪華な特別な日の丼。", cost5:1800, genre:"western", weight:"hearty", cookingTime:30, difficulty:2, tags:["ご褒美"], img:"roast beef rice bowl payday",
       ing:["牛もも肉塊500g","にんにく・しょうゆ各適量","ごはん5膳"],
       steps:["牛肉の表面を焼き固める","低温でじっくり火を通す","薄切りにしてごはんにのせる"]},
-    {id:"z93", cat:"chicken", name:"特別な日の鶏もも肉のごちそう焼き", desc:"皮パリッと仕上げるごちそう焼き。", cost5:1000, genre:"japanese", weight:"hearty", img:"chicken thigh crispy special occasion", cookingTime:20, difficulty:2, tags:["ご褒美"],
+    {id:"z93", cat:"chicken", name:"特別な日の鶏もも肉のごちそう焼き", desc:"皮パリッと仕上げるごちそう焼き。", cost5:1000, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:2, tags:["ご褒美"], img:"chicken thigh crispy special occasion",
       ing:["鶏もも肉3枚","塩・にんにく各適量","レモン適量"],
       steps:["鶏肉の皮をパリッと焼く","裏返して火を通す","レモンを添える"]},
-    {id:"z94", cat:"beef", name:"ご褒美チーズハンバーグステーキ", desc:"とろけるチーズで贅沢に。", cost5:1300, genre:"western", weight:"hearty", img:"hamburger steak cheese special", cookingTime:25, difficulty:2, tags:["ご褒美"],
+    {id:"z94", cat:"beef", name:"ご褒美チーズハンバーグステーキ", desc:"とろけるチーズで贅沢に。", cost5:1300, genre:"western", weight:"hearty", cookingTime:25, difficulty:2, tags:["ご褒美"], img:"hamburger steak cheese special",
       ing:["合いびき肉500g","とろけるチーズ100g","デミグラスソース1缶"],
       steps:["ハンバーグを成形して焼く","チーズをのせる","デミグラスソースをかける"]},
-    {id:"z95", cat:"pork", name:"特別な日の豚肩ロース厚切りステーキ", desc:"ジューシーな厚切り肉のごちそう。", cost5:1400, genre:"western", weight:"hearty", img:"pork shoulder thick steak special", cookingTime:20, difficulty:2, tags:["ご褒美"],
+    {id:"z95", cat:"pork", name:"特別な日の豚肩ロース厚切りステーキ", desc:"ジューシーな厚切り肉のごちそう。", cost5:1400, genre:"western", weight:"hearty", cookingTime:20, difficulty:2, tags:["ご褒美"], img:"pork shoulder thick steak special",
       ing:["豚肩ロース厚切り5枚","にんにく・バター各適量"],
       steps:["豚肉を室温に戻す","にんにくバターで焼く","休ませてから切る"]},
-    {id:"z96", cat:"tofu", name:"ごちそう厚揚げの鉄板ステーキ風", desc:"厚揚げが立派なごちそうに変身。", cost5:700, genre:"western", weight:"hearty", img:"fried tofu teppan steak special", cookingTime:15, difficulty:1, tags:["ご褒美","節約"],
+    {id:"z96", cat:"tofu", name:"ごちそう厚揚げの鉄板ステーキ風", desc:"厚揚げが立派なごちそうに変身。", cost5:700, genre:"western", weight:"hearty", cookingTime:15, difficulty:1, tags:["ご褒美","節約"], img:"fried tofu teppan steak special",
       ing:["厚揚げ3枚","にんにく・バター・しょうゆ各適量"],
       steps:["厚揚げを厚めに切る","にんにくバターで焼く","しょうゆで香りをつける"]},
-    {id:"z97", cat:"pork", name:"週末のスペシャル黒酢豚", desc:"コクのある黒酢だれの本格酢豚。", cost5:1200, genre:"chinese", weight:"hearty", img:"black vinegar sweet sour pork special", cookingTime:25, difficulty:2, tags:["ご褒美","中華"],
+    {id:"z97", cat:"pork", name:"週末のスペシャル黒酢豚", desc:"コクのある黒酢だれの本格酢豚。", cost5:1200, genre:"chinese", weight:"hearty", cookingTime:25, difficulty:2, tags:["ご褒美","中華"], img:"black vinegar sweet sour pork special",
       ing:["豚ロース350g","黒酢・しょうゆ・砂糖各大さじ2","ピーマン・玉ねぎ各適量"],
       steps:["豚肉を揚げ焼きにする","野菜を炒める","黒酢だれを絡める"]},
-    {id:"z98", cat:"beef", name:"記念日の牛肉と彩り野菜のグリル", desc:"見た目も華やかな記念日メニュー。", cost5:1800, genre:"western", weight:"hearty", img:"beef colorful vegetable grill anniversary", cookingTime:20, difficulty:2, tags:["ご褒美","記念日"],
+    {id:"z98", cat:"beef", name:"記念日の牛肉と彩り野菜のグリル", desc:"見た目も華やかな記念日メニュー。", cost5:1800, genre:"western", weight:"hearty", cookingTime:20, difficulty:2, tags:["ご褒美","記念日"], img:"beef colorful vegetable grill anniversary",
       ing:["牛肉塊400g","パプリカ・アスパラなど適量","塩こしょう・オリーブオイル各適量"],
       steps:["牛肉と野菜を切る","グリルまたはフライパンで焼く","塩こしょうで味を調える"]},
-    {id:"z99", cat:"chicken", name:"とっておきの鶏もも肉のガーリックバター焼き", desc:"香ばしいガーリックバターが決め手。", cost5:950, genre:"western", weight:"hearty", img:"chicken garlic butter special", cookingTime:18, difficulty:1, tags:["ご褒美"],
+    {id:"z99", cat:"chicken", name:"とっておきの鶏もも肉のガーリックバター焼き", desc:"香ばしいガーリックバターが決め手。", cost5:950, genre:"western", weight:"hearty", cookingTime:18, difficulty:1, tags:["ご褒美"], img:"chicken garlic butter special",
       ing:["鶏もも肉3枚","にんにく3かけ","バター20g"],
       steps:["にんにくをスライスして炒める","鶏肉を焼く","バターとにんにくで仕上げる"]},
-    {id:"z100", cat:"beef", name:"ご褒美の牛肉しゃぶしゃぶ風鍋", desc:"上質な牛肉を贅沢に楽しむ鍋。", cost5:1900, genre:"japanese", weight:"hearty", img:"beef shabu shabu special hot pot", cookingTime:20, difficulty:1, tags:["ご褒美","鍋"],
+    {id:"z100", cat:"beef", name:"ご褒美の牛肉しゃぶしゃぶ風鍋", desc:"上質な牛肉を贅沢に楽しむ鍋。", cost5:1900, genre:"japanese", weight:"hearty", cookingTime:20, difficulty:1, tags:["ご褒美","鍋"], img:"beef shabu shabu special hot pot",
       ing:["牛薄切り肉500g","白菜・長ねぎなど適量","昆布だし・ポン酢適量"],
-      steps:["昆布だしを煮立てる","野菜を煮る","牛肉をさっとくぐらせポン酢でいただく"]}
+      steps:["昆布だしを煮立てる","野菜を煮る","牛肉をさっとくぐらせポン酢でいただく"]},
+    {id:"fs1", cat:"fish", name:"鮭の味噌マヨ焼き", desc:"コクのある味噌マヨだれで魚が苦手な子も食べやすい。", cost5:1150, genre:"japanese", weight:"hearty", img:"salmon miso mayo grilled",
+      ing:["生鮭4切れ","味噌大さじ3","マヨネーズ大さじ3","みりん大さじ1.5","塩・こしょう各少々"],
+      steps:["鮭に軽く塩をふり水気を拭き取る","味噌・マヨネーズ・みりんを混ぜてたれを作る","魚焼きグリルで鮭を焼き、たれを塗ってさらに焼き色をつける"]},
+    {id:"fs2", cat:"fish", name:"鮭ときのこのホイル焼き", desc:"包んで焼くだけで洗い物も少なく、あっさり食べられる。", cost5:1100, genre:"japanese", weight:"healthy", img:"salmon mushroom foil bake",
+      ing:["生鮭4切れ","しめじ・えのき合わせて2袋","バター20g","しょうゆ大さじ2","酒大さじ2"],
+      steps:["アルミホイルに鮭ときのこをのせる","酒をふり、バターをのせて包む","グリルまたはオーブンで火が通るまで焼き、仕上げにしょうゆをかける"]},
+    {id:"fs3", cat:"fish", name:"鮭のちゃんちゃん焼き", desc:"野菜もたっぷり摂れる北海道生まれの鉄板焼き。", cost5:1200, genre:"japanese", weight:"hearty", img:"salmon chanchan yaki vegetables",
+      ing:["生鮭4切れ","キャベツ1/3個","もやし1袋","にんじん1/2本","味噌大さじ3","みりん・酒各大さじ2","バター20g"],
+      steps:["フライパンに野菜を敷き、鮭をのせる","酒をふって蓋をし蒸し焼きにする","味噌・みりんを溶いたたれをかけ、バターをのせて仕上げる"]},
+    {id:"fs4", cat:"fish", name:"ぶりの照り焼き", desc:"ごはんが進む甘辛だれの定番魚料理。", cost5:1250, genre:"japanese", weight:"hearty", img:"buri yellowtail teriyaki",
+      ing:["ぶり4切れ","しょうゆ大さじ3","みりん大さじ3","砂糖大さじ1","片栗粉少々"],
+      steps:["ぶりに薄く片栗粉をまぶす","フライパンで両面を焼く","しょうゆ・みりん・砂糖を加えてとろみがつくまで煮絡める"]},
+    {id:"fs5", cat:"fish", name:"さばの味噌煮", desc:"甘辛い味噌だれが染みた、魚料理の王道。", cost5:900, genre:"japanese", weight:"hearty", img:"saba mackerel miso simmered",
+      ing:["さば4切れ","味噌大さじ3","砂糖・みりん各大さじ2","しょうが1かけ","水150ml"],
+      steps:["さばに熱湯をかけて臭みを取る","水・しょうが・調味料を煮立てる","さばを加えて落し蓋をし、たれをかけながら煮る"]},
+    {id:"fs6", cat:"fish", name:"さばの竜田揚げ", desc:"下味をしっかりつけて揚げる、ご飯にもお酒にも合う一品。", cost5:950, genre:"japanese", weight:"hearty", img:"saba mackerel tatsutaage fried",
+      ing:["さば4切れ","しょうゆ・酒各大さじ2","しょうが少々","片栗粉適量","揚げ油"],
+      steps:["さばをしょうゆ・酒・しょうがに15分ほど漬ける","汁気を切り片栗粉をまぶす","170℃の油でカリッと揚げる"]},
+    {id:"fs7", cat:"fish", name:"たらのバター醤油焼き", desc:"淡白なたらを香ばしいバター醤油で仕上げる。", cost5:900, genre:"western", weight:"healthy", img:"cod butter soy sauce grilled",
+      ing:["生たら4切れ","塩・こしょう各少々","小麦粉適量","バター20g","しょうゆ大さじ1.5"],
+      steps:["たらに塩こしょうをして小麦粉を薄くまぶす","バターで両面を焼く","仕上げにしょうゆを回しかけて香りを立たせる"]},
+    {id:"fs8", cat:"fish", name:"あじの蒲焼き風", desc:"甘辛だれでうなぎ風に仕立てた食べやすい一皿。", cost5:850, genre:"japanese", weight:"hearty", img:"aji horse mackerel kabayaki style",
+      ing:["あじ開き4尾","しょうゆ・みりん各大さじ2","砂糖大さじ1","片栗粉少々"],
+      steps:["あじに片栗粉を薄くまぶす","フライパンで皮目から焼く","しょうゆ・みりん・砂糖のたれを加えて絡める"]},
+    {id:"fs9", cat:"fish", name:"あじのごまみりん漬け焼き", desc:"ごまの香りとみりんの甘みでさっぱりと。", cost5:850, genre:"japanese", weight:"healthy", img:"aji horse mackerel sesame grilled",
+      ing:["あじ開き4尾","すりごま大さじ2","しょうゆ・みりん各大さじ1.5"],
+      steps:["調味料とごまを混ぜてあじを30分漬ける","魚焼きグリルで焼き色がつくまで焼く"]},
+    {id:"fs10", cat:"fish", name:"さわらの西京漬け風焼き", desc:"甘い味噌床で漬けて焼く、上品な和の一皿。", cost5:1000, genre:"japanese", weight:"healthy", img:"sawara spanish mackerel saikyo miso",
+      ing:["さわら4切れ","白味噌大さじ4","みりん大さじ2","砂糖大さじ1"],
+      steps:["味噌・みりん・砂糖を混ぜて漬け床を作る","さわらを1時間〜一晩漬ける","味噌を軽く拭き取り、焦がさないように焼く"]},
+    {id:"fs11", cat:"fish", name:"えびマヨ", desc:"プリプリのえびを甘めのマヨソースで、子どもにも人気。", cost5:1300, genre:"chinese", weight:"hearty", img:"shrimp mayo chinese style",
+      ing:["むきえび400g","片栗粉適量","マヨネーズ大さじ4","ケチャップ大さじ1","練乳大さじ1"],
+      steps:["えびに片栗粉をまぶして揚げ焼きにする","マヨネーズ・ケチャップ・練乳を混ぜてソースを作る","えびとソースを絡める"]},
+    {id:"fs12", cat:"fish", name:"えびとブロッコリーのガーリック炒め", desc:"にんにくの香りが食欲をそそる、彩りの良い一皿。", cost5:1250, genre:"western", weight:"healthy", img:"shrimp broccoli garlic saute",
+      ing:["むきえび350g","ブロッコリー1株","にんにく2かけ","オリーブオイル大さじ2","塩・こしょう各少々"],
+      steps:["ブロッコリーを下ゆでする","オリーブオイルでにんにくを香りが立つまで炒める","えびとブロッコリーを加えて炒め、塩こしょうで味を調える"]},
+    {id:"fs13", cat:"fish", name:"いかのにんにく醤油炒め", desc:"ぷりぷりのいかをパンチのある味付けで。", cost5:900, genre:"japanese", weight:"hearty", img:"squid garlic soy sauce stir fry",
+      ing:["いか2杯","にんにく2かけ","しょうゆ大さじ2","バター10g"],
+      steps:["いかを輪切りにする","にんにくを油で炒めて香りを出す","いかを加えて手早く炒め、しょうゆとバターで仕上げる"]},
+    {id:"fs14", cat:"fish", name:"いかとセロリの中華炒め", desc:"セロリの香りが爽やかな中華風炒め物。", cost5:900, genre:"chinese", weight:"healthy", img:"squid celery chinese stir fry",
+      ing:["いか2杯","セロリ2本","しょうが少々","鶏ガラスープの素・酒各大さじ1"],
+      steps:["いかとセロリを食べやすく切る","しょうがを炒めて香りを出す","いかとセロリを加えて手早く炒め、調味料で味を調える"]},
+    {id:"fs15", cat:"fish", name:"まぐろの漬け丼", desc:"漬けだれに絡めるだけで、ごちそう感のある一杯に。", cost5:1400, genre:"japanese", weight:"healthy", img:"tuna zuke donburi",
+      ing:["まぐろ刺身用400g","しょうゆ大さじ3","みりん・酒各大さじ1","ごはん5膳","刻みのり・わさび各適量"],
+      steps:["みりんと酒を煮切ってしょうゆと合わせる","まぐろを漬けだれに15分ほど漬ける","ごはんにのせ、のりとわさびを添える"]},
+    {id:"fs16", cat:"fish", name:"まぐろのステーキ黒こしょう風味", desc:"表面だけ香ばしく焼いて中はレアに仕上げるごちそう。", cost5:1500, genre:"western", weight:"hearty", img:"tuna steak black pepper",
+      ing:["まぐろ赤身ブロック400g","黒こしょう適量","塩少々","オリーブオイル大さじ1","しょうゆ大さじ1"],
+      steps:["まぐろに塩と黒こしょうをしっかりまぶす","強火のフライパンで表面だけ短時間焼く","切り分けてしょうゆを回しかける"]},
+    {id:"fs17", cat:"fish", name:"白身魚の南蛮漬け", desc:"揚げてから甘酢に漬け込む、さっぱりとした一皿。", cost5:1000, genre:"japanese", weight:"healthy", img:"white fish nanbanzuke",
+      ing:["白身魚4切れ","片栗粉適量","玉ねぎ1/2個","にんじん1/3本","酢・しょうゆ・砂糖各大さじ3"],
+      steps:["白身魚に片栗粉をまぶして揚げ焼きにする","酢・しょうゆ・砂糖を合わせて甘酢を作る","揚げた魚と薄切り野菜を甘酢に漬け込む"]},
+    {id:"fs18", cat:"fish", name:"白身魚のアクアパッツァ風", desc:"トマトとあさりの旨みを吸った、おもてなしにも使える一皿。", cost5:1150, genre:"western", weight:"healthy", img:"white fish acqua pazza tomato",
+      ing:["白身魚4切れ","あさり200g","ミニトマト10個","にんにく1かけ","オリーブオイル大さじ2","白ワインまたは酒大さじ3"],
+      steps:["フライパンでにんにくを炒め、白身魚を焼く","あさり・ミニトマト・白ワインを加えて蓋をする","あさりの口が開くまで蒸し煮にする"]}
   ];
 
   var LS_CUSTOM = "konndate_custom_v1";
@@ -2659,6 +2986,33 @@ footer.note{
   ];
   var GENRE_MAP = {}; GENRES.forEach(function(g){ GENRE_MAP[g.id] = g; });
   var WEIGHT_MAP = {}; WEIGHTS.forEach(function(w){ WEIGHT_MAP[w.id] = w; });
+
+  var MOODS = [
+    {id:"hearty", emoji:"🔥", label:"ガッツリ食べたい", greeting:"今日はガッツリいきたいあなたへ",
+      cats:[], genres:[], weights:["hearty"], filter:null},
+    {id:"drink", emoji:"🍺", label:"今日は飲みたい", greeting:"今日は一杯やりたいあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){ return m.tags && m.tags.indexOf("おつまみ") !== -1; }},
+    {id:"quick", emoji:"⏱", label:"とにかくラクしたい", greeting:"とにかくラクしたい日のあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){ return typeof m.cookingTime === "number" && m.cookingTime <= 15; }},
+    {id:"save", emoji:"💰", label:"節約したい", greeting:"今日は節約したいあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){ return (m.tags && m.tags.indexOf("節約") !== -1) || m.cost5 <= 850; }},
+    {id:"meat", emoji:"🥩", label:"肉が食べたい", greeting:"お肉が食べたい日のあなたへ",
+      cats:["chicken","pork","beef"], genres:[], weights:[], filter:null},
+    {id:"fish", emoji:"🐟", label:"魚が食べたい", greeting:"お魚が食べたい日のあなたへ",
+      cats:["fish"], genres:[], weights:[], filter:null},
+    {id:"light", emoji:"🥬", label:"ちょっと軽め", greeting:"ちょっと軽めにしたい日のあなたへ",
+      cats:[], genres:[], weights:["healthy"], filter:null},
+    {id:"new", emoji:"🎉", label:"いつもと違うもの", greeting:"いつもと違うものが食べたい日のあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){
+        return m.tags && m.tags.some(function(t){ return ["世界旅行","バズり","台湾","タイ","メキシコ","ハワイ","イタリア","韓国"].indexOf(t) !== -1; });
+      }},
+    {id:"cleanup", emoji:"🧹", label:"冷蔵庫を片付けたい", greeting:"冷蔵庫を片付けたい日のあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){ return m.tags && m.tags.indexOf("冷蔵庫一掃") !== -1; }},
+    {id:"family", emoji:"👨‍👩‍👧", label:"家族を喜ばせたい", greeting:"家族を喜ばせたい日のあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){
+        return m.tags && m.tags.some(function(t){ return ["育ち盛り","ご褒美"].indexOf(t) !== -1; });
+      }}
+  ];
   var LS_PHOTO_CACHE = "konndate_photo_cache_v2";
   var SERVING_OPTIONS = [1, 2, 3, 4, 5];
   var BASE_SERVINGS = 5;
@@ -2686,6 +3040,13 @@ footer.note{
   var selectedWeights = safeGet(LS_SELECTED_WEIGHTS, []).slice(0, 1);
   var servings = safeGet(LS_SERVINGS, BASE_SERVINGS);
   if(SERVING_OPTIONS.indexOf(servings) === -1) servings = BASE_SERVINGS;
+  var activeMood = null;
+  var moodBtns = {};
+  function clearActiveMood(){
+    if(!activeMood) return;
+    activeMood = null;
+    MOODS.forEach(function(mo){ if(moodBtns[mo.id]) moodBtns[mo.id].setAttribute("aria-pressed", "false"); });
+  }
   var unsplashKey = "-Es-nrgH78WhEwxwEHN-4wYh2k1jOcX4DhxijEWHBAg";
   var photoCache = safeGet(LS_PHOTO_CACHE, {});
 
@@ -2753,6 +3114,7 @@ footer.note{
       if(idx === -1){ selectedCats.push(cat.id); btn.setAttribute("aria-pressed","true"); }
       else{ selectedCats.splice(idx,1); btn.setAttribute("aria-pressed","false"); }
       safeSet(LS_SELECTED_CATS, selectedCats);
+      clearActiveMood();
       resetResult();
     });
     categoryChips.appendChild(btn);
@@ -2770,6 +3132,7 @@ footer.note{
         if(idx === -1){ selectedArr.push(opt.id); btn.setAttribute("aria-pressed","true"); }
         else{ selectedArr.splice(idx,1); btn.setAttribute("aria-pressed","false"); }
         safeSet(storageKey, selectedArr);
+        clearActiveMood();
         resetResult();
       });
       containerEl.appendChild(btn);
@@ -2793,6 +3156,7 @@ footer.note{
           btn.setAttribute("aria-pressed", "true");
         }
         safeSet(storageKey, selectedArr);
+        clearActiveMood();
         resetResult();
       });
       buttons[opt.id] = btn;
@@ -2832,12 +3196,45 @@ footer.note{
     inCat.appendChild(opt);
   });
 
+  var moodGrid = document.getElementById("moodGrid");
+  MOODS.forEach(function(mood){
+    var btn = document.createElement("button");
+    btn.className = "mood-card";
+    btn.type = "button";
+    btn.setAttribute("aria-pressed", "false");
+    btn.innerHTML = '<span class="mood-card-emoji">' + mood.emoji + '</span><span class="mood-card-label">' + mood.label + '</span>';
+    btn.addEventListener("click", function(){
+      MOODS.forEach(function(mo){ moodBtns[mo.id].setAttribute("aria-pressed", mo.id === mood.id ? "true" : "false"); });
+      activeMood = mood;
+      spin();
+      var target = document.getElementById("rouletteCard");
+      if(target){
+        setTimeout(function(){
+          target.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"});
+        }, 60);
+      }
+    });
+    moodBtns[mood.id] = btn;
+    moodGrid.appendChild(btn);
+  });
+
   var comboIntro = document.getElementById("comboIntro");
+  var moodGreeting = document.getElementById("moodGreeting");
   var spinBtn = document.getElementById("spinBtn");
   var decideRow = document.getElementById("decideRow");
   var againBtn = document.getElementById("againBtn");
   var confirmBtn = document.getElementById("confirmBtn");
   var emptyNote = document.getElementById("emptyNote");
+  var decidedPanel = document.getElementById("decidedPanel");
+  var shoppingListBtn = document.getElementById("shoppingListBtn");
+  var newDayBtn = document.getElementById("newDayBtn");
+  var sidesHeading = document.getElementById("sidesHeading");
+  var mainMetaRow = document.getElementById("mainMetaRow");
+  var weightPillMain = document.getElementById("weightPillMain");
+  var timePillMain = document.getElementById("timePillMain");
+  var timeValueMain = document.getElementById("timeValueMain");
+  var pricePillMain = document.getElementById("pricePillMain");
+  var priceValueMain = document.getElementById("priceValueMain");
 
   var SLOTS = ["main", "side1", "side2"];
   var SLOT_SUFFIX = {main:"Main", side1:"Side1", side2:"Side2"};
@@ -2925,12 +3322,25 @@ footer.note{
     return true;
   }
 
+  function matchesMood(m){
+    if(!activeMood) return true;
+    if(activeMood.cats && activeMood.cats.length > 0 && activeMood.cats.indexOf(m.cat) === -1) return false;
+    if(activeMood.genres && activeMood.genres.length > 0 && (!m.genre || activeMood.genres.indexOf(m.genre) === -1)) return false;
+    if(activeMood.weights && activeMood.weights.length > 0 && (!m.weight || activeMood.weights.indexOf(m.weight) === -1)) return false;
+    if(activeMood.filter && !activeMood.filter(m)) return false;
+    return true;
+  }
+
   function mainPool(){
     var pool = allMenus().filter(function(m){ return roleOf(m) === "main"; });
     if(selectedCats.length > 0){
       pool = pool.filter(function(m){ return selectedCats.indexOf(m.cat) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
+    if(activeMood){
+      var moodPool = pool.filter(matchesMood);
+      if(moodPool.length > 0) pool = moodPool;
+    }
     var recent = recentNamesByRole("main", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
     return avoided.length > 0 ? avoided : pool;
@@ -3073,6 +3483,13 @@ footer.note{
   function showPick(combo){
     currentPicks = combo;
     comboIntro.hidden = true;
+    decidedPanel.hidden = true;
+    if(activeMood){
+      moodGreeting.hidden = false;
+      moodGreeting.textContent = "「" + activeMood.greeting + "」";
+    }else{
+      moodGreeting.hidden = true;
+    }
     comboRequestId++;
     var requestId = comboRequestId;
     SLOTS.forEach(function(key){
@@ -3080,7 +3497,7 @@ footer.note{
       var els = slotEls[key];
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
-      els.name.textContent = menu.name;
+      els.name.textContent = (key !== "main" && cat.emoji ? cat.emoji + " " : "") + menu.name;
       els.desc.textContent = menu.desc || "";
       els.tag.hidden = false;
       els.tag.textContent = cat.label;
@@ -3108,6 +3525,28 @@ footer.note{
         els.tagBadge.hidden = true;
       }
 
+      if(key === "main"){
+        if(weightInfo){
+          weightPillMain.hidden = false;
+          weightPillMain.textContent = (menu.weight === "hearty" ? "🔥 " : "🥗 ") + weightInfo.label;
+        }else{
+          weightPillMain.hidden = true;
+        }
+        if(typeof menu.cookingTime === "number"){
+          timeValueMain.textContent = menu.cookingTime;
+          timePillMain.hidden = false;
+        }else{
+          timePillMain.hidden = true;
+        }
+        var mainPrice = Math.round((menu.cost5 || 0) * servingsRatio() / 50) * 50;
+        if(mainPrice > 0){
+          priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
+          pricePillMain.hidden = false;
+        }else{
+          pricePillMain.hidden = true;
+        }
+      }
+
       fillRecipe(els, menu);
       setShopLink(els, menu);
       setPhotoLoading(els);
@@ -3123,10 +3562,10 @@ footer.note{
         }
       });
     });
+    sidesHeading.hidden = false;
     updateBudget(combo);
     spinBtn.hidden = true;
     decideRow.hidden = false;
-    shareBtn.hidden = false;
   }
 
   function refreshServingsDisplay(){
@@ -3135,6 +3574,13 @@ footer.note{
       fillRecipe(slotEls[key], currentPicks[key]);
     });
     updateBudget(currentPicks);
+    var mainPrice = Math.round((currentPicks.main.cost5 || 0) * servingsRatio() / 50) * 50;
+    if(mainPrice > 0){
+      priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
+      pricePillMain.hidden = false;
+    }else{
+      pricePillMain.hidden = true;
+    }
   }
 
   function resetResult(){
@@ -3142,10 +3588,15 @@ footer.note{
     comboRequestId++;
     currentPicks = null;
     comboIntro.hidden = false;
+    moodGreeting.hidden = true;
+    sidesHeading.hidden = true;
+    weightPillMain.hidden = true;
+    timePillMain.hidden = true;
+    pricePillMain.hidden = true;
     SLOTS.forEach(function(key){ slotEls[key].block.hidden = true; });
     spinBtn.hidden = false;
     decideRow.hidden = true;
-    shareBtn.hidden = true;
+    decidedPanel.hidden = true;
     emptyNote.hidden = true;
     budgetBox.hidden = true;
   }
@@ -3164,9 +3615,14 @@ footer.note{
     }
 
     comboIntro.hidden = true;
+    moodGreeting.hidden = true;
+    sidesHeading.hidden = true;
+    weightPillMain.hidden = true;
+    timePillMain.hidden = true;
+    pricePillMain.hidden = true;
     spinBtn.hidden = true;
     decideRow.hidden = true;
-    shareBtn.hidden = true;
+    decidedPanel.hidden = true;
     budgetBox.hidden = true;
     SLOTS.forEach(function(key){
       var els = slotEls[key];
@@ -3231,13 +3687,23 @@ footer.note{
     safeSet(LS_HISTORY, history);
     renderHistory();
     showToast("今日の献立に決定しました！");
+    decideRow.hidden = true;
+    decidedPanel.hidden = false;
+  });
+
+  newDayBtn.addEventListener("click", function(){
     resetResult();
+    clearActiveMood();
+    var moodSection = document.querySelector(".mood-section");
+    if(moodSection){
+      moodSection.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"});
+    }
   });
 
   var shareBtn = document.getElementById("shareBtn");
   shareBtn.addEventListener("click", function(){
     if(!currentPicks) return;
-    var text = "今日のごはん、これに決めました🍽️\n\n" +
+    var text = "今日の晩ごはん、決まった！🍚\n\n" +
       "🍖 " + currentPicks.main.name + "\n" +
       "🥗 " + currentPicks.side1.name + "\n" +
       "🥗 " + currentPicks.side2.name + "\n\n" +
@@ -3264,29 +3730,31 @@ footer.note{
     listEl.innerHTML = "";
     var recent = history.slice(0, 7);
     if(recent.length === 0){
-      var li = document.createElement("li");
-      li.innerHTML = '<span class="history-empty">まだ記録がありません。決定すると、ここに残ります。</span>';
-      listEl.appendChild(li);
+      var empty = document.createElement("div");
+      empty.className = "history-card";
+      empty.innerHTML = '<span class="history-empty">まだ記録がありません。決定すると、ここに残ります。</span>';
+      listEl.appendChild(empty);
       return;
     }
     recent.forEach(function(h){
-      var li = document.createElement("li");
+      var card = document.createElement("div");
+      card.className = "history-card";
       var md = h.date.slice(5).replace("-", "/");
       if(h.main){
         var mainCat = CAT_MAP[h.main.cat] || CATS[0];
         var sideNames = h.sides.map(function(s){ return escapeHtml(s.name); }).join("・");
-        li.innerHTML =
+        card.innerHTML =
           '<span class="history-date">' + md + '</span>' +
           '<span class="history-tagdot" style="--dot:' + mainCat.dot + '"></span>' +
-          '<span>' + escapeHtml(h.main.name) + (sideNames ? '(' + sideNames + ')' : '') + '</span>';
+          '<span>' + (mainCat.emoji || "") + " " + escapeHtml(h.main.name) + (sideNames ? '(' + sideNames + ')' : '') + '</span>';
       }else{
         var cat = CAT_MAP[h.cat] || CATS[0];
-        li.innerHTML =
+        card.innerHTML =
           '<span class="history-date">' + md + '</span>' +
           '<span class="history-tagdot" style="--dot:' + cat.dot + '"></span>' +
-          '<span>' + escapeHtml(h.name) + '</span>';
+          '<span>' + (cat.emoji || "") + " " + escapeHtml(h.name) + '</span>';
       }
-      listEl.appendChild(li);
+      listEl.appendChild(card);
     });
   }
 
