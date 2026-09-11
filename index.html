@@ -748,6 +748,13 @@ footer.note{
   border-color:transparent;
 }
 
+.pick-reason{
+  font-size:12.5px;
+  color:var(--text-muted);
+  margin:0 0 12px;
+}
+.pick-reason::before{content:"→ ";}
+
 .sides-heading{
   font-size:13px;
   font-weight:700;
@@ -912,6 +919,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           <span class="meta-pill" id="timePillMain" hidden>⏱ <span id="timeValueMain"></span>分</span>
           <span class="meta-pill" id="pricePillMain" hidden>💰 約<span id="priceValueMain"></span>円</span>
         </div>
+        <p class="pick-reason" id="pickReasonMain" hidden></p>
         <div class="dish-photo" id="photoWrapMain">
           <img id="photoMain" alt="" loading="lazy" />
           <svg class="dish-photo-empty-icon" id="photoEmptyMain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" hidden>
@@ -2966,7 +2974,97 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       steps:["白身魚に片栗粉をまぶして揚げ焼きにする","酢・しょうゆ・砂糖を合わせて甘酢を作る","揚げた魚と薄切り野菜を甘酢に漬け込む"]},
     {id:"fs18", cat:"fish", name:"白身魚のアクアパッツァ風", desc:"トマトとあさりの旨みを吸った、おもてなしにも使える一皿。", cost5:1150, genre:"western", weight:"healthy", img:"white fish acqua pazza tomato",
       ing:["白身魚4切れ","あさり200g","ミニトマト10個","にんにく1かけ","オリーブオイル大さじ2","白ワインまたは酒大さじ3"],
-      steps:["フライパンでにんにくを炒め、白身魚を焼く","あさり・ミニトマト・白ワインを加えて蓋をする","あさりの口が開くまで蒸し煮にする"]}
+      steps:["フライパンでにんにくを炒め、白身魚を焼く","あさり・ミニトマト・白ワインを加えて蓋をする","あさりの口が開くまで蒸し煮にする"]},
+    {id:"fs19", cat:"fish", name:"さんまの塩焼き薬味たっぷり", desc:"大根おろしと薬味でさっぱりと。", cost5:1000, genre:"japanese", weight:"healthy", cookingTime:15, tags:["時短"], img:"sanma pacific saury grilled salt",
+      ing:["さんま3尾","大根1/3本","しょうゆ・すだちなど各適量"],
+      steps:["さんまに塩をふり魚焼きグリルで焼く","大根おろしを添える","しょうゆをかけて食べる"]},
+    {id:"fs20", cat:"fish", name:"ほっけの塩焼き", desc:"脂ののった定番の塩焼き。", cost5:1100, genre:"japanese", weight:"healthy", cookingTime:15, tags:["時短"], img:"hokke mackerel grilled",
+      ing:["ほっけ開き2枚","塩少々"],
+      steps:["ほっけに軽く塩をふる","魚焼きグリルで皮目から焼く","焼き色がついたら裏返してさらに焼く"]},
+    {id:"fs21", cat:"fish", name:"鯛の兜煮", desc:"甘辛いたれでじっくり煮た特別な一皿。", cost5:1400, genre:"japanese", weight:"hearty", tags:["ご褒美"], img:"tai sea bream head simmered",
+      ing:["鯛のあら400g","しょうゆ・みりん・砂糖各大さじ3","しょうが1かけ"],
+      steps:["鯛のあらに熱湯をかけて臭みを取る","調味料としょうがを煮立てる","鯛を加えて落し蓋をし煮る"]},
+    {id:"fs22", cat:"fish", name:"かれいの煮付け", desc:"しょうゆベースでほろっと煮る。", cost5:1000, genre:"japanese", weight:"healthy", img:"karei flounder simmered",
+      ing:["かれい4切れ","しょうゆ・みりん・砂糖各大さじ2","しょうが少々"],
+      steps:["調味料としょうがを煮立てる","かれいを加えて落し蓋をする","煮汁をかけながら煮る"]},
+    {id:"fs23", cat:"fish", name:"ホタテのバター醤油焼き", desc:"香ばしいバター醤油でごちそう感アップ。", cost5:1500, genre:"western", weight:"hearty", tags:["ご褒美"], img:"scallop butter soy sauce",
+      ing:["ホタテ12個","バター20g","しょうゆ大さじ1.5","にんにく1かけ"],
+      steps:["ホタテの水気を拭く","バターとにんにくで両面を焼く","しょうゆを加えて香りを立たせる"]},
+    {id:"fs24", cat:"fish", name:"いわしの梅煮", desc:"梅の酸味でさっぱり食べられる。", cost5:800, genre:"japanese", weight:"healthy", img:"sardine plum simmered",
+      ing:["いわし6尾","梅干し3個","しょうゆ・みりん各大さじ2","しょうが1かけ"],
+      steps:["いわしの頭とわたを取る","調味料と梅干しを煮立てる","いわしを加えて落し蓋をし煮る"]},
+    {id:"fs25", cat:"fish", name:"鮭のマスタードマヨ焼き", desc:"粒マスタードの酸味がアクセント。", cost5:1150, genre:"western", weight:"hearty", cookingTime:15, tags:["時短"], img:"salmon mustard mayo grilled",
+      ing:["生鮭4切れ","粒マスタード大さじ2","マヨネーズ大さじ2"],
+      steps:["鮭に軽く塩をふる","マスタードとマヨネーズを混ぜる","鮭を焼きながらたれを塗って仕上げる"]},
+    {id:"fs26", cat:"fish", name:"カツオのたたき薬味のせ", desc:"薬味とポン酢でさっぱりと。", cost5:1200, genre:"japanese", weight:"healthy", cookingTime:10, tags:["時短"], img:"katsuo bonito tataki",
+      ing:["カツオ(刺身用)300g","みょうが・しょうが・大葉各適量","ポン酢適量"],
+      steps:["カツオの表面をさっと炙るか刺身用をそのまま使う","薄切りにして皿に並べる","薬味をのせポン酢をかける"]},
+    {id:"fs27", cat:"fish", name:"えびチリ", desc:"ピリ辛のケチャップだれが食欲をそそる中華の定番。", cost5:1300, genre:"chinese", weight:"hearty", tags:["ご飯が進む"], img:"ebi chili shrimp chinese",
+      ing:["むきえび400g","豆板醤大さじ1","ケチャップ大さじ3","長ねぎ1本"],
+      steps:["えびに片栗粉をまぶして揚げ焼きにする","長ねぎと豆板醤を炒める","ケチャップなどを加えてえびに絡める"]},
+    {id:"sp1", cat:"tofu", role:"side", name:"豆腐とわかめの味噌汁", desc:"定番の具だくさん味噌汁。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:5, img:"tofu wakame miso soup",
+      ing:["豆腐1丁","乾燥わかめ大さじ2","味噌大さじ3","だし500ml"],
+      steps:["だしを温める","豆腐とわかめを加える","味噌を溶き入れる"]},
+    {id:"sp2", cat:"daikon", role:"side", name:"大根おろしとなめこの味噌汁", desc:"とろっとした食感がやさしい。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:5, img:"daikon nameko miso soup",
+      ing:["大根1/4本","なめこ1袋","味噌大さじ3","だし500ml"],
+      steps:["だしを温めなめこを加える","大根おろしを加える","味噌を溶き入れる"]},
+    {id:"sp3", cat:"cabbage", role:"side", name:"キャベツと油揚げの味噌汁", desc:"野菜がしっかり摂れる一杯。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:5, img:"cabbage aburaage miso soup",
+      ing:["キャベツ2枚","油揚げ1枚","味噌大さじ3","だし500ml"],
+      steps:["だしを温めキャベツと油揚げを加える","柔らかくなるまで煮る","味噌を溶き入れる"]},
+    {id:"sp4", cat:"egg_natto", role:"side", name:"かきたま中華スープ", desc:"ふわふわ卵の優しいスープ。", cost5:300, genre:"chinese", weight:"healthy", cookingTime:5, img:"egg drop chinese soup",
+      ing:["卵2個","鶏ガラスープの素大さじ1","水500ml","片栗粉大さじ1"],
+      steps:["スープを温めて味を調える","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"]},
+    {id:"sp5", cat:"green_onion", role:"side", name:"長ねぎと春雨の中華スープ", desc:"つるっとした春雨が食べやすい。", cost5:350, genre:"chinese", weight:"healthy", cookingTime:5, img:"harusame chinese soup scallion",
+      ing:["長ねぎ1本","春雨30g","鶏ガラスープの素大さじ1","水500ml"],
+      steps:["スープを煮立てる","春雨と長ねぎを加える","春雨が柔らかくなるまで煮る"]},
+    {id:"sp6", cat:"potato", role:"side", name:"じゃがいもの豆乳スープ", desc:"優しい甘みでほっとする一杯。", cost5:400, genre:"western", weight:"healthy", cookingTime:10, img:"potato soy milk soup",
+      ing:["じゃがいも2個","豆乳300ml","コンソメ1個"],
+      steps:["じゃがいもを柔らかくゆでる","豆乳とコンソメを加えて温める","お好みでつぶして仕上げる"]},
+    {id:"mu1", cat:"onion", role:"side", name:"きのこのバターポン酢和え", desc:"数種のきのこを香ばしく。", cost5:400, genre:"japanese", weight:"healthy", cookingTime:10, img:"mushroom butter ponzu",
+      ing:["しめじ・えのきなど合わせて2袋","バター10g","ポン酢大さじ2"],
+      steps:["きのこをほぐす","バターで炒める","仕上げにポン酢をかける"]},
+    {id:"mu2", cat:"tofu", role:"side", name:"しめじと油揚げの煮浸し", desc:"だしがしみた優しい一品。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:10, img:"shimeji aburaage simmered",
+      ing:["しめじ1袋","油揚げ1枚","だし・しょうゆ各適量"],
+      steps:["だしとしょうゆを煮立てる","しめじと油揚げを加える","味がしみるまで煮る"]},
+    {id:"mu3", cat:"green_onion", role:"side", name:"えのきの梅おかか和え", desc:"梅の酸味でさっぱりと。", cost5:300, genre:"japanese", weight:"healthy", cookingTime:5, img:"enoki mushroom plum okaka",
+      ing:["えのき1袋","梅干し1個","かつお節適量"],
+      steps:["えのきをさっとゆでる","梅肉と和える","かつお節をのせる"]},
+    {id:"mu4", cat:"carrot", role:"side", name:"きのこと人参のきんぴら", desc:"甘辛い味付けでご飯に合う。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:10, img:"mushroom carrot kinpira",
+      ing:["しめじ・エリンギなど1.5袋","にんじん1/2本","しょうゆ・みりん各大さじ1.5"],
+      steps:["にんじんを細切りにする","きのこと一緒に炒める","調味料で味を調える"]},
+    {id:"mu5", cat:"green_onion", role:"side", name:"しいたけの照り焼き", desc:"肉厚なしいたけを香ばしく。", cost5:400, genre:"japanese", weight:"healthy", cookingTime:10, img:"shiitake mushroom teriyaki",
+      ing:["しいたけ8枚","しょうゆ・みりん各大さじ1.5"],
+      steps:["しいたけの軸を取る","フライパンで両面を焼く","調味料を加えて絡める"]},
+    {id:"eg1", cat:"chives", role:"side", name:"にら玉のうま煮", desc:"だしでとろっと仕上げる。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:10, img:"chives egg simmered",
+      ing:["ニラ1束","卵2個","だし100ml","しょうゆ少々"],
+      steps:["だしとしょうゆを煮立てる","ニラを加える","溶き卵を回し入れてとじる"]},
+    {id:"eg2", cat:"tomato", role:"side", name:"トマトと卵の中華炒め", desc:"中華の定番、優しい酸味。", cost5:400, genre:"chinese", weight:"healthy", cookingTime:10, img:"tomato egg chinese stir fry",
+      ing:["トマト2個","卵3個","塩・こしょう各少々"],
+      steps:["トマトをくし切りにする","卵を炒めて取り出す","トマトを炒め卵を戻し味を調える"]},
+    {id:"eg3", cat:"daikon", role:"side", name:"大根と卵のとろみ煮", desc:"あんかけでほっとする味。", cost5:350, genre:"japanese", weight:"healthy", cookingTime:15, img:"daikon egg simmered",
+      ing:["大根1/3本","卵2個","だし200ml","片栗粉大さじ1"],
+      steps:["大根をやわらかく煮る","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"]},
+    {id:"eg4", cat:"chives", role:"side", name:"三つ葉の卵とじ椀", desc:"香り豊かな上品な一椀。", cost5:300, genre:"japanese", weight:"healthy", cookingTime:10, img:"mitsuba egg soup",
+      ing:["三つ葉1束","卵2個","だし200ml"],
+      steps:["だしを温める","三つ葉を加える","溶き卵を回し入れて火を止める"]},
+    {id:"hv1", cat:"cabbage", role:"side", name:"キャベツのペペロンチーノ炒め", desc:"にんにくと唐辛子でパンチのある副菜。", cost5:400, genre:"western", weight:"hearty", cookingTime:10, img:"cabbage peperoncino",
+      ing:["キャベツ1/4個","にんにく1かけ","赤唐辛子・オリーブオイル各適量"],
+      steps:["キャベツをざく切りにする","にんにくと唐辛子を油で炒める","キャベツを加えて炒める"]},
+    {id:"hv2", cat:"potato", role:"side", name:"じゃがいものチーズガレット", desc:"外はカリッと中はほくほく。", cost5:450, genre:"western", weight:"hearty", cookingTime:15, img:"potato cheese galette",
+      ing:["じゃがいも2個","とろけるチーズ50g","塩・こしょう各少々"],
+      steps:["じゃがいもを細切りにする","フライパンでチーズと一緒に焼き固める","両面カリッと焼く"]},
+    {id:"hv3", cat:"daikon", role:"side", name:"大根のステーキ風", desc:"バターしょうゆで洋風に。", cost5:350, genre:"western", weight:"hearty", cookingTime:15, img:"daikon steak style",
+      ing:["大根1/3本","バター10g","しょうゆ大さじ1"],
+      steps:["大根を厚めの輪切りにする","バターで両面じっくり焼く","しょうゆを加えて仕上げる"]},
+    {id:"hv4", cat:"bell_pepper", role:"side", name:"ピーマンの中華風肉みそがけ", desc:"少量のひき肉でボリューム満点。", cost5:450, genre:"chinese", weight:"hearty", cookingTime:15, img:"bell pepper meat miso chinese",
+      ing:["ピーマン4個","豚ひき肉100g","甜麺醤大さじ1.5"],
+      steps:["ピーマンを縦半分に切る","ひき肉と甜麺醤を炒める","ピーマンにのせて軽く火を通す"]},
+    {id:"hv5", cat:"tofu", role:"side", name:"厚揚げの黒酢あん", desc:"コクのある黒酢だれでご飯が進む。", cost5:400, genre:"chinese", weight:"hearty", cookingTime:15, img:"fried tofu black vinegar",
+      ing:["厚揚げ2枚","黒酢・しょうゆ各大さじ1.5","砂糖大さじ1"],
+      steps:["厚揚げを一口大に切って焼く","調味料を煮立てる","厚揚げに絡める"]},
+    {id:"hv6", cat:"burdock", role:"side", name:"ごぼうの唐揚げ", desc:"香ばしく揚げたやみつき副菜。", cost5:400, genre:"japanese", weight:"hearty", cookingTime:15, img:"burdock fried karaage style",
+      ing:["ごぼう1本","片栗粉適量","しょうゆ・みりん各大さじ1"],
+      steps:["ごぼうを斜め切りにする","下味をつけて片栗粉をまぶす","揚げ焼きにする"]}
   ];
 
   var LS_CUSTOM = "konndate_custom_v1";
@@ -3046,6 +3144,19 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(!activeMood) return;
     activeMood = null;
     MOODS.forEach(function(mo){ if(moodBtns[mo.id]) moodBtns[mo.id].setAttribute("aria-pressed", "false"); });
+  }
+
+  // in-memory (not persisted) "this session" variety tracking, so pressing
+  // "もう一度ひらめく" repeatedly doesn't keep showing the same/similar dishes.
+  var SESSION_MEMORY = 6;
+  var sessionMainHistory = [];
+  var sessionSideHistory = [];
+  function recordSessionPick(combo){
+    sessionMainHistory.unshift({name: combo.main.name, cat: combo.main.cat, genre: combo.main.genre});
+    sessionMainHistory = sessionMainHistory.slice(0, SESSION_MEMORY);
+    sessionSideHistory.unshift({name: combo.side1.name, cat: combo.side1.cat});
+    sessionSideHistory.unshift({name: combo.side2.name, cat: combo.side2.cat});
+    sessionSideHistory = sessionSideHistory.slice(0, SESSION_MEMORY * 2);
   }
   var unsplashKey = "-Es-nrgH78WhEwxwEHN-4wYh2k1jOcX4DhxijEWHBAg";
   var photoCache = safeGet(LS_PHOTO_CACHE, {});
@@ -3206,7 +3317,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     btn.addEventListener("click", function(){
       MOODS.forEach(function(mo){ moodBtns[mo.id].setAttribute("aria-pressed", mo.id === mood.id ? "true" : "false"); });
       activeMood = mood;
-      spin();
+      trackEvent("mood_select", {mood: mood.id});
+      spin("mood");
       var target = document.getElementById("rouletteCard");
       if(target){
         setTimeout(function(){
@@ -3235,6 +3347,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var timeValueMain = document.getElementById("timeValueMain");
   var pricePillMain = document.getElementById("pricePillMain");
   var priceValueMain = document.getElementById("priceValueMain");
+  var pickReasonMain = document.getElementById("pickReasonMain");
 
   var SLOTS = ["main", "side1", "side2"];
   var SLOT_SUFFIX = {main:"Main", side1:"Side1", side2:"Side2"};
@@ -3291,12 +3404,37 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }
     els.shopLinkA.href = rakutenSearchLink(keyword);
     els.shopLinkA.textContent = "🛒 " + keyword + "を楽天で探す";
+    els.shopLinkA.onclick = function(){
+      trackEvent("rakuten_click", {keyword: keyword, main_name: menu.name, cat: menu.cat});
+    };
     els.shopLink.hidden = false;
   }
 
   var currentPicks = null;
   var spinTimer = null;
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ----- lightweight analytics hook -----
+  // GA4 is not wired up yet (no gtag.js on this page). This wrapper is safe to
+  // call from anywhere below whether or not GA4 ends up installed later: if
+  // window.gtag exists (i.e. the standard GA4 snippet has been added to the
+  // page), events are sent; otherwise every call silently no-ops. No personal
+  // data is ever included in params - only dish names/categories/mood ids.
+  //
+  // Planned KPIs and how to derive them once events are flowing in GA4:
+  //   ①ひらめき実行率   = unique users with generate_menu / unique users with page_view
+  //   ②決定率           = decide_menu / generate_menu
+  //   ③再ひらめき率     = reroll_menu / generate_menu
+  //   ④シェア率         = share_menu / decide_menu
+  //   ⑤再訪率           = returning users (GA4 default engagement/retention report)
+  //   ⑥外部購入クリック率 = rakuten_click / decide_menu
+  function trackEvent(name, params){
+    try{
+      if(typeof window.gtag === "function"){
+        window.gtag("event", name, params || {});
+      }
+    }catch(e){}
+  }
 
   function roleOf(menu){ return menu.role === "side" ? "side" : "main"; }
 
@@ -3331,6 +3469,36 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return true;
   }
 
+  // ----- scoring: turns plain random selection into a lightweight
+  // "recommendation" that favors mood-fit, variety and freshness, while
+  // always keeping some randomness (top-scoring band, not a single winner).
+  function topScoringBand(list, scoreFn, margin){
+    if(list.length === 0) return list;
+    var scored = list.map(function(m){ return {m: m, s: scoreFn(m)}; });
+    scored.sort(function(a, b){ return b.s - a.s; });
+    var top = scored[0].s;
+    var band = scored.filter(function(x){ return x.s >= top - margin; }).map(function(x){ return x.m; });
+    return band.length > 0 ? band : list;
+  }
+
+  function scoreMain(m){
+    var score = 0;
+    var sessionIdx = sessionMainHistory.findIndex(function(h){ return h.name === m.name; });
+    if(sessionIdx !== -1) score -= 30 - sessionIdx * 3; // shown very recently this session
+    if(sessionMainHistory[0]){
+      if(sessionMainHistory[0].cat === m.cat) score -= 10; // same main ingredient as last time
+      if(sessionMainHistory[0].genre && sessionMainHistory[0].genre === m.genre) score -= 4;
+    }
+    if(sessionMainHistory[1] && sessionMainHistory[1].genre && sessionMainHistory[1].genre === m.genre) score -= 2;
+    if(history[0] && history[0].main && history[0].main.cat === m.cat) score -= 6; // "昨日と違うもの"
+    if(activeMood){
+      if(activeMood.filter && activeMood.filter(m)) score += 8;
+      if(activeMood.cats && activeMood.cats.indexOf(m.cat) !== -1) score += 5;
+    }
+    if(m.tags && m.tags.length > 0) score += 2; // curated / characterful dishes get a small nudge
+    return score;
+  }
+
   function mainPool(){
     var pool = allMenus().filter(function(m){ return roleOf(m) === "main"; });
     if(selectedCats.length > 0){
@@ -3343,13 +3511,31 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }
     var recent = recentNamesByRole("main", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
-    return avoided.length > 0 ? avoided : pool;
+    if(avoided.length > 0) pool = avoided;
+    return topScoringBand(pool, scoreMain, 4);
   }
 
   var SALAD_STYLE_RE = /サラダ|マリネ|ラペ|コールスロー|酢の物|なます/;
   function isSaladStyle(menu){ return SALAD_STYLE_RE.test(menu.name); }
+  var FRIED_STYLE_RE = /揚げ|フライ|カツ|唐揚げ|竜田揚げ/;
+  var VEG_CATS = ["onion","carrot","green_onion","tomato","lettuce","cabbage","potato","burdock","bell_pepper","chives","daikon"];
+  var SOUP_STYLE_RE = /味噌汁|スープ/;
 
-  function sidePool(excludeNames, excludeCats, avoidSalad){
+  function scoreSide(side, mainMenu){
+    var score = 0;
+    if(mainMenu){
+      if(mainMenu.weight === "hearty" && side.weight === "healthy") score += 4;
+      if(FRIED_STYLE_RE.test(mainMenu.name) && VEG_CATS.indexOf(side.cat) !== -1) score += 3;
+      if(mainMenu.cat === "fish" && SOUP_STYLE_RE.test(side.name)) score += 5;
+      if(mainMenu.weight === "healthy" && side.weight === "hearty") score += 2; // let a light main be balanced by a heartier side
+    }
+    var sessionIdx = sessionSideHistory.findIndex(function(h){ return h.name === side.name; });
+    if(sessionIdx !== -1) score -= 20 - sessionIdx * 2;
+    if(side.tags && side.tags.length > 0) score += 1;
+    return score;
+  }
+
+  function sidePool(mainMenu, excludeNames, excludeCats, avoidSalad){
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side"; });
     var pool = allSides.filter(matchesGenreWeight);
     var recent = recentNamesByRole("side", 3);
@@ -3371,7 +3557,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       allSides.filter(byName)
     ];
     for(var i = 0; i < tiers.length; i++){
-      if(tiers[i].length > 0) return tiers[i];
+      if(tiers[i].length > 0){
+        return topScoringBand(tiers[i], function(m){ return scoreSide(m, mainMenu); }, 3);
+      }
     }
     return [];
   }
@@ -3381,15 +3569,40 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(mPool.length === 0) return null;
     var mainPick = pickRandom(mPool);
 
-    var sPool1 = sidePool([mainPick.name], [mainPick.cat], false);
+    var sPool1 = sidePool(mainPick, [mainPick.name], [mainPick.cat], false);
     if(sPool1.length === 0) return null;
     var side1 = pickRandom(sPool1);
 
-    var sPool2 = sidePool([mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
+    var sPool2 = sidePool(mainPick, [mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
     if(sPool2.length === 0) return null;
     var side2 = pickRandom(sPool2);
 
     return {main: mainPick, side1: side1, side2: side2};
+  }
+
+  function reasonFor(mainMenu){
+    if(activeMood){
+      var reasons = {
+        hearty: "ガッツリ気分にぴったりだから",
+        drink: "お酒のお供にぴったりだから",
+        quick: (typeof mainMenu.cookingTime === "number" ? mainMenu.cookingTime + "分で作れるから" : "サッと作れる一品だから"),
+        save: "お財布にやさしい一品だから",
+        meat: "お肉をしっかり食べたい日にぴったりだから",
+        fish: "お魚が食べたい日にぴったりだから",
+        light: "軽めに済ませたい日にぴったりだから",
+        new: "いつもと違う一品だから",
+        cleanup: "冷蔵庫の食材整理にも使えるから",
+        family: "家族みんなが喜びそうな一品だから"
+      };
+      if(reasons[activeMood.id]) return reasons[activeMood.id];
+    }
+    if(history[0] && history[0].main && history[0].main.cat !== mainMenu.cat){
+      return "最近とは違う食材で気分転換に";
+    }
+    if(mainMenu.tags && mainMenu.tags.length > 0){
+      return "✨ " + mainMenu.tags[0] + "な一品だから";
+    }
+    return "今日のおすすめの一品です";
   }
 
   function scaleNumber(value, ratio){
@@ -3482,6 +3695,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   function showPick(combo){
     currentPicks = combo;
+    recordSessionPick(combo);
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
     if(activeMood){
@@ -3490,6 +3704,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }else{
       moodGreeting.hidden = true;
     }
+    pickReasonMain.hidden = false;
+    pickReasonMain.textContent = reasonFor(combo.main);
     comboRequestId++;
     var requestId = comboRequestId;
     SLOTS.forEach(function(key){
@@ -3589,6 +3805,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     currentPicks = null;
     comboIntro.hidden = false;
     moodGreeting.hidden = true;
+    pickReasonMain.hidden = true;
     sidesHeading.hidden = true;
     weightPillMain.hidden = true;
     timePillMain.hidden = true;
@@ -3601,13 +3818,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     budgetBox.hidden = true;
   }
 
-  function spin(){
+  function spin(source){
     var combo = pickCombo();
     if(!combo){
       emptyNote.hidden = false;
       return;
     }
     emptyNote.hidden = true;
+    trackEvent("generate_menu", {mood: activeMood ? activeMood.id : "none", main_cat: combo.main.cat, genre: combo.main.genre || "", source: source || "manual"});
+    if(source === "reroll"){
+      trackEvent("reroll_menu", {mood: activeMood ? activeMood.id : "none"});
+    }
 
     if(reduceMotion){
       showPick(combo);
@@ -3616,6 +3837,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     comboIntro.hidden = true;
     moodGreeting.hidden = true;
+    pickReasonMain.hidden = true;
     sidesHeading.hidden = true;
     weightPillMain.hidden = true;
     timePillMain.hidden = true;
@@ -3657,8 +3879,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }, 90);
   }
 
-  spinBtn.addEventListener("click", spin);
-  againBtn.addEventListener("click", spin);
+  spinBtn.addEventListener("click", function(){ spin("manual"); });
+  againBtn.addEventListener("click", function(){ spin("reroll"); });
 
   var toastEl = document.getElementById("toast");
   var toastTimer = null;
@@ -3687,6 +3909,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     safeSet(LS_HISTORY, history);
     renderHistory();
     showToast("今日の献立に決定しました！");
+    trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
     decideRow.hidden = true;
     decidedPanel.hidden = false;
   });
@@ -3703,6 +3926,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var shareBtn = document.getElementById("shareBtn");
   shareBtn.addEventListener("click", function(){
     if(!currentPicks) return;
+    trackEvent("share_menu", {method: navigator.share ? "web_share" : "clipboard", main_name: currentPicks.main.name});
     var text = "今日の晩ごはん、決まった！🍚\n\n" +
       "🍖 " + currentPicks.main.name + "\n" +
       "🥗 " + currentPicks.side1.name + "\n" +
@@ -3807,6 +4031,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     };
     customMenus.push(menu);
     safeSet(LS_CUSTOM, customMenus);
+    trackEvent("custom_menu_add", {cat: menu.cat, role: menu.role});
     nameInput.value = "";
     descInput.value = "";
     imgInput.value = "";
@@ -3818,6 +4043,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   renderHistory();
   renderCustomList();
+  if(history.length > 0){
+    trackEvent("history_view", {history_count: history.length});
+  }
 })();
 </script>
 </body>
