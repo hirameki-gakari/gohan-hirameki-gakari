@@ -411,6 +411,34 @@ section{margin-bottom:22px;}
   letter-spacing:.04em;
 }
 
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:calc(96px + env(safe-area-inset-bottom, 0px));
+  transform:translateX(-50%) translateY(8px);
+  background:var(--accent-strong);
+  color:var(--surface);
+  font-size:14px;
+  font-weight:700;
+  padding:12px 22px;
+  border-radius:999px;
+  box-shadow:0 6px 20px rgba(0,0,0,.18);
+  z-index:20;
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .25s ease, transform .25s ease;
+  text-wrap:balance;
+  max-width:calc(100% - 40px);
+  text-align:center;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+@media (prefers-reduced-motion: reduce){
+  .toast{transition:none;}
+}
+
 .meta-badge{
   font-size:11px;
   font-weight:500;
@@ -747,7 +775,7 @@ footer.note{
   </section>
 
   <section>
-    <p class="section-label">最近の晩ごはん</p>
+    <p class="section-label">📖 献立履歴</p>
     <ul class="history-list" id="historyList"></ul>
   </section>
 
@@ -810,11 +838,13 @@ footer.note{
     <button class="btn btn-primary" id="spinBtn">今夜の組み合わせを決める</button>
 
     <div class="btn-row" id="decideRow" hidden>
-      <button class="btn btn-secondary" id="againBtn">もう一回</button>
-      <button class="btn btn-primary" id="confirmBtn">これに決定</button>
+      <button class="btn btn-secondary" id="againBtn">🔄 もう一度ひらめく</button>
+      <button class="btn btn-primary" id="confirmBtn">🍽️ これに決定！</button>
     </div>
+    <button class="btn btn-secondary" id="shareBtn" hidden>📤 この献立をシェア</button>
     <p class="empty-note" id="emptyNote" hidden>その条件の候補がありません。カテゴリを増やしてください。</p>
   </div>
+  <div class="toast" id="toast" hidden></div>
 </div>
 
 <script>
@@ -2783,6 +2813,7 @@ footer.note{
     updateBudget(combo);
     spinBtn.hidden = true;
     decideRow.hidden = false;
+    shareBtn.hidden = false;
   }
 
   function refreshServingsDisplay(){
@@ -2801,6 +2832,7 @@ footer.note{
     SLOTS.forEach(function(key){ slotEls[key].block.hidden = true; });
     spinBtn.hidden = false;
     decideRow.hidden = true;
+    shareBtn.hidden = true;
     emptyNote.hidden = true;
     budgetBox.hidden = true;
   }
@@ -2821,6 +2853,7 @@ footer.note{
     comboIntro.hidden = true;
     spinBtn.hidden = true;
     decideRow.hidden = true;
+    shareBtn.hidden = true;
     budgetBox.hidden = true;
     SLOTS.forEach(function(key){
       var els = slotEls[key];
@@ -2857,6 +2890,19 @@ footer.note{
   spinBtn.addEventListener("click", spin);
   againBtn.addEventListener("click", spin);
 
+  var toastEl = document.getElementById("toast");
+  var toastTimer = null;
+  function showToast(message){
+    toastEl.textContent = message;
+    toastEl.hidden = false;
+    requestAnimationFrame(function(){ toastEl.classList.add("show"); });
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      toastEl.classList.remove("show");
+      setTimeout(function(){ toastEl.hidden = true; }, 300);
+    }, 2200);
+  }
+
   confirmBtn.addEventListener("click", function(){
     if(!currentPicks) return;
     history.unshift({
@@ -2870,7 +2916,33 @@ footer.note{
     history = history.slice(0, 30);
     safeSet(LS_HISTORY, history);
     renderHistory();
+    showToast("今日の献立に決定しました！");
     resetResult();
+  });
+
+  var shareBtn = document.getElementById("shareBtn");
+  shareBtn.addEventListener("click", function(){
+    if(!currentPicks) return;
+    var text = "今日のごはん、これに決めました🍽️\n\n" +
+      "🍖 " + currentPicks.main.name + "\n" +
+      "🥗 " + currentPicks.side1.name + "\n" +
+      "🥗 " + currentPicks.side2.name + "\n\n" +
+      "ごはんのひらめき係で決めました！";
+    var url = location.href;
+    if(navigator.share){
+      navigator.share({ text: text, url: url }).catch(function(){});
+    }else{
+      var clipboardText = text + "\n" + url;
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(clipboardText).then(function(){
+          showToast("献立をコピーしました！LINEなどに貼り付けてください");
+        }).catch(function(){
+          showToast("コピーできませんでした");
+        });
+      }else{
+        showToast("お使いのブラウザは共有に対応していません");
+      }
+    }
   });
 
   function renderHistory(){
