@@ -16,159 +16,159 @@
 @import url('https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@500;600;800&family=Zen+Kaku+Gothic+New:wght@400;500;700&display=swap');
 
 :root{
-  --bg:#EEEFE6;
-  --surface:#FBFBF5;
-  --surface-2:#F2F2E9;
-  --text:#23281F;
-  --text-muted:#656E5C;
-  --border:#D9DACB;
-  --accent:#2C4A5E;
-  --accent-strong:#1A3340;
-  --accent-soft:#DCE6E8;
-  --focus:#1A3340;
+  --bg:#F7F3ED;
+  --surface:#FFFFFF;
+  --surface-2:#F0EAE1;
+  --text:#2B2722;
+  --text-muted:#8C8172;
+  --border:#E6DED2;
+  --accent:#B5643C;
+  --accent-strong:#96502F;
+  --accent-soft:#F1E1D4;
+  --focus:#96502F;
 
-  --c-chicken:#C98A52;
-  --c-chicken-bg:#F3E4D2;
-  --c-pork:#C06B6E;
-  --c-pork-bg:#F3DCDD;
-  --c-beef:#8E3A32;
-  --c-beef-bg:#EBD4CF;
-  --c-egg:#A9821E;
-  --c-egg-bg:#F1E6C4;
-  --c-tofu:#8C7F5C;
-  --c-tofu-bg:#ECE6D4;
-  --c-onion:#A67C3D;
-  --c-onion-bg:#EFE3C9;
-  --c-carrot:#C15A2E;
-  --c-carrot-bg:#F1DACB;
-  --c-negi:#4F8C7A;
-  --c-negi-bg:#DCEAE5;
-  --c-tomato:#B33A34;
-  --c-tomato-bg:#F0D6D2;
-  --c-lettuce:#7E9C43;
-  --c-lettuce-bg:#E4EAD1;
-  --c-cabbage:#6FA36B;
-  --c-cabbage-bg:#DDEBDC;
-  --c-potato:#9C8868;
-  --c-potato-bg:#EBE3D3;
-  --c-burdock:#8B6B47;
-  --c-burdock-bg:#E7DFD0;
-  --c-pepper:#4C8C3F;
-  --c-pepper-bg:#DCEAD6;
-  --c-chives:#3D7A54;
-  --c-chives-bg:#D9E8DE;
-  --c-daikon:#9A9C8C;
-  --c-daikon-bg:#E9EAE1;
-  --c-fish:#3E6E8E;
-  --c-fish-bg:#D9E5EC;
+  --c-chicken:#957550;
+  --c-chicken-bg:#eee6dd;
+  --c-pork:#955a50;
+  --c-pork-bg:#eedfdd;
+  --c-beef:#956250;
+  --c-beef-bg:#eee1dd;
+  --c-egg:#958450;
+  --c-egg-bg:#eeeadd;
+  --c-tofu:#957e50;
+  --c-tofu-bg:#eee8dd;
+  --c-onion:#957c50;
+  --c-onion-bg:#eee8dd;
+  --c-carrot:#956d50;
+  --c-carrot-bg:#eee4dd;
+  --c-negi:#509573;
+  --c-negi-bg:#ddeee6;
+  --c-tomato:#955750;
+  --c-tomato-bg:#eededd;
+  --c-lettuce:#789550;
+  --c-lettuce-bg:#e7eedd;
+  --c-cabbage:#5c9550;
+  --c-cabbage-bg:#e0eedd;
+  --c-potato:#957850;
+  --c-potato-bg:#eee7dd;
+  --c-burdock:#957350;
+  --c-burdock-bg:#eee6dd;
+  --c-pepper:#6d9550;
+  --c-pepper-bg:#e4eedd;
+  --c-chives:#50955c;
+  --c-chives-bg:#ddeee0;
+  --c-daikon:#958a50;
+  --c-daikon-bg:#eeebdd;
+  --c-fish:#507e95;
+  --c-fish-bg:#dde8ee;
 
-  --accent-warm:#C96A3E;
-  --accent-warm-strong:#A8532E;
-  --accent-warm-soft:#F3E0D2;
+  --accent-warm:#B5643C;
+  --accent-warm-strong:#96502F;
+  --accent-warm-soft:#F1E1D4;
 }
 
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
-    --bg:#1B1E17;
-    --surface:#242820;
-    --surface-2:#2B2F25;
-    --text:#E9E9DC;
-    --text-muted:#A6AC97;
-    --border:#3A3F31;
-    --accent:#8FB6C4;
-    --accent-strong:#BBD8E2;
-    --accent-soft:#2E3E40;
-    --focus:#BBD8E2;
+    --bg:#1B1712;
+    --surface:#221E19;
+    --surface-2:#2A2520;
+    --text:#EDE7DD;
+    --text-muted:#A79A88;
+    --border:#3A342C;
+    --accent:#D99468;
+    --accent-strong:#E8AC85;
+    --accent-soft:#3D2C22;
+    --focus:#E8AC85;
 
-    --c-chicken:#E3A565;
-    --c-chicken-bg:#3C3425;
-    --c-pork:#E18E90;
-    --c-pork-bg:#3C2B2C;
-    --c-beef:#D98F82;
-    --c-beef-bg:#3A2B26;
-    --c-egg:#D8B95A;
-    --c-egg-bg:#3A3420;
-    --c-tofu:#C9BC96;
-    --c-tofu-bg:#34301F;
-    --c-onion:#D9B36E;
-    --c-onion-bg:#3D3420;
-    --c-carrot:#E08A5C;
-    --c-carrot-bg:#3D2A1E;
-    --c-negi:#7FBFA8;
-    --c-negi-bg:#223832;
-    --c-tomato:#D97570;
-    --c-tomato-bg:#3A2624;
-    --c-lettuce:#B5CC7E;
-    --c-lettuce-bg:#333B22;
-    --c-cabbage:#9BCB96;
-    --c-cabbage-bg:#263326;
-    --c-potato:#C7B48C;
-    --c-potato-bg:#362F22;
-    --c-burdock:#BFA57E;
-    --c-burdock-bg:#362E22;
-    --c-pepper:#85C176;
-    --c-pepper-bg:#24331F;
-    --c-chives:#7AC49A;
-    --c-chives-bg:#1F3327;
-    --c-daikon:#C6C7B8;
-    --c-daikon-bg:#33342C;
-    --c-fish:#7FADC7;
-    --c-fish-bg:#22333D;
+    --c-chicken:#c8af93;
+    --c-chicken-bg:#3e3428;
+    --c-pork:#c89a93;
+    --c-pork-bg:#3e2b28;
+    --c-beef:#c8a093;
+    --c-beef-bg:#3e2d28;
+    --c-egg:#c8ba93;
+    --c-egg-bg:#3e3928;
+    --c-tofu:#c8b693;
+    --c-tofu-bg:#3e3728;
+    --c-onion:#c8b493;
+    --c-onion-bg:#3e3628;
+    --c-carrot:#c8a993;
+    --c-carrot-bg:#3e3128;
+    --c-negi:#93c8ad;
+    --c-negi-bg:#283e33;
+    --c-tomato:#c89993;
+    --c-tomato-bg:#3e2a28;
+    --c-lettuce:#b2c893;
+    --c-lettuce-bg:#353e28;
+    --c-cabbage:#9cc893;
+    --c-cabbage-bg:#2c3e28;
+    --c-potato:#c8b293;
+    --c-potato-bg:#3e3528;
+    --c-burdock:#c8ad93;
+    --c-burdock-bg:#3e3328;
+    --c-pepper:#a9c893;
+    --c-pepper-bg:#313e28;
+    --c-chives:#93c89c;
+    --c-chives-bg:#283e2c;
+    --c-daikon:#c8bf93;
+    --c-daikon-bg:#3e3a28;
+    --c-fish:#93b6c8;
+    --c-fish-bg:#28373e;
 
-    --accent-warm:#E8A17A;
-    --accent-warm-strong:#F0B896;
+    --accent-warm:#D99468;
+    --accent-warm-strong:#E8AC85;
     --accent-warm-soft:#3D2C22;
   }
 }
 :root[data-theme="dark"]{
-  --bg:#1B1E17;
-  --surface:#242820;
-  --surface-2:#2B2F25;
-  --text:#E9E9DC;
-  --text-muted:#A6AC97;
-  --border:#3A3F31;
-  --accent:#8FB6C4;
-  --accent-strong:#BBD8E2;
-  --accent-soft:#2E3E40;
-  --focus:#BBD8E2;
+  --bg:#1B1712;
+  --surface:#221E19;
+  --surface-2:#2A2520;
+  --text:#EDE7DD;
+  --text-muted:#A79A88;
+  --border:#3A342C;
+  --accent:#D99468;
+  --accent-strong:#E8AC85;
+  --accent-soft:#3D2C22;
+  --focus:#E8AC85;
 
-  --c-chicken:#E3A565;
-  --c-chicken-bg:#3C3425;
-  --c-pork:#E18E90;
-  --c-pork-bg:#3C2B2C;
-  --c-beef:#D98F82;
-  --c-beef-bg:#3A2B26;
-  --c-egg:#D8B95A;
-  --c-egg-bg:#3A3420;
-  --c-tofu:#C9BC96;
-  --c-tofu-bg:#34301F;
-  --c-onion:#D9B36E;
-  --c-onion-bg:#3D3420;
-  --c-carrot:#E08A5C;
-  --c-carrot-bg:#3D2A1E;
-  --c-negi:#7FBFA8;
-  --c-negi-bg:#223832;
-  --c-tomato:#D97570;
-  --c-tomato-bg:#3A2624;
-  --c-lettuce:#B5CC7E;
-  --c-lettuce-bg:#333B22;
-  --c-cabbage:#9BCB96;
-  --c-cabbage-bg:#263326;
-  --c-potato:#C7B48C;
-  --c-potato-bg:#362F22;
-  --c-burdock:#BFA57E;
-  --c-burdock-bg:#362E22;
-  --c-pepper:#85C176;
-  --c-pepper-bg:#24331F;
-  --c-chives:#7AC49A;
-  --c-chives-bg:#1F3327;
-  --c-daikon:#C6C7B8;
-  --c-daikon-bg:#33342C;
-  --c-fish:#7FADC7;
-  --c-fish-bg:#22333D;
+  --c-chicken:#c8af93;
+  --c-chicken-bg:#3e3428;
+  --c-pork:#c89a93;
+  --c-pork-bg:#3e2b28;
+  --c-beef:#c8a093;
+  --c-beef-bg:#3e2d28;
+  --c-egg:#c8ba93;
+  --c-egg-bg:#3e3928;
+  --c-tofu:#c8b693;
+  --c-tofu-bg:#3e3728;
+  --c-onion:#c8b493;
+  --c-onion-bg:#3e3628;
+  --c-carrot:#c8a993;
+  --c-carrot-bg:#3e3128;
+  --c-negi:#93c8ad;
+  --c-negi-bg:#283e33;
+  --c-tomato:#c89993;
+  --c-tomato-bg:#3e2a28;
+  --c-lettuce:#b2c893;
+  --c-lettuce-bg:#353e28;
+  --c-cabbage:#9cc893;
+  --c-cabbage-bg:#2c3e28;
+  --c-potato:#c8b293;
+  --c-potato-bg:#3e3528;
+  --c-burdock:#c8ad93;
+  --c-burdock-bg:#3e3328;
+  --c-pepper:#a9c893;
+  --c-pepper-bg:#313e28;
+  --c-chives:#93c89c;
+  --c-chives-bg:#283e2c;
+  --c-daikon:#c8bf93;
+  --c-daikon-bg:#3e3a28;
+  --c-fish:#93b6c8;
+  --c-fish-bg:#28373e;
 
-  --accent-warm:#E8A17A;
-  --accent-warm-strong:#F0B896;
+  --accent-warm:#D99468;
+  --accent-warm-strong:#E8AC85;
   --accent-warm-soft:#3D2C22;
 }
 
@@ -179,12 +179,13 @@ body{
   background:var(--bg);
   color:var(--text);
   font-family:"Zen Kaku Gothic New", "Hiragino Sans", sans-serif;
-  line-height:1.6;
+  line-height:1.7;
+  -webkit-font-smoothing:antialiased;
 }
 .page{
   max-width:520px;
   margin:0 auto;
-  padding:28px 20px 190px;
+  padding:40px 22px 200px;
 }
 
 .action-bar{
@@ -208,36 +209,37 @@ body{
 
 header.hero{
   text-align:center;
-  margin-bottom:28px;
+  margin-bottom:40px;
 }
 .eyebrow{
   font-size:12px;
-  letter-spacing:.12em;
+  letter-spacing:.18em;
   color:var(--accent);
-  font-weight:700;
+  font-weight:600;
 }
 h1{
   font-family:"Shippori Mincho", serif;
-  font-weight:800;
-  font-size:clamp(28px,7vw,36px);
-  margin:6px 0 8px;
+  font-weight:700;
+  font-size:clamp(26px,7vw,32px);
+  margin:10px 0 12px;
   text-wrap:balance;
-  letter-spacing:.02em;
+  letter-spacing:.03em;
 }
-.hero p{
+.hero-sub{
   color:var(--text-muted);
   font-size:14px;
   margin:0;
   text-wrap:balance;
+  letter-spacing:.02em;
 }
 
-section{margin-bottom:22px;}
+section{margin-bottom:28px;}
 .section-label{
-  font-size:12px;
-  font-weight:700;
+  font-size:11.5px;
+  font-weight:600;
   color:var(--text-muted);
-  letter-spacing:.08em;
-  margin:0 0 10px;
+  letter-spacing:.1em;
+  margin:0 0 12px;
 }
 
 .chips{
@@ -273,8 +275,9 @@ section{margin-bottom:22px;}
 .card{
   background:var(--surface);
   border:1px solid var(--border);
-  border-radius:18px;
-  padding:28px 24px;
+  border-radius:20px;
+  padding:22px 22px 26px;
+  box-shadow:0 1px 2px rgba(30,20,10,.03);
 }
 
 .roulette-card{
@@ -295,38 +298,39 @@ section{margin-bottom:22px;}
 .dish-head{
   display:flex;
   align-items:center;
-  gap:8px;
-  margin-bottom:8px;
+  gap:7px;
+  margin:12px 0 6px;
   flex-wrap:wrap;
 }
 .dish-role{
-  font-size:11px;
-  font-weight:700;
-  letter-spacing:.08em;
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.1em;
   color:var(--text-muted);
 }
 .dish-tag{
   display:inline-flex;
   align-items:center;
-  gap:6px;
-  font-size:12px;
-  font-weight:700;
-  padding:3px 11px;
+  gap:5px;
+  font-size:11.5px;
+  font-weight:600;
+  padding:2px 10px;
   border-radius:999px;
-  background:var(--chip-bg,var(--surface-2));
-  color:var(--dot,var(--text-muted));
+  background:var(--surface-2);
+  color:var(--text-muted);
 }
 .dish-photo{
   position:relative;
   width:100%;
-  aspect-ratio:16/10;
-  border-radius:12px;
+  aspect-ratio:4/3;
+  border-radius:14px;
   overflow:hidden;
   background:var(--surface-2);
-  margin-bottom:12px;
+  margin-bottom:0;
   display:flex;
   align-items:center;
   justify-content:center;
+  box-shadow:0 6px 18px rgba(40,25,10,.08);
 }
 .dish-photo img{
   width:100%;
@@ -377,15 +381,17 @@ section{margin-bottom:22px;}
 .dish-name{
   font-family:"Shippori Mincho", serif;
   font-weight:700;
-  font-size:clamp(19px,5.2vw,24px);
-  margin:0 0 6px;
+  font-size:clamp(22px,6vw,28px);
+  line-height:1.35;
+  margin:0 0 8px;
   min-height:1.3em;
   text-wrap:balance;
 }
 .dish-desc{
   color:var(--text-muted);
-  font-size:13px;
-  margin:0 0 12px;
+  font-size:14px;
+  line-height:1.6;
+  margin:0 0 14px;
 }
 .dish-name.spinning{opacity:.55;}
 
@@ -483,16 +489,21 @@ section{margin-bottom:22px;}
 .btn{
   font-family:inherit;
   border:none;
-  border-radius:12px;
-  padding:14px 20px;
+  border-radius:11px;
+  padding:15px 20px;
   font-size:15px;
-  font-weight:700;
+  font-weight:600;
+  letter-spacing:.02em;
   cursor:pointer;
   width:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
 }
 .btn-primary{
   background:var(--accent-strong);
-  color:var(--surface);
+  color:#FFFDF9;
 }
 .btn-primary:active{transform:translateY(1px);}
 .btn-row{
@@ -502,12 +513,32 @@ section{margin-bottom:22px;}
 }
 .btn-row .btn{flex:1;}
 .btn-secondary{
-  background:var(--surface-2);
+  background:var(--surface);
   color:var(--text);
   border:1px solid var(--border);
+  font-weight:600;
 }
 .btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
 .btn[hidden]{display:none;}
+.btn[disabled]{opacity:.5;cursor:not-allowed;}
+.btn-icon{width:16px;height:16px;flex-shrink:0;}
+
+.btn-link{
+  display:block;
+  width:100%;
+  background:none;
+  border:none;
+  font-family:inherit;
+  color:var(--text-muted);
+  font-size:13.5px;
+  font-weight:500;
+  letter-spacing:.02em;
+  text-align:center;
+  padding:10px;
+  cursor:pointer;
+}
+.btn-link:hover, .btn-link:focus-visible{color:var(--accent-strong);}
+.btn-link[hidden]{display:none;}
 
 .empty-note{
   font-size:13px;
@@ -543,39 +574,9 @@ section{margin-bottom:22px;}
   font-size:11px;
 }
 
-.history-list{
-  list-style:none;
-  margin:0;
-  padding:0;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
-}
-.history-list li{
-  display:flex;
-  align-items:baseline;
-  gap:10px;
-  font-size:14px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:10px 14px;
-}
-.history-date{
-  font-variant-numeric:tabular-nums;
-  color:var(--text-muted);
-  font-size:12px;
-  flex-shrink:0;
-  width:3.6em;
-}
-.history-tagdot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--dot,var(--accent));
-  flex-shrink:0;
-}
 .history-empty{
   color:var(--text-muted);
-  font-size:13px;
+  font-size:13.5px;
 }
 
 details.add-box{
@@ -671,59 +672,64 @@ footer.note{
 }
 
 /* ===== mood section ===== */
-.mood-section{margin-bottom:24px;}
+.mood-section{margin-bottom:32px;}
 .mood-heading{
   font-family:"Shippori Mincho", serif;
   font-weight:700;
-  font-size:clamp(18px,5vw,21px);
+  font-size:clamp(16px,4.5vw,18px);
   text-align:center;
-  margin:0 0 14px;
-  text-wrap:balance;
+  margin:0 0 16px;
+  color:var(--text);
+  letter-spacing:.03em;
 }
 .mood-grid{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:10px;
+  gap:9px;
 }
 .mood-card{
   display:flex;
-  flex-direction:column;
   align-items:center;
   justify-content:center;
-  gap:4px;
-  min-height:64px;
-  padding:12px 8px;
+  min-height:54px;
+  padding:14px 10px;
   border:1px solid var(--border);
   background:var(--surface);
-  border-radius:16px;
+  border-radius:10px;
   cursor:pointer;
-  font-family:inherit;
+  font-family:"Zen Kaku Gothic New", sans-serif;
   color:var(--text);
-  transition:border-color .15s, background .15s, transform .1s;
+  font-size:13.5px;
+  font-weight:600;
+  letter-spacing:.02em;
+  text-align:center;
+  transition:border-color .15s, color .15s, background .15s;
 }
-.mood-card:active{transform:scale(.97);}
+.mood-card:active{transform:scale(.98);}
 .mood-card[aria-pressed="true"]{
-  border-color:var(--accent-warm);
-  background:var(--accent-warm-soft);
+  border-color:var(--accent);
+  color:var(--accent-strong);
+  background:var(--accent-soft);
 }
 .mood-card:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
-.mood-card-emoji{font-size:22px;line-height:1;}
-.mood-card-label{font-size:12.5px;font-weight:700;text-align:center;}
 
 /* ===== result card ===== */
 .result-eyebrow{
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:.1em;
-  color:var(--accent-warm);
-  margin:0 0 4px;
+  font-size:11.5px;
+  font-weight:600;
+  letter-spacing:.14em;
+  color:var(--text-muted);
+  margin:0 0 6px;
   text-align:center;
 }
 .mood-greeting{
-  font-size:13px;
-  color:var(--text-muted);
-  margin:0 0 14px;
+  font-family:"Shippori Mincho", serif;
+  font-size:16px;
+  font-weight:600;
+  color:var(--text);
+  margin:0 0 18px;
   text-align:center;
+  text-wrap:balance;
 }
 .dish-block-main{animation:resultReveal .35s ease both;}
 .sides-row{animation:resultReveal .4s ease both;}
@@ -738,38 +744,31 @@ footer.note{
 .main-meta-row{
   display:flex;
   flex-wrap:wrap;
-  gap:6px;
-  margin-bottom:12px;
-}
-.meta-pill{
-  font-size:12px;
-  font-weight:700;
-  padding:4px 11px;
-  border-radius:999px;
-  background:var(--surface-2);
-  color:var(--text);
-  border:1px solid var(--border);
-}
-.weight-pill{
-  background:var(--accent-warm-soft);
-  color:var(--accent-warm-strong);
-  border-color:transparent;
-}
-
-.pick-reason{
-  font-size:12.5px;
+  align-items:center;
+  font-size:13px;
   color:var(--text-muted);
-  margin:0 0 12px;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.01em;
+  margin:2px 0 4px;
 }
-.pick-reason::before{content:"→ ";}
+.main-meta-row > span{
+  display:inline-flex;
+  align-items:center;
+}
+.main-meta-row > span:not([hidden]) ~ span:not([hidden])::before{
+  content:"｜";
+  margin:0 8px;
+  color:var(--border);
+}
 
 .sides-heading{
-  font-size:13px;
-  font-weight:700;
+  font-family:"Shippori Mincho", serif;
+  font-size:14px;
+  font-weight:600;
   color:var(--text-muted);
   text-align:left;
-  margin:4px 0 10px;
-  padding-top:14px;
+  margin:6px 0 12px;
+  padding-top:18px;
   border-top:1px solid var(--border);
 }
 .sides-row{
@@ -843,17 +842,16 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 .advanced-body section{margin-bottom:0;}
 
 /* ===== decide CTA / decided panel ===== */
-.btn-decide{
-  font-size:16.5px;
-  padding:17px 20px;
-  background:var(--accent-warm-strong);
-  box-shadow:0 4px 14px rgba(0,0,0,.12);
+.decide-row{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
 }
-.btn-tertiary{
-  background:transparent;
-  color:var(--text-muted);
-  font-weight:600;
-  padding:10px 20px;
+.btn-decide{
+  font-size:16px;
+  padding:17px 20px;
+  background:var(--accent-strong);
+  box-shadow:0 4px 16px rgba(60,30,10,.16);
 }
 .decided-panel{
   display:flex;
@@ -864,70 +862,101 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 @media (prefers-reduced-motion: reduce){ .decided-panel{animation:none;} }
 .decided-message{
   text-align:center;
-  font-weight:700;
-  font-size:14.5px;
-  margin:0 0 2px;
+  font-family:"Shippori Mincho", serif;
+  font-weight:600;
+  font-size:15px;
+  color:var(--text);
+  margin:0 0 4px;
 }
 .decided-panel .btn[disabled]{
   opacity:.55;
   cursor:not-allowed;
 }
 
-/* ===== history cards ===== */
+/* ===== history: photo album strip ===== */
 .history-cards{
   display:flex;
-  flex-direction:column;
-  gap:8px;
+  gap:12px;
+  overflow-x:auto;
+  padding:2px 2px 6px;
+  margin:0 -2px;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
 }
+.history-cards::-webkit-scrollbar{display:none;}
 .history-card{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-size:14px;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:11px 14px;
+  flex:0 0 auto;
+  width:118px;
+  text-align:left;
+  cursor:default;
 }
-.history-card .history-tagdot{
-  width:8px;height:8px;border-radius:50%;
+.history-card .history-photo{
+  width:100%;
+  aspect-ratio:1/1;
+  border-radius:12px;
+  overflow:hidden;
+  background:var(--surface-2);
+  margin-bottom:8px;
+  position:relative;
+}
+.history-card .history-photo img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  opacity:0;
+  transition:opacity .3s ease;
+}
+.history-card .history-photo img.loaded{opacity:1;}
+.history-card .history-dot{
+  position:absolute;
+  left:8px; top:8px;
+  width:7px;height:7px;border-radius:50%;
   background:var(--dot,var(--accent));
-  flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(255,255,255,.7);
+}
+.history-card .history-name{
+  font-size:12.5px;
+  font-weight:600;
+  color:var(--text);
+  line-height:1.4;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.history-card .history-date{
+  font-size:11px;
+  color:var(--text-muted);
+  font-variant-numeric:tabular-nums;
+  margin-top:2px;
+}
+.history-empty{
+  display:block;
+  width:100%;
 }
 </style>
 </head>
 <body>
 <div class="page">
   <header class="hero">
-    <div class="eyebrow">今日のごはん、決めよう</div>
+    <p class="eyebrow">今日の夕飯、どうする？</p>
     <h1>ごはんのひらめき係</h1>
+    <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
   </header>
 
   <section class="mood-section">
-    <p class="mood-heading">🍚 今日、どんなごはんにする？</p>
+    <p class="mood-heading">今日の気分は？</p>
     <div class="mood-grid" id="moodGrid" role="group" aria-label="今日の気分"></div>
   </section>
 
   <section>
     <div class="card roulette-card" id="rouletteCard">
-      <p class="result-eyebrow">✨ 今日のひらめき</p>
+      <p class="result-eyebrow">今日のひらめき</p>
       <p class="mood-greeting" id="moodGreeting" hidden></p>
       <p class="combo-intro" id="comboIntro">気分を選ぶと、今日のひらめきが届きます。</p>
 
       <div class="dish-block dish-block-main" id="blockMain" hidden>
-        <div class="dish-head">
-          <span class="dish-role">主菜</span>
-          <span class="dish-tag" id="tagMain"></span>
-          <span class="meta-badge" id="genreMain" hidden></span>
-          <span class="meta-badge" id="weightMain" hidden></span>
-          <span class="meta-badge tag-badge" id="tagBadgeMain" hidden></span>
-        </div>
-        <div class="main-meta-row" id="mainMetaRow">
-          <span class="meta-pill weight-pill" id="weightPillMain" hidden></span>
-          <span class="meta-pill" id="timePillMain" hidden>⏱ <span id="timeValueMain"></span>分</span>
-          <span class="meta-pill" id="pricePillMain" hidden>💰 約<span id="priceValueMain"></span>円</span>
-        </div>
-        <p class="pick-reason" id="pickReasonMain" hidden></p>
         <div class="dish-photo" id="photoWrapMain">
           <img id="photoMain" alt="" loading="lazy" />
           <svg class="dish-photo-empty-icon" id="photoEmptyMain" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true" hidden>
@@ -936,10 +965,22 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           </svg>
           <div class="photo-credit" id="photoCreditMain" hidden><a id="photoCreditLinkMain" href="#" target="_blank" rel="noopener"></a></div>
         </div>
+        <div class="dish-head">
+          <span class="dish-role">主菜</span>
+          <span class="dish-tag" id="tagMain"></span>
+          <span class="meta-badge" id="genreMain" hidden></span>
+          <span class="meta-badge" id="weightMain" hidden></span>
+          <span class="meta-badge tag-badge" id="tagBadgeMain" hidden></span>
+        </div>
         <p class="dish-name" id="nameMain"></p>
         <p class="dish-desc" id="descMain"></p>
+        <div class="main-meta-row" id="mainMetaRow">
+          <span id="timePillMain" hidden><span id="timeValueMain"></span>分</span>
+          <span id="pricePillMain" hidden>約<span id="priceValueMain"></span>円</span>
+          <span id="servingsPillMain"><span id="servingsValueMain"></span>人分</span>
+        </div>
         <details class="recipe" id="recipeMain" hidden>
-          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <summary class="recipe-summary">材料・作り方を見る</summary>
           <div class="recipe-body">
             <div id="ingWrapMain">
               <p class="recipe-label" id="ingLabelMain">材料(5人分目安)</p>
@@ -952,7 +993,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           </div>
         </details>
         <p class="shop-link" id="shopLinkMain" hidden>
-          <a id="shopLinkAMain" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <a id="shopLinkAMain" href="#" target="_blank" rel="nofollow sponsored noopener">材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
@@ -978,7 +1019,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         <p class="dish-name" id="nameSide1"></p>
         <p class="dish-desc" id="descSide1"></p>
         <details class="recipe" id="recipeSide1" hidden>
-          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <summary class="recipe-summary">材料・作り方を見る</summary>
           <div class="recipe-body">
             <div id="ingWrapSide1">
               <p class="recipe-label" id="ingLabelSide1">材料(5人分目安)</p>
@@ -991,7 +1032,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           </div>
         </details>
         <p class="shop-link" id="shopLinkSide1" hidden>
-          <a id="shopLinkASide1" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <a id="shopLinkASide1" href="#" target="_blank" rel="nofollow sponsored noopener">材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
@@ -1015,7 +1056,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         <p class="dish-name" id="nameSide2"></p>
         <p class="dish-desc" id="descSide2"></p>
         <details class="recipe" id="recipeSide2" hidden>
-          <summary class="recipe-summary">📖 材料・作り方を見る</summary>
+          <summary class="recipe-summary">材料・作り方を見る</summary>
           <div class="recipe-body">
             <div id="ingWrapSide2">
               <p class="recipe-label" id="ingLabelSide2">材料(5人分目安)</p>
@@ -1028,7 +1069,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           </div>
         </details>
         <p class="shop-link" id="shopLinkSide2" hidden>
-          <a id="shopLinkASide2" href="#" target="_blank" rel="nofollow sponsored noopener">🛒 材料を楽天で探す</a>
+          <a id="shopLinkASide2" href="#" target="_blank" rel="nofollow sponsored noopener">材料を楽天で探す</a>
           <span class="ad-badge">広告</span>
         </p>
       </div>
@@ -1037,7 +1078,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   </section>
 
   <details class="advanced-filters" id="advancedFilters">
-    <summary>🔧 もっと細かく選ぶ <span class="chevron">▾</span></summary>
+    <summary>条件を細かく指定する <span class="chevron">▾</span></summary>
     <div class="advanced-body">
       <section>
         <p class="section-label">人数</p>
@@ -1062,7 +1103,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   </details>
 
   <section>
-    <p class="section-label">🕘 最近の晩ごはん</p>
+    <p class="section-label">最近の晩ごはん</p>
     <div class="history-cards" id="historyList"></div>
   </section>
 
@@ -1122,18 +1163,21 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       <span class="budget-caveat">(店舗や地域により変動します)</span>
     </div>
 
-    <button class="btn btn-primary" id="spinBtn">✨ ひらめく</button>
+    <button class="btn btn-primary" id="spinBtn">ひらめく</button>
 
-    <div class="btn-row" id="decideRow" hidden>
-      <button class="btn btn-secondary" id="againBtn">🔄 もう一度ひらめく</button>
-      <button class="btn btn-primary btn-decide" id="confirmBtn">🍚 今日これに決定！</button>
+    <div class="decide-row" id="decideRow" hidden>
+      <button class="btn btn-primary btn-decide" id="confirmBtn">この献立に決める</button>
+      <button class="btn-link" id="againBtn">もう一度ひらめく</button>
     </div>
 
     <div class="decided-panel" id="decidedPanel" hidden>
-      <p class="decided-message">✅ 今日の晩ごはんが決まりました！</p>
-      <button class="btn btn-primary" id="shareBtn">📱 家族に送る</button>
-      <button class="btn btn-secondary" id="shoppingListBtn" disabled>🛒 買い物リストを見る(準備中)</button>
-      <button class="btn btn-tertiary" id="newDayBtn">🔄 別の日の献立を考える</button>
+      <p class="decided-message">今日の晩ごはんが決まりました。</p>
+      <button class="btn btn-secondary" id="shareBtn">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2" stroke-linecap="round"/></svg>
+        家族に送る
+      </button>
+      <button class="btn btn-secondary" id="shoppingListBtn" disabled>買い物リスト(準備中)</button>
+      <button class="btn-link" id="newDayBtn">別の日の献立を考える</button>
     </div>
 
     <p class="empty-note" id="emptyNote" hidden>その条件の候補がありません。カテゴリを増やしてください。</p>
@@ -3321,7 +3365,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     btn.className = "mood-card";
     btn.type = "button";
     btn.setAttribute("aria-pressed", "false");
-    btn.innerHTML = '<span class="mood-card-emoji">' + mood.emoji + '</span><span class="mood-card-label">' + mood.label + '</span>';
+    btn.textContent = mood.label;
     btn.addEventListener("click", function(){
       MOODS.forEach(function(mo){ moodBtns[mo.id].setAttribute("aria-pressed", mo.id === mood.id ? "true" : "false"); });
       activeMood = mood;
@@ -3350,12 +3394,11 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var newDayBtn = document.getElementById("newDayBtn");
   var sidesHeading = document.getElementById("sidesHeading");
   var mainMetaRow = document.getElementById("mainMetaRow");
-  var weightPillMain = document.getElementById("weightPillMain");
   var timePillMain = document.getElementById("timePillMain");
   var timeValueMain = document.getElementById("timeValueMain");
   var pricePillMain = document.getElementById("pricePillMain");
   var priceValueMain = document.getElementById("priceValueMain");
-  var pickReasonMain = document.getElementById("pickReasonMain");
+  var servingsValueMain = document.getElementById("servingsValueMain");
 
   var SLOTS = ["main", "side1", "side2"];
   var SLOT_SUFFIX = {main:"Main", side1:"Side1", side2:"Side2"};
@@ -3411,7 +3454,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return;
     }
     els.shopLinkA.href = rakutenSearchLink(keyword);
-    els.shopLinkA.textContent = "🛒 " + keyword + "を楽天で探す";
+    els.shopLinkA.textContent = keyword + "を楽天で探す";
     els.shopLinkA.onclick = function(){
       trackEvent("rakuten_click", {keyword: keyword, main_name: menu.name, cat: menu.cat});
     };
@@ -3608,7 +3651,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return "最近とは違う食材で気分転換に";
     }
     if(mainMenu.tags && mainMenu.tags.length > 0){
-      return "✨ " + mainMenu.tags[0] + "な一品だから";
+      return mainMenu.tags[0] + "な一品だから";
     }
     return "今日のおすすめの一品です";
   }
@@ -3706,14 +3749,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     recordSessionPick(combo);
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
-    if(activeMood){
-      moodGreeting.hidden = false;
-      moodGreeting.textContent = "「" + activeMood.greeting + "」";
-    }else{
-      moodGreeting.hidden = true;
-    }
-    pickReasonMain.hidden = false;
-    pickReasonMain.textContent = reasonFor(combo.main);
+    moodGreeting.hidden = false;
+    moodGreeting.textContent = activeMood ? activeMood.greeting : reasonFor(combo.main);
     comboRequestId++;
     var requestId = comboRequestId;
     SLOTS.forEach(function(key){
@@ -3721,7 +3758,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       var els = slotEls[key];
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
-      els.name.textContent = (key !== "main" && cat.emoji ? cat.emoji + " " : "") + menu.name;
+      els.name.textContent = menu.name;
       els.desc.textContent = menu.desc || "";
       els.tag.hidden = false;
       els.tag.textContent = cat.label;
@@ -3744,18 +3781,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       }
       if(menu.tags && menu.tags.length > 0){
         els.tagBadge.hidden = false;
-        els.tagBadge.textContent = "✨ " + menu.tags[0];
+        els.tagBadge.textContent = menu.tags[0];
       }else{
         els.tagBadge.hidden = true;
       }
 
       if(key === "main"){
-        if(weightInfo){
-          weightPillMain.hidden = false;
-          weightPillMain.textContent = (menu.weight === "hearty" ? "🔥 " : "🥗 ") + weightInfo.label;
-        }else{
-          weightPillMain.hidden = true;
-        }
         if(typeof menu.cookingTime === "number"){
           timeValueMain.textContent = menu.cookingTime;
           timePillMain.hidden = false;
@@ -3769,6 +3800,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         }else{
           pricePillMain.hidden = true;
         }
+        servingsValueMain.textContent = servings;
       }
 
       fillRecipe(els, menu);
@@ -3805,6 +3837,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }else{
       pricePillMain.hidden = true;
     }
+    servingsValueMain.textContent = servings;
   }
 
   function resetResult(){
@@ -3813,9 +3846,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     currentPicks = null;
     comboIntro.hidden = false;
     moodGreeting.hidden = true;
-    pickReasonMain.hidden = true;
     sidesHeading.hidden = true;
-    weightPillMain.hidden = true;
     timePillMain.hidden = true;
     pricePillMain.hidden = true;
     SLOTS.forEach(function(key){ slotEls[key].block.hidden = true; });
@@ -3845,9 +3876,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     comboIntro.hidden = true;
     moodGreeting.hidden = true;
-    pickReasonMain.hidden = true;
     sidesHeading.hidden = true;
-    weightPillMain.hidden = true;
     timePillMain.hidden = true;
     pricePillMain.hidden = true;
     spinBtn.hidden = true;
@@ -3935,11 +3964,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   shareBtn.addEventListener("click", function(){
     if(!currentPicks) return;
     trackEvent("share_menu", {method: navigator.share ? "web_share" : "clipboard", main_name: currentPicks.main.name});
-    var text = "今日の晩ごはん、決まった！🍚\n\n" +
-      "🍖 " + currentPicks.main.name + "\n" +
-      "🥗 " + currentPicks.side1.name + "\n" +
-      "🥗 " + currentPicks.side2.name + "\n\n" +
-      "ごはんのひらめき係で決めました！";
+    var text = "今日の晩ごはん、決まりました。\n\n" +
+      "主菜：" + currentPicks.main.name + "\n" +
+      "副菜：" + currentPicks.side1.name + "・" + currentPicks.side2.name + "\n\n" +
+      "ごはんのひらめき係で決めました。";
     var url = location.href;
     if(navigator.share){
       navigator.share({ text: text, url: url }).catch(function(){});
@@ -3962,31 +3990,53 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     listEl.innerHTML = "";
     var recent = history.slice(0, 7);
     if(recent.length === 0){
-      var empty = document.createElement("div");
-      empty.className = "history-card";
-      empty.innerHTML = '<span class="history-empty">まだ記録がありません。決定すると、ここに残ります。</span>';
+      var empty = document.createElement("p");
+      empty.className = "history-empty";
+      empty.textContent = "まだ記録がありません。決定すると、ここに残ります。";
       listEl.appendChild(empty);
       return;
     }
     recent.forEach(function(h){
+      var name = h.main ? h.main.name : h.name;
+      var catId = h.main ? h.main.cat : h.cat;
+      var cat = CAT_MAP[catId] || CATS[0];
+      var md = h.date.slice(5).replace("-", "/");
+
       var card = document.createElement("div");
       card.className = "history-card";
-      var md = h.date.slice(5).replace("-", "/");
-      if(h.main){
-        var mainCat = CAT_MAP[h.main.cat] || CATS[0];
-        var sideNames = h.sides.map(function(s){ return escapeHtml(s.name); }).join("・");
-        card.innerHTML =
-          '<span class="history-date">' + md + '</span>' +
-          '<span class="history-tagdot" style="--dot:' + mainCat.dot + '"></span>' +
-          '<span>' + (mainCat.emoji || "") + " " + escapeHtml(h.main.name) + (sideNames ? '(' + sideNames + ')' : '') + '</span>';
-      }else{
-        var cat = CAT_MAP[h.cat] || CATS[0];
-        card.innerHTML =
-          '<span class="history-date">' + md + '</span>' +
-          '<span class="history-tagdot" style="--dot:' + cat.dot + '"></span>' +
-          '<span>' + (cat.emoji || "") + " " + escapeHtml(h.name) + '</span>';
-      }
+
+      var photoWrap = document.createElement("div");
+      photoWrap.className = "history-photo";
+      var dot = document.createElement("span");
+      dot.className = "history-dot";
+      dot.style.setProperty("--dot", cat.dot);
+      var img = document.createElement("img");
+      img.alt = "";
+      img.loading = "lazy";
+      photoWrap.appendChild(img);
+      photoWrap.appendChild(dot);
+      card.appendChild(photoWrap);
+
+      var nameEl = document.createElement("p");
+      nameEl.className = "history-name";
+      nameEl.textContent = name;
+      card.appendChild(nameEl);
+
+      var dateEl = document.createElement("p");
+      dateEl.className = "history-date";
+      dateEl.textContent = md;
+      card.appendChild(dateEl);
+
       listEl.appendChild(card);
+
+      var sourceMenu = allMenus().find(function(m){ return m.name === name; });
+      var keyword = (sourceMenu && sourceMenu.img) || name;
+      fetchPhoto(keyword, function(photo){
+        if(photo && photo.url){
+          img.onload = function(){ img.classList.add("loaded"); };
+          img.src = photo.url;
+        }
+      });
     });
   }
 
