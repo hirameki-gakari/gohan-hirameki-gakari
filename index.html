@@ -206,6 +206,9 @@ body{
   flex-direction:column;
   gap:10px;
 }
+.action-bar.is-decided{
+  position:static;
+}
 
 header.hero{
   text-align:center;
@@ -1006,6 +1009,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
   </header>
 
+      <section>
+        <p class="section-label">人数</p>
+        <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
+      </section>
   <section class="mood-section">
     <p class="mood-heading">今日の気分は？</p>
     <div class="mood-grid" id="moodGrid" role="group" aria-label="今日の気分"></div>
@@ -1179,10 +1186,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   <details class="advanced-filters" id="advancedFilters">
     <summary>条件を細かく指定する <span class="chevron">▾</span></summary>
     <div class="advanced-body">
-      <section>
-        <p class="section-label">人数</p>
-        <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
-      </section>
+
 
       <section>
         <p class="section-label">主食(選ばなければ全部から)</p>
@@ -1289,7 +1293,16 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2" stroke-linecap="round"/></svg>
         家族に送る
       </button>
-      <button class="btn btn-secondary" id="shoppingListBtn" disabled>買い物リスト(準備中)</button>
+      <button class="btn btn-secondary" id="shoppingListBtn" aria-expanded="false" aria-controls="shoppingPanel">買い物リスト</button>
+      <section id="shoppingPanel" hidden aria-label="買い物リスト" style="text-align:left;margin:16px 0;padding:16px;background:var(--surface);border-radius:14px">
+        <h2 style="font-size:18px" id="shoppingTitle">買い物リスト</h2>
+        <p>家にある物・買った物にチェック。コピーするのは未チェックの材料だけです。</p>
+        <p style="font-size:13px">数量はレシピの目安です。単位が違う材料や「適量」は別々に表示します。</p>
+        <div id="shoppingItems"></div>
+        <button class="btn btn-secondary" id="copyShoppingBtn">未チェックの材料をコピー</button>
+        <textarea id="shoppingCopyText" aria-label="買い物リストのコピー用テキスト" hidden readonly style="width:100%;min-height:160px"></textarea>
+        <p id="shoppingStatus" role="status"></p>
+      </section>
       <button class="btn-link" id="newDayBtn">別の日の献立を考える</button>
     </div>
 
@@ -2098,8 +2111,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function recordSessionPick(combo){
     sessionMainHistory.unshift({name: combo.main.name, cat: combo.main.cat, genre: combo.main.genre});
     sessionMainHistory = sessionMainHistory.slice(0, SESSION_MEMORY);
-    sessionSideHistory.unshift({name: combo.side1.name, cat: combo.side1.cat});
-    sessionSideHistory.unshift({name: combo.side2.name, cat: combo.side2.cat});
+    [combo.side1, combo.side2].filter(Boolean).forEach(function(m){
+      sessionSideHistory.unshift({name:m.name, cat:m.cat});
+    });
     sessionSideHistory = sessionSideHistory.slice(0, SESSION_MEMORY * 2);
     if(combo.staple){
       sessionStapleHistory.unshift({name: combo.staple.name, staple: combo.staple.staple});
@@ -2180,7 +2194,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function allMenus(){
-    return BASE_MENUS.concat(customMenus);
+    return BASE_MENUS.filter(function(m){return m.id !== "b115";}).concat(customMenus);
   }
 
   function todayStr(){
@@ -2325,6 +2339,72 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var decidedPanel = document.getElementById("decidedPanel");
   var decidedRecap = document.getElementById("decidedRecap");
   var shoppingListBtn = document.getElementById("shoppingListBtn");
+  var shoppingPanel = document.getElementById("shoppingPanel");
+  var shoppingItems = document.getElementById("shoppingItems");
+  var shoppingStatus = document.getElementById("shoppingStatus");
+  var shoppingCopyText = document.getElementById("shoppingCopyText");
+  function clearShopping(){
+    if(!shoppingPanel) return;
+    document.getElementById("actionBar").classList.remove("is-decided");
+    shoppingPanel.hidden = true;
+    shoppingListBtn.setAttribute("aria-expanded","false");
+    shoppingItems.textContent = "";
+    shoppingStatus.textContent = "";
+    shoppingCopyText.hidden = true;
+  }
+  function shoppingRows(combo){
+    var rows = [];
+    comboMenus(combo).forEach(function(menu){
+      (menu.ing || []).forEach(function(raw){
+        var text = scaleIngredientText(raw, servingsRatio());
+        var match = text.match(/^(.+?)(大さじ|小さじ)?(\d+\/\d+|\d+(?:\.\d+)?)(kg|g|ml|L|個|本|枚|缶|丁|玉|株|束|袋|合|かけ|杯)?$/);
+        if(!match || /[・、各]/.test(match[1]) || (!match[2] && !match[4])){
+          rows.push({text:text, dishes:[menu.name]}); return;
+        }
+        var amount = match[3].split('/').map(Number);
+        var qty = amount.length === 2 ? amount[0]/amount[1] : amount[0];
+        var name = match[1].trim().replace(/^玉ねぎ$/, "たまねぎ");
+        var unit = (match[2] || '') + (match[4] || '');
+        var existing = rows.find(function(r){return r.name === name && r.unit === unit;});
+        if(existing){existing.qty += qty;existing.dishes.push(menu.name);}
+        else rows.push({name:name,unit:unit,qty:qty,dishes:[menu.name]});
+      });
+    });
+    return rows.map(function(r){
+      if(r.name){var q = String(Math.round(r.qty*100)/100);r.text=r.name+(/^(大|小)さじ/.test(r.unit) ? r.unit+q : q+r.unit);}
+      return r;
+    });
+  }
+  function renderShopping(){
+    shoppingItems.textContent = "";
+    shoppingStatus.textContent = "";
+    shoppingCopyText.hidden = true;
+    document.getElementById("shoppingTitle").textContent = "買い物リスト（"+servings+"人分）";
+    shoppingRows(currentPicks).forEach(function(row){
+      var label = document.createElement("label");
+      label.style.cssText="display:block;padding:10px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere";
+      var input = document.createElement("input");input.type="checkbox";input.dataset.material=row.text;
+      label.appendChild(input);label.appendChild(document.createTextNode(" "+row.text));
+      var detail=document.createElement("small");detail.textContent=row.dishes.join(" / ");detail.style.cssText="display:block;color:var(--text-muted);margin-left:24px";
+      label.appendChild(detail);shoppingItems.appendChild(label);
+    });
+  }
+  shoppingListBtn.addEventListener("click",function(){
+    if(!currentPicks)return;
+    var opening=shoppingPanel.hidden;
+    if(opening && !shoppingItems.children.length)renderShopping();
+    shoppingPanel.hidden=!opening;shoppingListBtn.setAttribute("aria-expanded",String(opening));
+    if(opening)trackEvent("open_shopping_list",{servings:servings});
+  });
+  document.getElementById("copyShoppingBtn").addEventListener("click",function(){
+    var materials=Array.from(shoppingItems.querySelectorAll("input:not(:checked)")).map(function(input){return "・"+input.dataset.material;});
+    if(!materials.length){shoppingStatus.textContent="必要な材料はすべてチェック済みです。";return;}
+    var text="買い物リスト（"+servings+"人分）\n"+materials.join("\n");
+    function fallback(){shoppingCopyText.value=text;shoppingCopyText.hidden=false;shoppingCopyText.focus();shoppingCopyText.select();shoppingStatus.textContent="テキストを選択してコピーしてください。";}
+    if(navigator.clipboard && navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){shoppingStatus.textContent="未チェックの材料をコピーしました。";}).catch(fallback);
+    else fallback();
+  });
+
   var newDayBtn = document.getElementById("newDayBtn");
   var sidesHeading = document.getElementById("sidesHeading");
   var stapleHeading = document.getElementById("stapleHeading");
@@ -2491,14 +2571,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function mainPool(){
-    var pool = allMenus().filter(function(m){ return roleOf(m) === "main"; });
+    var pool = allMenus().filter(function(m){ return roleOf(m) === "main" && !SOUP_STYLE_RE.test(m.name) && !/丼|ごはん|ご飯|チャーハン|炒飯|パスタ|焼きそば|うどん|ラーメン|オムライス|リゾット|雑炊|おにぎり|サンド|トースト/.test(m.name); });
     if(selectedCats.length > 0){
       pool = pool.filter(function(m){ return selectedCats.indexOf(m.cat) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
     if(activeMood){
       var moodPool = pool.filter(matchesMood);
-      if(moodPool.length > 0) pool = moodPool;
+      if(moodPool.length > 0 || activeMood.id === "quick") pool = moodPool;
     }
     var recent = recentNamesByRole("main", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
@@ -2520,14 +2600,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function staplePool(){
-    var pool = allMenus().filter(function(m){ return roleOf(m) === "staple"; });
+    var pool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !/フレンチトースト|パンケーキ|甘い|甘め/.test(m.name + (m.desc || "")); });
     if(selectedStaple.length > 0){
       pool = pool.filter(function(m){ return selectedStaple.indexOf(m.staple) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
     if(activeMood){
       var moodPool = pool.filter(matchesMood);
-      if(moodPool.length > 0) pool = moodPool;
+      if(moodPool.length > 0 || activeMood.id === "quick") pool = moodPool;
     }
     var recent = recentNamesByRole("staple", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
@@ -2584,24 +2664,39 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return [];
   }
 
-  function pickCombo(){
-    var stPool = staplePool();
-    if(stPool.length === 0) return null;
-    var staplePick = pickRandom(stPool);
+  function comboMenus(combo){
+    return SLOTS.map(function(key){ return combo[key]; }).filter(Boolean);
+  }
 
+  function pickCombo(){
     var mPool = mainPool();
     if(mPool.length === 0) return null;
     var mainPick = pickRandom(mPool);
-
-    var sPool1 = sidePool(mainPick, [mainPick.name], [mainPick.cat], false);
-    if(sPool1.length === 0) return null;
-    var side1 = pickRandom(sPool1);
-
-    var sPool2 = sidePool(mainPick, [mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
-    if(sPool2.length === 0) return null;
-    var side2 = pickRandom(sPool2);
-
-    return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
+    var stPool = staplePool();
+    // On low-effort days use a ready-to-serve staple, not a second cooked dish.
+    var quick = activeMood && activeMood.id === "quick";
+    var staplePick;
+    if(quick){
+      var kind = selectedStaple[0] || "rice";
+      if(kind === "noodle") staplePick = {name:"冷凍うどん",cat:"egg_natto",role:"staple",staple:"noodle",ing:["冷凍うどん5玉","めんつゆ適量"],steps:["うどんは袋の表示に従って加熱する。めんつゆは商品の表示通りに薄めて添える。"],cost5:500};
+      else if(kind === "bread") staplePick = {name:"食事パン",cat:"egg_natto",role:"staple",staple:"bread",ing:["食事パン5個"],steps:["そのまま盛り付ける。温める場合は商品の表示に従う。"],cost5:500};
+      else staplePick = {name:"ごはん（炊飯済み・パック）",cat:"egg_natto",role:"staple",staple:"rice",ing:["ごはん1000g"],steps:["炊飯済みのごはんを温めて盛る。パックごはんは商品の加熱表示に従う。"],cost5:500};
+      staplePick.isPlainStaple = true;
+      return {staple:staplePick,main:mainPick,side1:null,side2:null};
+    }
+    if(stPool.length === 0) return null;
+    var compatible = stPool.filter(function(m){return m.genre === mainPick.genre && m.cat !== mainPick.cat;});
+    staplePick = pickRandom(compatible.length ? compatible : stPool);
+    var chosen = [staplePick,mainPick];
+    function nextSide(){
+      var pool = sidePool(mainPick, chosen.map(function(m){return m.name;}), chosen.map(function(m){return m.cat;}), chosen.some(isSaladStyle));
+      pool = pool.filter(function(m){return !SOUP_STYLE_RE.test(m.name) || !chosen.some(function(x){return SOUP_STYLE_RE.test(x.name);});});
+      var side = pool.length ? pickRandom(pool) : null;
+      if(side) chosen.push(side);
+      return side;
+    }
+    var side1 = nextSide();
+    return {staple:staplePick,main:mainPick,side1:side1,side2:nextSide()};
   }
 
   function reasonFor(mainMenu){
@@ -2631,7 +2726,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   function scaleNumber(value, ratio){
     var scaled = value * ratio;
-    if(scaled <= 0.05) return "少々";
+    if(scaled < 0.125) return String(Math.max(0.01, Math.round(scaled * 100) / 100));
     if(scaled < 1){
       var q = Math.round(scaled * 4) / 4;
       var fracMap = {0.25:"1/4", 0.5:"1/2", 0.75:"3/4", 1:"1"};
@@ -2645,8 +2740,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function scaleIngredientText(text, ratio){
+    // Only scale quantities next to units; preserve names such as 6Pチーズ.
+    if(/^(?:卵|鶏卵)\s*[0-9]/.test(text)){
+      return text.replace(/(\d+(?:\.\d+)?)(?=個)/, function(n){return Math.max(1, Math.round(Number(n)*ratio));});
+    }
     if(ratio === 1) return text;
-    return text.replace(/(\d+)\s*\/\s*(\d+)|\d+(?:\.\d+)?/g, function(match, num, den){
+    return text.replace(/(?:(\d+)\s*\/\s*(\d+)|\d+(?:\.\d+)?)(?=\s*(?:kg|g|ml|L|個|本|枚|缶|丁|玉|株|束|袋|合|かけ|杯)|$)/g, function(match, num, den, offset){
+      var prefix = text.slice(0, offset);
+      if(prefix.lastIndexOf("(") > prefix.lastIndexOf(")") || prefix.lastIndexOf("（") > prefix.lastIndexOf("）")) return match;
       var value = (num !== undefined) ? (parseInt(num, 10) / parseInt(den, 10)) : parseFloat(match);
       return scaleNumber(value, ratio);
     });
@@ -2673,7 +2774,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function updateBudget(combo){
-    var costs = SLOTS.map(function(key){ return combo[key].cost5 || 0; });
+    var costs = comboMenus(combo).map(function(menu){ return menu.cost5 || 0; });
     var total = costs.reduce(function(a, b){ return a + b; }, 0);
     var scaled = Math.round(total * servingsRatio() / 50) * 50;
     budgetBox.hidden = false;
@@ -2719,6 +2820,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   function showPick(combo){
     currentPicks = combo;
+    clearShopping();
     recordSessionPick(combo);
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
@@ -2729,11 +2831,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     SLOTS.forEach(function(key){
       var menu = combo[key];
       var els = slotEls[key];
+      if(!menu){ els.block.hidden = true; return; }
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
       els.name.textContent = menu.name;
       els.desc.textContent = menu.desc || "";
-      els.tag.hidden = false;
+      els.tag.hidden = !!menu.isPlainStaple;
       els.tag.textContent = cat.label;
       els.tag.style.setProperty("--dot", cat.dot);
       els.tag.style.setProperty("--chip-bg", cat.bg);
@@ -2778,6 +2881,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
       fillRecipe(els, menu);
       setShopLink(els, menu);
+      if(menu.isPlainStaple){setPhotoEmpty(els);return;}
       setPhotoLoading(els);
 
       resolvePhoto(menu, function(photo){
@@ -2791,7 +2895,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       });
     });
     stapleHeading.hidden = false;
-    sidesHeading.hidden = false;
+    sidesHeading.hidden = !combo.side1 && !combo.side2;
     updateBudget(combo);
     spinBtn.hidden = true;
     decideRow.hidden = false;
@@ -2800,9 +2904,11 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function refreshServingsDisplay(){
     if(!currentPicks) return;
     SLOTS.forEach(function(key){
-      fillRecipe(slotEls[key], currentPicks[key]);
+      if(currentPicks[key]) fillRecipe(slotEls[key], currentPicks[key]);
     });
     updateBudget(currentPicks);
+    if(!shoppingPanel.hidden) renderShopping();
+    else shoppingItems.textContent = "";
     var mainPrice = Math.round((currentPicks.main.cost5 || 0) * servingsRatio() / 50) * 50;
     if(mainPrice > 0){
       priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
@@ -2817,6 +2923,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     clearInterval(spinTimer);
     comboRequestId++;
     currentPicks = null;
+    clearShopping();
     comboIntro.hidden = false;
     moodGreeting.hidden = true;
     stapleHeading.hidden = true;
@@ -2872,7 +2979,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       setPhotoLoading(els);
     });
 
-    var tickStaplePool = allMenus().filter(function(m){ return roleOf(m) === "staple"; });
+    var tickStaplePool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !/フレンチトースト|パンケーキ|甘い|甘め/.test(m.name + (m.desc || "")); });
     var tickMainPool = mainPool();
     var tickSidePool = allMenus().filter(function(m){ return roleOf(m) === "side"; });
 
@@ -2915,19 +3022,18 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       date: todayStr(),
       staple: currentPicks.staple ? {name: currentPicks.staple.name, cat: currentPicks.staple.cat} : null,
       main: {name: currentPicks.main.name, cat: currentPicks.main.cat},
-      sides: [
-        {name: currentPicks.side1.name, cat: currentPicks.side1.cat},
-        {name: currentPicks.side2.name, cat: currentPicks.side2.cat}
-      ]
+      sides: [currentPicks.side1, currentPicks.side2].filter(Boolean).map(function(m){return {name:m.name,cat:m.cat};})
     });
     history = history.slice(0, 30);
     safeSet(LS_HISTORY, history);
     renderHistory();
     showToast("今日の献立に決定しました！");
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
-    decidedRecap.textContent = currentPicks.staple.name + " ＋ " + currentPicks.main.name + " ＋ " + currentPicks.side1.name + " ＋ " + currentPicks.side2.name;
+    decidedRecap.textContent = comboMenus(currentPicks).map(function(m){return m.name;}).join(" ＋ ");
     decideRow.hidden = true;
     decidedPanel.hidden = false;
+    document.getElementById("actionBar").classList.add("is-decided");
+    decidedPanel.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
   });
 
   newDayBtn.addEventListener("click", function(){
@@ -2946,7 +3052,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var text = "今日の晩ごはん、決まりました。\n\n" +
       "主食：" + currentPicks.staple.name + "\n" +
       "主菜：" + currentPicks.main.name + "\n" +
-      "副菜：" + currentPicks.side1.name + "・" + currentPicks.side2.name + "\n\n" +
+      ([currentPicks.side1,currentPicks.side2].filter(Boolean).length ? "副菜：" + [currentPicks.side1,currentPicks.side2].filter(Boolean).map(function(m){return m.name;}).join("・") + "\n\n" : "\n") +
       "ごはんのひらめき係で決めました。";
     var url = location.href;
     if(navigator.share){
