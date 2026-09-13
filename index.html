@@ -296,9 +296,9 @@ section{margin-bottom:28px;}
 }
 
 /* ===== ひらり(案内役キャラクター) =====
-   4つの決定的な瞬間(誘う/尋ねる/考える→ひらめく/讃える)だけに登場する。
-   状態ごとの画像は現状すべて同じ立ち姿(hirameki.webp)を指しているが、
-   専用ポーズ(THINKING/HIRAMEKI/DECIDED)が揃い次第、MASCOT_STATE_IMG の
+   4つの決定的な瞬間(誘う/考える→ひらめく/讃える)だけに登場する。
+   状態ごとに専用ポーズ(hirameki-reveal / hirameki-thinking / hirameki-decided)
+   の画像を直接指定している。ポーズ画像を更新する場合は、各<img>の
    パスを差し替えるだけで反映できるようにしてある。 */
 .mascot{
   display:block;
@@ -1111,7 +1111,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <h1>ごはんのひらめき係</h1>
     <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
     <div class="hero-mascot">
-      <img src="assets/character/hirameki.webp" width="240" height="244" alt="" loading="lazy">
+      <img src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
       <p class="mascot-bubble" id="heroLine"></p>
     </div>
   </header>
@@ -1125,17 +1125,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <div class="card roulette-card" id="rouletteCard">
       <p class="result-eyebrow">今日のひらめき</p>
       <div class="result-lede">
-        <img class="mascot mascot-inline" id="mascotResult" src="assets/character/hirameki.webp" width="240" height="244" alt="" loading="lazy" hidden>
+        <img class="mascot mascot-inline" id="mascotResult" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy" hidden>
         <p class="mood-greeting" id="moodGreeting" hidden></p>
       </div>
 
       <div class="mascot-loading" id="mascotLoading" hidden>
-        <img class="mascot" src="assets/character/hirameki.webp" width="240" height="244" alt="" loading="lazy">
+        <img class="mascot" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
         <p class="mascot-bubble" id="thinkingLine"></p>
       </div>
 
       <div class="combo-intro" id="comboIntro">
-        <img class="mascot mascot-intro" src="assets/character/hirameki.webp" width="240" height="244" alt="" loading="lazy">
+        <img class="mascot mascot-intro" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
         <p>気分を選ぶと、今日のひらめきが届きます。</p>
       </div>
 
@@ -1406,7 +1406,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     <div class="decided-panel" id="decidedPanel" hidden>
       <div class="decided-mascot">
-        <img class="mascot" src="assets/character/hirameki.webp" width="240" height="244" alt="" loading="lazy">
+        <img class="mascot" src="assets/character/hirameki-decided.webp" width="240" height="244" alt="" loading="lazy">
         <p class="mascot-bubble" id="decidedLine"></p>
       </div>
       <p class="decided-message">今日の晩ごはんが決まりました。</p>
