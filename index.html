@@ -206,9 +206,6 @@ body{
   flex-direction:column;
   gap:10px;
 }
-.action-bar.is-decided{
-  position:static;
-}
 
 header.hero{
   text-align:center;
@@ -296,106 +293,6 @@ section{margin-bottom:28px;}
   font-size:14px;
   margin:0 0 18px;
   text-wrap:balance;
-}
-
-/* ===== ひらり(案内役キャラクター) =====
-   4つの決定的な瞬間(誘う/考える→ひらめく/讃える)だけに登場する。
-   状態ごとに専用ポーズ(hirameki-reveal / hirameki-thinking / hirameki-decided)
-   の画像を直接指定している。ポーズ画像を更新する場合は、各<img>の
-   パスを差し替えるだけで反映できるようにしてある。 */
-.mascot{
-  display:block;
-  height:auto;
-  flex:none;
-}
-.mascot-bubble{
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px 14px 14px 4px;
-  padding:9px 14px;
-  font-family:"Shippori Mincho", serif;
-  font-size:14px;
-  color:var(--text);
-  box-shadow:0 4px 12px -8px rgba(43,39,34,.25);
-  text-align:left;
-  text-wrap:balance;
-}
-
-/* ①ファーストビュー */
-.hero-mascot{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:12px;
-  margin-top:20px;
-  flex-wrap:wrap;
-}
-.hero-mascot img{
-  width:112px;
-  animation:mascotBreathe 3s ease-in-out infinite;
-}
-
-/* ③ひらめき結果(考える → ひらめく) */
-.result-lede{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-wrap:wrap;
-  gap:8px;
-  margin:0 0 18px;
-}
-.mascot-inline{
-  width:48px;
-}
-.mascot-intro{
-  width:64px;
-}
-.mascot-loading{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  margin:0 0 18px;
-}
-.mascot-loading img{
-  width:56px;
-  animation:mascotTilt 1.1s ease-in-out infinite;
-}
-
-/* ④決定時 */
-.decided-mascot{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  margin:0 0 8px;
-}
-.decided-mascot img{
-  width:40px;
-  animation:mascotHop .4s ease both;
-}
-
-@keyframes mascotBreathe{
-  0%,100%{ transform:translateY(0); }
-  50%{ transform:translateY(-2px); }
-}
-@keyframes mascotTilt{
-  0%,100%{ transform:rotate(0deg); }
-  50%{ transform:rotate(-4deg); }
-}
-@keyframes mascotPopIn{
-  from{ opacity:0; transform:scale(.92); }
-  to{ opacity:1; transform:scale(1); }
-}
-@keyframes mascotHop{
-  0%{ transform:translateY(0); }
-  40%{ transform:translateY(-5px); }
-  100%{ transform:translateY(0); }
-}
-@media (prefers-reduced-motion: reduce){
-  .hero-mascot img, .mascot-loading img, .decided-mascot img{
-    animation:none;
-  }
 }
 .dish-block{
   text-align:left;
@@ -867,18 +764,9 @@ footer.site-footer .footer-copyright{
   font-size:16px;
   font-weight:600;
   color:var(--text);
-  margin:0;
-  text-align:left;
+  margin:0 0 18px;
+  text-align:center;
   text-wrap:balance;
-  background:var(--surface);
-  border:1px solid var(--border);
-  border-radius:14px 14px 14px 4px;
-  padding:9px 14px;
-  box-shadow:0 4px 12px -8px rgba(43,39,34,.25);
-  animation:mascotPopIn .25s ease both;
-}
-@media (prefers-reduced-motion: reduce){
-  .mood-greeting{ animation:none; }
 }
 .dish-block-main{animation:resultReveal .35s ease both;}
 .sides-row{animation:resultReveal .4s ease both;}
@@ -1116,16 +1004,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <p class="eyebrow">今日の夕飯、どうする？</p>
     <h1>ごはんのひらめき係</h1>
     <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
-    <div class="hero-mascot">
-      <img class="mascot" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
-      <p class="mascot-bubble" id="heroLine"></p>
-    </div>
   </header>
 
-      <section>
-        <p class="section-label">人数</p>
-        <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
-      </section>
   <section class="mood-section">
     <p class="mood-heading">今日の気分は？</p>
     <div class="mood-grid" id="moodGrid" role="group" aria-label="今日の気分"></div>
@@ -1134,21 +1014,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   <section>
     <div class="card roulette-card" id="rouletteCard">
       <p class="result-eyebrow">今日のひらめき</p>
-
-      <div class="result-lede">
-        <img class="mascot mascot-inline" id="mascotResult" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy" hidden>
-        <p class="mood-greeting" id="moodGreeting" hidden></p>
-      </div>
-
-      <div class="mascot-loading" id="mascotLoading" hidden>
-        <img class="mascot" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
-        <p class="mascot-bubble" id="thinkingLine"></p>
-      </div>
-
-      <div class="combo-intro" id="comboIntro">
-        <img class="mascot mascot-intro" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
-        <p>気分を選ぶと、今日のひらめきが届きます。</p>
-      </div>
+      <p class="mood-greeting" id="moodGreeting" hidden></p>
+      <p class="combo-intro" id="comboIntro">気分を選ぶと、今日のひらめきが届きます。</p>
 
       <p class="staple-heading" id="stapleHeading" hidden>今日の主食</p>
       <div class="dish-block dish-block-staple" id="blockStaple" hidden>
@@ -1312,7 +1179,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   <details class="advanced-filters" id="advancedFilters">
     <summary>条件を細かく指定する <span class="chevron">▾</span></summary>
     <div class="advanced-body">
-
+      <section>
+        <p class="section-label">人数</p>
+        <div class="chips" id="servingsChips" role="group" aria-label="人数で量を調整"></div>
+      </section>
 
       <section>
         <p class="section-label">主食(選ばなければ全部から)</p>
@@ -1413,26 +1283,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     </div>
 
     <div class="decided-panel" id="decidedPanel" hidden>
-      <div class="decided-mascot">
-        <img class="mascot" src="assets/character/hirameki-decided.webp" width="240" height="244" alt="" loading="lazy">
-        <p class="mascot-bubble" id="decidedLine"></p>
-      </div>
       <p class="decided-message">今日の晩ごはんが決まりました。</p>
       <p class="decided-recap" id="decidedRecap"></p>
       <button class="btn btn-secondary" id="shareBtn">
         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2" stroke-linecap="round"/></svg>
         家族に送る
       </button>
-      <button class="btn btn-secondary" id="shoppingListBtn" aria-expanded="false" aria-controls="shoppingPanel">買い物リスト</button>
-      <section id="shoppingPanel" hidden aria-label="買い物リスト" style="text-align:left;margin:16px 0;padding:16px;background:var(--surface);border-radius:14px">
-        <h2 style="font-size:18px" id="shoppingTitle">買い物リスト</h2>
-        <p>家にある物・買った物にチェック。コピーするのは未チェックの材料だけです。</p>
-        <p style="font-size:13px">数量はレシピの目安です。単位が違う材料や「適量」は別々に表示します。</p>
-        <div id="shoppingItems"></div>
-        <button class="btn btn-secondary" id="copyShoppingBtn">未チェックの材料をコピー</button>
-        <textarea id="shoppingCopyText" aria-label="買い物リストのコピー用テキスト" hidden readonly style="width:100%;min-height:160px"></textarea>
-        <p id="shoppingStatus" role="status"></p>
-      </section>
+      <button class="btn btn-secondary" id="shoppingListBtn" disabled>買い物リスト(準備中)</button>
       <button class="btn-link" id="newDayBtn">別の日の献立を考える</button>
     </div>
 
@@ -1595,20 +1452,20 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"b138",cat:"tofu",name:"厚揚げと野菜の煮物",desc:"冷蔵庫の野菜を消費できる。",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:550,img:"fried tofu vegetable simmered",ing:["厚揚げ4枚","冷蔵庫の野菜適量","だし400ml","しょうゆ大さじ2"],steps:["野菜を切って炒める","厚揚げとだしを加える","調味料で味を調えて煮る"],photoUrl:"https://images.unsplash.com/photo-1546077500-45f1ac492543?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8ZnJpZWQlMjB0b2Z1JTIwdmVnZXRhYmxlcyUyMHNpbW1lcmVkJTIwamFwYW5lc2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjI2ODY0fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Adi Nugroho",photoCreditUrl:"https://unsplash.com/@adisini",photoDownloadLocation:"https://api.unsplash.com/photos/SCsexJD-Z0Q/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8ZnJpZWQlMjB0b2Z1JTIwdmVnZXRhYmxlcyUyMHNpbW1lcmVkJTIwamFwYW5lc2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjI2ODY0fDA"},
     {id:"b139",cat:"tofu",name:"豆腐の肉巻き照り焼き",desc:"豆腐を豚肉で巻いて満足感アップ。",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:800,img:"tofu bacon roll teriyaki",ing:["木綿豆腐1.5丁","豚薄切り肉12枚","しょうゆ・みりん各大さじ2"],steps:["豆腐を豚肉で巻く","フライパンで焼く","調味料を加えて絡める"],photoUrl:"https://images.unsplash.com/photo-1722573784505-a7b5ac6925c1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWVhdCUyMHJvbGxzJTIwc2tld2VyJTIwZ2xhemVkJTIwc2F1Y2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjMyMDI3fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Adhitya Sibikumar",photoCreditUrl:"https://unsplash.com/@adhitya_2505",photoDownloadLocation:"https://api.unsplash.com/photos/T2D7rC8wBSw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bWVhdCUyMHJvbGxzJTIwc2tld2VyJTIwZ2xhemVkJTIwc2F1Y2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjMyMDI3fDA"},
     {id:"t1",cat:"tofu",name:"豆腐の梅おかか和え",desc:"さっぱりとした冷奴アレンジ。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"tofu plum bonito salad",ing:["絹豆腐2丁","梅干し2個","かつお節適量"],steps:["豆腐を切って盛る","梅干しをたたく","かつお節と一緒にのせる"]},
-    {id:"t2",cat:"tofu",name:"豆腐の白和え",desc:"すりごまの香りが優しい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu shiraae salad",ing:["木綿豆腐1丁","すりごま大さじ2","しょうゆ・砂糖各小さじ2"],steps:["豆腐の水気を切って崩す","調味料と混ぜる","野菜と和える(お好みで)"]},
+    {id:"t2",cat:"tofu",name:"豆腐の白和え",desc:"すりごまの香りが優しい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu shiraae salad",ing:["木綿豆腐1丁","すりごま大さじ2","しょうゆ・砂糖各小さじ2"],steps:["豆腐の水気を切って崩す","調味料と混ぜる","野菜と和える(お好みで)"],photoUrl:"https://images.unsplash.com/photo-1546069901-55d1670321aa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8dG9mdSUyMHNlc2FtZSUyMGRyZXNzaW5nJTIwc2FsYWQlMjBjbG9zZXVwfGVufDB8MHx8fDE3ODkzNDI0MDF8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Anh Nguyen",photoCreditUrl:"https://unsplash.com/@pwign",photoDownloadLocation:"https://api.unsplash.com/photos/iJlYqriF-X0/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8dG9mdSUyMHNlc2FtZSUyMGRyZXNzaW5nJTIwc2FsYWQlMjBjbG9zZXVwfGVufDB8MHx8fDE3ODkzNDI0MDF8MA"},
     {id:"t3",cat:"tofu",name:"厚揚げの塩昆布和え",desc:"塩昆布の旨みで簡単に。",role:"side",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:350,img:"fried tofu salted kelp salad",ing:["厚揚げ2枚","塩昆布大さじ2","ごま油少々"],steps:["厚揚げを焼いて切る","塩昆布を加える","ごま油で和える"],photoUrl:"https://images.unsplash.com/photo-1770966666349-7b7708a8c0c2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwa29tYnUlMjBzZWF3ZWVkJTIwZGlzaHxlbnwwfDB8fHwxNzg5MjkzNzA1fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Zhang Ziyu",photoCreditUrl:"https://unsplash.com/@rs1497",photoDownloadLocation:"https://api.unsplash.com/photos/4FXu3BtANYs/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwa29tYnUlMjBzZWF3ZWVkJTIwZGlzaHxlbnwwfDB8fHwxNzg5MjkzNzA1fDA"},
     {id:"t4",cat:"tofu",name:"豆腐とわかめの中華サラダ",desc:"さっぱりとした前菜風副菜。",role:"side",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu seaweed chinese salad",ing:["絹豆腐1丁","乾燥わかめ大さじ2","ごま油・しょうゆ各大さじ1"],steps:["わかめを戻す","豆腐を切って盛る","調味料をかける"]},
     {id:"t5",cat:"tofu",name:"豆腐のねぎ塩麹和え",desc:"塩麹の旨みが染みる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"tofu scallion salad",ing:["絹豆腐2丁","長ねぎ1本","塩麹大さじ1"],steps:["豆腐を切る","ねぎを刻む","塩麹で和えてのせる"]},
     {id:"t6",cat:"tofu",name:"厚揚げの煮浸し",desc:"だしが染みたほっとする味。",role:"side",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:350,img:"fried tofu simmered dashi",ing:["厚揚げ3枚","だし400ml","しょうゆ大さじ2"],steps:["厚揚げを油抜きする","だしとしょうゆで煮る","味を含ませる"]},
     {id:"t7",cat:"tofu",name:"豆腐の梅肉和え",desc:"梅の酸味でさっぱりと。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"tofu plum paste salad",ing:["木綿豆腐1丁","梅肉大さじ1","かつお節"],steps:["豆腐を崩す","梅肉と混ぜる","かつお節をのせる"],photoUrl:"https://images.unsplash.com/photo-1638996757515-ea51b6eb91ba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8OXx8dG9mdSUyMHBsdW0lMjBzYXVjZSUyMGNvbGQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MTV8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jason Leung",photoCreditUrl:"https://unsplash.com/@ninjason",photoDownloadLocation:"https://api.unsplash.com/photos/JKq7GcFUgOU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8OXx8dG9mdSUyMHBsdW0lMjBzYXVjZSUyMGNvbGQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MTV8MA"},
-    {id:"t8",cat:"tofu",name:"油揚げの甘辛煮",desc:"箸休めにちょうど良い甘辛さ。",role:"side",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:300,img:"fried tofu sweet soy simmered",ing:["油揚げ3枚","しょうゆ・みりん・砂糖各大さじ2"],steps:["油揚げを油抜きする","調味料で煮る","味が染みるまで煮詰める"]},
+    {id:"t8",cat:"tofu",name:"油揚げの甘辛煮",desc:"箸休めにちょうど良い甘辛さ。",role:"side",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:300,img:"fried tofu sweet soy simmered",ing:["油揚げ3枚","しょうゆ・みりん・砂糖各大さじ2"],steps:["油揚げを油抜きする","調味料で煮る","味が染みるまで煮詰める"],photoUrl:"https://images.unsplash.com/photo-1590954975529-88d51567b8d5?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8OXx8ZnJpZWQlMjB0b2Z1JTIwcG91Y2glMjBnbGF6ZWQlMjBzaW1tZXJlZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI0MTF8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"David Todd McCarty",photoCreditUrl:"https://unsplash.com/@davidtoddmccarty",photoDownloadLocation:"https://api.unsplash.com/photos/hlFbTd_9XPs/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8OXx8ZnJpZWQlMjB0b2Z1JTIwcG91Y2glMjBnbGF6ZWQlMjBzaW1tZXJlZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI0MTF8MA"},
     {id:"t9",cat:"tofu",name:"豆腐のキムチ和え",desc:"ピリ辛でご飯が進む。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu kimchi salad",ing:["絹豆腐2丁","キムチ100g","ごま油少々"],steps:["豆腐を切って盛る","キムチをのせる","ごま油をかける"]},
     {id:"t10",cat:"tofu",name:"厚揚げのおろしポン酢和え",desc:"さっぱりとした大人味。",role:"side",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:350,img:"fried tofu grated radish salad",ing:["厚揚げ3枚","大根おろし適量","ポン酢大さじ2"],steps:["厚揚げを焼く","大根おろしをのせる","ポン酢をかける"],photoUrl:"https://images.unsplash.com/photo-1719537683877-025cb8951548?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwZ3JhdGVkJTIwZGFpa29uJTIwcG9uenUlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MjN8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Buddy AN",photoCreditUrl:"https://unsplash.com/@stbuddyp",photoDownloadLocation:"https://api.unsplash.com/photos/Ts0GNDn0UTE/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwZ3JhdGVkJTIwZGFpa29uJTIwcG9uenUlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MjN8MA"},
     {id:"t11",cat:"tofu",name:"豆腐のツナサラダ",desc:"火を使わず簡単に作れる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"tofu tuna salad",ing:["木綿豆腐1丁","ツナ缶1個","マヨネーズ大さじ2"],steps:["豆腐の水気を切る","ツナと混ぜる","マヨネーズで和える"]},
     {id:"t12",cat:"tofu",name:"豆腐の南蛮漬け",desc:"揚げた豆腐に甘酢がよく合う。",role:"side",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:400,img:"tofu nanban vinegar",ing:["木綿豆腐2丁","片栗粉適量","酢・しょうゆ・砂糖各大さじ2"],steps:["豆腐に片栗粉をまぶして揚げ焼きにする","甘酢だれを合わせる","豆腐を漬けて味をなじませる"],photoUrl:"https://images.unsplash.com/photo-1748813793182-d73716278759?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8N3x8ZnJpZWQlMjB0b2Z1JTIwbmFuYmFuJTIwdmluZWdhciUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzcyOHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jonathan Borba",photoCreditUrl:"https://unsplash.com/@jonathanborba",photoDownloadLocation:"https://api.unsplash.com/photos/7Ntd2l5dQgc/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8N3x8ZnJpZWQlMjB0b2Z1JTIwbmFuYmFuJTIwdmluZWdhciUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzcyOHww"},
     {id:"t13",cat:"tofu",name:"厚揚げの柚子胡椒和え",desc:"ピリッとした香りが効いた副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:350,img:"fried tofu yuzu pepper salad",ing:["厚揚げ3枚","柚子胡椒小さじ1","しょうゆ少々"],steps:["厚揚げを焼く","柚子胡椒としょうゆを混ぜる","厚揚げに絡める"],photoUrl:"https://images.unsplash.com/photo-1762305194201-077e7e23ccf2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Nnx8ZnJpZWQlMjB0b2Z1JTIweXV6dSUyMHBlcHBlciUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzczMXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Lee Milo",photoCreditUrl:"https://unsplash.com/@miloleetw",photoDownloadLocation:"https://api.unsplash.com/photos/N0lnO0gZlW8/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Nnx8ZnJpZWQlMjB0b2Z1JTIweXV6dSUyMHBlcHBlciUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzczMXww"},
     {id:"t14",cat:"tofu",name:"豆腐のもずく和え",desc:"つるんとした食感が楽しい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu mozuku seaweed salad",ing:["絹豆腐2丁","もずく酢1パック","かつお節"],steps:["豆腐を切って盛る","もずく酢をかける","かつお節をのせる"],photoUrl:"https://images.unsplash.com/photo-1638996758272-db3782f78819?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9mdSUyMG1venVrdSUyMHNlYXdlZWQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MzN8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jason Leung",photoCreditUrl:"https://unsplash.com/@ninjason",photoDownloadLocation:"https://api.unsplash.com/photos/_-4TlIJDJBg/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9mdSUyMG1venVrdSUyMHNlYXdlZWQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM3MzN8MA"},
-    {id:"t15",cat:"tofu",name:"油揚げとねぎの炒め物",desc:"香ばしく炒めた簡単副菜。",role:"side",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:300,img:"fried tofu scallion stir fry",ing:["油揚げ3枚","長ねぎ1本","しょうゆ大さじ1"],steps:["油揚げとねぎを切る","炒める","しょうゆで味を調える"]},
+    {id:"t15",cat:"tofu",name:"油揚げとねぎの炒め物",desc:"香ばしく炒めた簡単副菜。",role:"side",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:300,img:"fried tofu scallion stir fry",ing:["油揚げ3枚","長ねぎ1本","しょうゆ大さじ1"],steps:["油揚げとねぎを切る","炒める","しょうゆで味を調える"],photoUrl:"https://images.unsplash.com/photo-1629360636524-ac84e22911a0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NHx8ZnJpZWQlMjB0b2Z1JTIwc3RyaXBzJTIwc2NhbGxpb24lMjBzdGlyJTIwZnJ5JTIwcGFufGVufDB8MHx8fDE3ODkzNDI0MTl8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"taichi nakamura",photoCreditUrl:"https://unsplash.com/@naka_mura",photoDownloadLocation:"https://api.unsplash.com/photos/bCsloBrvRzI/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NHx8ZnJpZWQlMjB0b2Z1JTIwc3RyaXBzJTIwc2NhbGxpb24lMjBzdGlyJTIwZnJ5JTIwcGFufGVufDB8MHx8fDE3ODkzNDI0MTl8MA"},
     {id:"t16",cat:"tofu",name:"豆腐のザーサイ和え",desc:"ザーサイの塩気がアクセント。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tofu preserved vegetable salad",ing:["絹豆腐2丁","ザーサイ大さじ3","ごま油少々"],steps:["ザーサイを刻む","豆腐を切って盛る","ザーサイとごま油をのせる"]},
     {id:"t17",cat:"tofu",name:"厚揚げの照り焼き風小鉢",desc:"甘辛だれでご飯にも合う。",role:"side",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:350,img:"fried tofu teriyaki small dish",ing:["厚揚げ3枚","しょうゆ・みりん各大さじ1.5"],steps:["厚揚げを焼く","調味料を加えて煮絡める","照りが出たら仕上げる"],photoUrl:"https://images.unsplash.com/photo-1764674963000-0d113663bc0d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwZ2xhemVkJTIwc295JTIwc2F1Y2UlMjBzbWFsbCUyMGJvd2x8ZW58MHwwfHx8MTc4OTMwOTUwMHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"XinYing Lin",photoCreditUrl:"https://unsplash.com/@xinyinglin",photoDownloadLocation:"https://api.unsplash.com/photos/_VWg1YZNDnM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZnJpZWQlMjB0b2Z1JTIwZ2xhemVkJTIwc295JTIwc2F1Y2UlMjBzbWFsbCUyMGJvd2x8ZW58MHwwfHx8MTc4OTMwOTUwMHww"},
     {id:"t18",cat:"tofu",name:"豆腐の海苔和え",desc:"磯の香りがふわっと広がる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"tofu nori seaweed salad",ing:["絹豆腐2丁","焼き海苔1枚","しょうゆ適量"],steps:["豆腐を切って盛る","海苔をちぎってのせる","しょうゆをかける"],photoUrl:"https://images.unsplash.com/photo-1634412116466-926be93580a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9mdSUyMHNlYXdlZWQlMjBub3JpJTIwZGlzaHxlbnwwfDB8fHwxNzg5MjkzNzQ0fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Alex Gorey",photoCreditUrl:"https://unsplash.com/@alexgorey",photoDownloadLocation:"https://api.unsplash.com/photos/k3JMHecBxz8/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9mdSUyMHNlYXdlZWQlMjBub3JpJTIwZGlzaHxlbnwwfDB8fHwxNzg5MjkzNzQ0fDA"},
@@ -1625,7 +1482,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"on5",cat:"onion",name:"玉ねぎたっぷりハンバーグ",desc:"玉ねぎの甘みでジューシーに。",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:900,img:"hamburger steak onion",ing:["玉ねぎ2個","合いびき肉500g","パン粉・卵各適量","ソース適量"],steps:["玉ねぎをみじん切りにして炒める","ひき肉と混ぜてタネを作る","焼いてソースをかける"],photoUrl:"https://images.unsplash.com/photo-1560750133-ca2dcd3801f1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8aGFtYnVyZyUyMHN0ZWFrJTIwb25pb24lMjBzYXVjZSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMjY4Nzl8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"MAK",photoCreditUrl:"https://unsplash.com/@mak_jp",photoDownloadLocation:"https://api.unsplash.com/photos/Qo5zW7_9cGo/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8aGFtYnVyZyUyMHN0ZWFrJTIwb25pb24lMjBzYXVjZSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMjY4Nzl8MA"},
     {id:"on6",cat:"onion",name:"玉ねぎと鶏むね肉のさっぱり煮",desc:"むね肉も柔らかく仕上がる。",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:1,cost5:800,img:"onion chicken breast simmered",ing:["玉ねぎ3個","鶏むね肉2枚","ポン酢大さじ4","だし200ml"],steps:["鶏肉をそぎ切りにする","玉ねぎと一緒に煮る","ポン酢で味を調える"],photoUrl:"https://images.unsplash.com/photo-1598515213712-623a4da0cfad?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8b25pb24lMjBjaGlja2VuJTIwYnJlYXN0JTIwc2ltbWVyZWQlMjBjaXRydXMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjI2ODgyfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Sam Moghadam",photoCreditUrl:"https://unsplash.com/@sammoghadam",photoDownloadLocation:"https://api.unsplash.com/photos/e3nO3kXugbM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8b25pb24lMjBjaGlja2VuJTIwYnJlYXN0JTIwc2ltbWVyZWQlMjBjaXRydXMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjI2ODgyfDA"},
     {id:"ons1",cat:"onion",name:"玉ねぎの丸ごとレンジ蒸し",desc:"レンジだけで作れる簡単副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:15,difficulty:2,cost5:350,img:"microwave steamed onion",ing:["玉ねぎ3個","バター15g","しょうゆ少々"],steps:["玉ねぎの皮をむいてラップで包む","レンジで加熱する","バターとしょうゆをかける"]},
-    {id:"ons2",cat:"onion",name:"玉ねぎとわかめの酢の物",desc:"さっぱりとした箸休め。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"onion seaweed vinegar salad",ing:["玉ねぎ2個","乾燥わかめ大さじ2","酢・しょうゆ各大さじ2"],steps:["玉ねぎを薄切りにして水にさらす","わかめを戻す","調味料で和える"]},
+    {id:"ons2",cat:"onion",name:"玉ねぎとわかめの酢の物",desc:"さっぱりとした箸休め。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"onion seaweed vinegar salad",ing:["玉ねぎ2個","乾燥わかめ大さじ2","酢・しょうゆ各大さじ2"],steps:["玉ねぎを薄切りにして水にさらす","わかめを戻す","調味料で和える"],photoUrl:"https://images.unsplash.com/photo-1546393273-5ae641051e01?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwb25pb24lMjB3YWthbWUlMjB2aW5lZ2FyJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDM0fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Rae Goldman",photoCreditUrl:"https://unsplash.com/@candidlyrae",photoDownloadLocation:"https://api.unsplash.com/photos/KqFQZnU4pCg/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwb25pb24lMjB3YWthbWUlMjB2aW5lZ2FyJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDM0fDA"},
     {id:"ons3",cat:"onion",name:"玉ねぎの甘酢漬け",desc:"作り置きにも便利な一品。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"onion sweet vinegar pickle",ing:["玉ねぎ3個","酢・砂糖各大さじ3","塩少々"],steps:["玉ねぎを薄切りにする","塩をふって水気を絞る","甘酢に漬ける"],photoUrl:"https://images.unsplash.com/photo-1560963689-b9e9773ff232?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cGlja2xlZCUyMG9uaW9uJTIwdmluZWdhciUyMGNsb3NldXAlMjBkaXNofGVufDB8MHx8fDE3ODkzMDcyMTN8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Louis Hansel",photoCreditUrl:"https://unsplash.com/@louishansel",photoDownloadLocation:"https://api.unsplash.com/photos/Ids64B_rD_c/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cGlja2xlZCUyMG9uaW9uJTIwdmluZWdhciUyMGNsb3NldXAlMjBkaXNofGVufDB8MHx8fDE3ODkzMDcyMTN8MA"},
     {id:"ons4",cat:"onion",name:"オニオンサラダおかかがけ",desc:"シンプルで食べやすい定番。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:250,img:"onion salad bonito",ing:["玉ねぎ2個","かつお節適量","しょうゆ適量"],steps:["玉ねぎを薄切りにして水にさらす","水気を切って盛る","かつお節としょうゆをかける"]},
     {id:"ca1",cat:"carrot",name:"にんじんしりしり",desc:"沖縄の定番、彩りも良い。",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:700,img:"carrot stir fry okinawan",ing:["にんじん4本","卵4個","ツナ缶2個","しょうゆ大さじ2"],steps:["にんじんを細切りにする","ツナと一緒に炒める","卵を加えてさっと炒める"],photoUrl:"https://images.unsplash.com/photo-1773358331096-26b5df1f1990?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2Fycm90JTIwc3RpciUyMGZyeSUyMGVnZ3xlbnwwfDB8fHwxNzg5MjI5NzYxfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Gennady Zakharin",photoCreditUrl:"https://unsplash.com/@gennady107",photoDownloadLocation:"https://api.unsplash.com/photos/Ym7oGQs4WNg/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2Fycm90JTIwc3RpciUyMGZyeSUyMGVnZ3xlbnwwfDB8fHwxNzg5MjI5NzYxfDA"},
@@ -1656,7 +1513,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"to6",cat:"tomato",name:"まるごとトマトの肉詰め",desc:"見た目も華やかなおもてなし料理。",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:950,img:"stuffed tomato baked",ing:["トマト5個","合いびき肉350g","玉ねぎ1/2個","チーズ適量"],steps:["トマトの中身をくり抜く","肉だねを詰める","チーズをのせて焼く"],photoUrl:"https://images.unsplash.com/photo-1618825827072-74b096164e44?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3R1ZmZlZCUyMHdob2xlJTIwdG9tYXRvJTIwYmFrZWQlMjBjaGVlc2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjQwNjU5fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"May Lawrence",photoCreditUrl:"https://unsplash.com/@masiemay",photoDownloadLocation:"https://api.unsplash.com/photos/IBQturWlSgU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3R1ZmZlZCUyMHdob2xlJTIwdG9tYXRvJTIwYmFrZWQlMjBjaGVlc2UlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjQwNjU5fDA"},
     {id:"tos1",cat:"tomato",name:"トマトの塩昆布和え",desc:"塩昆布の旨みだけで作れる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tomato salted kelp salad side",ing:["トマト3個","塩昆布大さじ2","ごま油少々"],steps:["トマトを切る","塩昆布を加える","ごま油で和える"],photoUrl:"https://images.unsplash.com/photo-1692106915449-eef361456693?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9tYXRvJTIwa29tYnUlMjBzZWF3ZWVkJTIwc2FsYWR8ZW58MHwwfHx8MTc4OTI5MzYyMHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Mayumi Maciel",photoCreditUrl:"https://unsplash.com/@mayumimaciel",photoDownloadLocation:"https://api.unsplash.com/photos/RMzb_Pg5Euw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9tYXRvJTIwa29tYnUlMjBzZWF3ZWVkJTIwc2FsYWR8ZW58MHwwfHx8MTc4OTI5MzYyMHww"},
     {id:"tos2",cat:"tomato",name:"トマトのマリネ",desc:"さっぱりとした箸休め。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tomato marinade salad side",ing:["トマト3個","酢・オリーブオイル各大さじ2"],steps:["トマトを切る","調味料を混ぜる","トマトにかけて冷やす"],photoUrl:"https://images.unsplash.com/photo-1731792055060-d1f91019180a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8dG9tYXRvJTIwbWFyaW5hdGVkJTIwc2FsYWQlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjkzNjIzfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Gennady Zakharin",photoCreditUrl:"https://unsplash.com/@gennady107",photoDownloadLocation:"https://api.unsplash.com/photos/31K_fnPtaZc/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8dG9tYXRvJTIwbWFyaW5hdGVkJTIwc2FsYWQlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjkzNjIzfDA"},
-    {id:"tos3",cat:"tomato",name:"トマトと玉ねぎのサラダ",desc:"定番の組み合わせのサラダ。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tomato onion salad",ing:["トマト3個","玉ねぎ1/2個","ドレッシング適量"],steps:["トマトを切る","玉ねぎを薄切りにして水にさらす","盛り付けてドレッシングをかける"]},
+    {id:"tos3",cat:"tomato",name:"トマトと玉ねぎのサラダ",desc:"定番の組み合わせのサラダ。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"tomato onion salad",ing:["トマト3個","玉ねぎ1/2個","ドレッシング適量"],steps:["トマトを切る","玉ねぎを薄切りにして水にさらす","盛り付けてドレッシングをかける"],photoUrl:"https://images.unsplash.com/photo-1673646961402-df39d8c32448?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwdG9tYXRvJTIwb25pb24lMjBzYWxhZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI0NDR8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Natalia Gusakova",photoCreditUrl:"https://unsplash.com/@nataliaraylenegusakova",photoDownloadLocation:"https://api.unsplash.com/photos/NTPrgH82SBA/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwdG9tYXRvJTIwb25pb24lMjBzYWxhZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI0NDR8MA"},
     {id:"tos4",cat:"tomato",name:"ミニトマトのはちみつマリネ",desc:"子どもにも食べやすい甘め副菜。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"cherry tomato honey marinade",ing:["ミニトマト20個","はちみつ大さじ1","レモン汁少々"],steps:["ミニトマトを半分に切る","はちみつとレモン汁を混ぜる","トマトと和えて冷やす"],photoUrl:"https://images.unsplash.com/photo-1559848062-8d9d54682e1a?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hlcnJ5JTIwdG9tYXRvJTIwaG9uZXklMjBtYXJpbmF0ZWQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM2Mjh8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Louis Hansel",photoCreditUrl:"https://unsplash.com/@louishansel",photoDownloadLocation:"https://api.unsplash.com/photos/9fy37IYSB3g/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hlcnJ5JTIwdG9tYXRvJTIwaG9uZXklMjBtYXJpbmF0ZWQlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM2Mjh8MA"},
     {id:"le1",cat:"lettuce",name:"レタスチャーハン",desc:"シャキシャキ食感が楽しい。",role:"staple",staple:"rice",genre:"chinese",weight:"hearty",cookingTime:10,difficulty:1,tags:["主食"],cost5:600,img:"lettuce fried rice",ing:["レタス1個","ごはん5皿分","卵4個","しょうゆ大さじ2"],steps:["卵とごはんを炒める","レタスをちぎって加える","しょうゆで味を調えてさっと炒める"],photoUrl:"https://images.unsplash.com/photo-1664334996269-54ca4fb9a168?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8bGV0dHVjZSUyMGZyaWVkJTIwcmljZSUyMGZvb2R8ZW58MHwwfHx8MTc4OTE5MzIzNHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Abraham Owunna",photoCreditUrl:"https://unsplash.com/@famedia",photoDownloadLocation:"https://api.unsplash.com/photos/bEUZfy7m-NU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8bGV0dHVjZSUyMGZyaWVkJTIwcmljZSUyMGZvb2R8ZW58MHwwfHx8MTc4OTE5MzIzNHww"},
     {id:"le2",cat:"lettuce",name:"レタスと豚しゃぶのサラダ",desc:"さっぱり食べたい日に。",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:900,img:"lettuce pork shabu salad",ing:["レタス1個","豚薄切り肉400g","ポン酢適量"],steps:["豚肉をゆでて冷水で締める","レタスをちぎって盛る","豚肉をのせてポン酢をかける"],photoUrl:"https://images.unsplash.com/photo-1782468654011-270157b7107f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y29va2VkJTIwcG9yayUyMHNoYWJ1JTIwbGV0dHVjZSUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0MDY2Mnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Zayed Ahmed Zadu",photoCreditUrl:"https://unsplash.com/@zayed_ahmed_zadu",photoDownloadLocation:"https://api.unsplash.com/photos/GJQ2jH0HDt0/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y29va2VkJTIwcG9yayUyMHNoYWJ1JTIwbGV0dHVjZSUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0MDY2Mnww"},
@@ -1665,7 +1522,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"le5",cat:"lettuce",name:"サンチュ風レタス包み焼肉",desc:"野菜たっぷりで巻いて食べる。",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:1200,img:"lettuce wrap korean bbq",ing:["レタス1個","牛カルビ350g","焼肉のたれ適量"],steps:["牛肉を焼く","レタスを洗って用意する","レタスで肉を包んで食べる"],photoUrl:"https://images.unsplash.com/photo-1695606452994-744d28349d71?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMHdyYXAlMjBrb3JlYW4lMjBiYnElMjBiZWVmJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNTE3MXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Daniel",photoCreditUrl:"https://unsplash.com/@unsplashbydan",photoDownloadLocation:"https://api.unsplash.com/photos/2lGxAlHCuSA/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMHdyYXAlMjBrb3JlYW4lMjBiYnElMjBiZWVmJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNTE3MXww"},
     {id:"le6",cat:"lettuce",name:"レタスと鶏ひき肉の中華炒め",desc:"シャキシャキ食感の中華炒め。",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:750,img:"lettuce minced chicken stir fry",ing:["レタス1個","鶏ひき肉300g","オイスターソース大さじ2"],steps:["鶏ひき肉を炒める","オイスターソースで味を調える","レタスを加えてさっと炒める"],photoUrl:"https://images.unsplash.com/photo-1750190624031-8a1eacae11bb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8bGV0dHVjZSUyMG1pbmNlZCUyMGNoaWNrZW4lMjBzdGlyJTIwZnJ5fGVufDB8MHx8fDE3ODkyMzYyOTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Abdul Raheem Kannath",photoCreditUrl:"https://unsplash.com/@raheemblacksnows",photoDownloadLocation:"https://api.unsplash.com/photos/aAjf4-f3suY/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8bGV0dHVjZSUyMG1pbmNlZCUyMGNoaWNrZW4lMjBzdGlyJTIwZnJ5fGVufDB8MHx8fDE3ODkyMzYyOTJ8MA"},
     {id:"les1",cat:"lettuce",name:"レタスとハムのサラダ",desc:"彩りよく食卓に並べやすい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"lettuce ham salad side",ing:["レタス1個","ハム4枚","マヨネーズまたはドレッシング"],steps:["レタスをちぎる","ハムを細切りにする","ドレッシングで和える"]},
-    {id:"les2",cat:"lettuce",name:"レタスのおかか和え",desc:"シンプルで箸が進む副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:250,img:"lettuce bonito salad",ing:["レタス1個","かつお節適量","しょうゆ少々"],steps:["レタスをちぎる","かつお節をのせる","しょうゆをかける"]},
+    {id:"les2",cat:"lettuce",name:"レタスのおかか和え",desc:"シンプルで箸が進む副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:250,img:"lettuce bonito salad",ing:["レタス1個","かつお節適量","しょうゆ少々"],steps:["レタスをちぎる","かつお節をのせる","しょうゆをかける"],photoUrl:"https://images.unsplash.com/photo-1676300186673-615bcc8d5d68?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMGJvbml0byUyMGZsYWtlcyUyMHNhbGFkJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDUwfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Orkun Orcan",photoCreditUrl:"https://unsplash.com/@orkunorcan",photoDownloadLocation:"https://api.unsplash.com/photos/Bm8radCPG0I/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMGJvbml0byUyMGZsYWtlcyUyMHNhbGFkJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDUwfDA"},
     {id:"les3",cat:"lettuce",name:"レタスと海苔のナムル",desc:"ごま油香る中華風副菜。",role:"side",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"lettuce nori namul",ing:["レタス1個","焼き海苔1枚","ごま油・塩各適量"],steps:["レタスをちぎる","海苔をちぎって加える","ごま油と塩で和える"],photoUrl:"https://images.unsplash.com/photo-1656687879710-4db17fa34f99?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMHNlYXdlZWQlMjBuYW11bCUyMHNhbGFkfGVufDB8MHx8fDE3ODkyOTM2MzZ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"MChe Lee",photoCreditUrl:"https://unsplash.com/@mclee",photoDownloadLocation:"https://api.unsplash.com/photos/2fnjRkmeyHU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bGV0dHVjZSUyMHNlYXdlZWQlMjBuYW11bCUyMHNhbGFkfGVufDB8MHx8fDE3ODkyOTM2MzZ8MA"},
     {id:"les4",cat:"lettuce",name:"ちぎりレタスの中華ドレッシング和え",desc:"手早く作れるさっぱり副菜。",role:"side",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"lettuce chinese dressing salad",ing:["レタス1個","中華ドレッシング適量","炒りごま少々"],steps:["レタスを手でちぎる","ドレッシングをかける","ごまを散らす"],photoUrl:"https://images.unsplash.com/photo-1722032617357-7b09276b1a8d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9ybiUyMGxldHR1Y2UlMjBjaGluZXNlJTIwZHJlc3NpbmclMjBzYWxhZHxlbnwwfDB8fHwxNzg5MjkzNjM4fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"KODO Tenco",photoCreditUrl:"https://unsplash.com/@kodotenco",photoDownloadLocation:"https://api.unsplash.com/photos/xbwMkgORF5U/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dG9ybiUyMGxldHR1Y2UlMjBjaGluZXNlJTIwZHJlc3NpbmclMjBzYWxhZHxlbnwwfDB8fHwxNzg5MjkzNjM4fDA"},
     {id:"cb1",cat:"cabbage",name:"ロールキャベツ",desc:"コンソメ味の優しいごちそう。",genre:"western",weight:"hearty",cookingTime:45,difficulty:2,cost5:950,img:"cabbage rolls main",ing:["キャベツ1個","合いびき肉350g","玉ねぎ1/2個","コンソメ1個"],steps:["キャベツを下ゆでして肉を包む","鍋に並べる","コンソメスープで煮込む"],photoUrl:"https://images.unsplash.com/photo-1622220736031-714bcc9f96b0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2FiYmFnZSUyMHJvbGxzJTIwc3R1ZmZlZCUyMHNpbW1lcmVkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNTE3Nnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Karolina Kołodziejczak",photoCreditUrl:"https://unsplash.com/@rabbit_in_blue",photoDownloadLocation:"https://api.unsplash.com/photos/pgOIplh_jcg/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2FiYmFnZSUyMHJvbGxzJTIwc3R1ZmZlZCUyMHNpbW1lcmVkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNTE3Nnww"},
@@ -1684,7 +1541,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"po4",cat:"potato",name:"じゃがいもと豚肉のバター醤油炒め",desc:"バター醤油の香りが良い。",genre:"japanese",weight:"hearty",cookingTime:45,difficulty:2,cost5:850,img:"potato pork butter soy stir fry",ing:["じゃがいも4個","豚こま切れ300g","バター15g","しょうゆ大さじ1"],steps:["じゃがいもを下ゆでする","豚肉と炒める","バターとしょうゆで仕上げる"],photoUrl:"https://images.unsplash.com/photo-1564675310209-9bae28805eae?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NHx8cG90YXRvJTIwcG9yayUyMHN0aXIlMjBmcnklMjBidXR0ZXIlMjBzb3klMjBwbGF0ZSUyMGNsb3NldXB8ZW58MHwwfHx8MTc4OTI0MDY3Mnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Alyssa Kowalski",photoCreditUrl:"https://unsplash.com/@lockandkey",photoDownloadLocation:"https://api.unsplash.com/photos/uIi5gr2Zw2Q/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NHx8cG90YXRvJTIwcG9yayUyMHN0aXIlMjBmcnklMjBidXR0ZXIlMjBzb3klMjBwbGF0ZSUyMGNsb3NldXB8ZW58MHwwfHx8MTc4OTI0MDY3Mnww"},
     {id:"po5",cat:"potato",name:"コロッケ",desc:"手間をかけたい日のごちそう。",genre:"western",weight:"hearty",cookingTime:20,difficulty:2,cost5:900,img:"korokke potato croquette",ing:["じゃがいも6個","合いびき肉200g","玉ねぎ1/2個","パン粉・卵各適量"],steps:["じゃがいもをゆでて潰す","ひき肉と玉ねぎを炒めて混ぜる","成形して揚げる"],photoUrl:"https://images.unsplash.com/photo-1649980338782-7992d60be610?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBwb3RhdG8lMjBjcm9xdWV0dGV8ZW58MHwwfHx8MTc4OTIzNjI5N3ww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"bubun",photoCreditUrl:"https://unsplash.com/@masbuuun",photoDownloadLocation:"https://api.unsplash.com/photos/CsZTvmFPxZY/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBwb3RhdG8lMjBjcm9xdWV0dGV8ZW58MHwwfHx8MTc4OTIzNjI5N3ww"},
     {id:"po6",cat:"potato",name:"じゃがいもと牛肉のオイスター炒め",desc:"ボリュームのある炒め物。",genre:"chinese",weight:"hearty",cookingTime:45,difficulty:2,cost5:1200,img:"potato beef oyster stir fry",ing:["じゃがいも4個","牛切り落とし300g","オイスターソース大さじ2"],steps:["じゃがいもを下ゆでする","牛肉と炒める","オイスターソースで味を調える"],photoUrl:"https://images.unsplash.com/photo-1713742000609-7dfb86bfc720?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Nnx8cG90YXRvJTIwYmVlZiUyMG95c3RlciUyMHNhdWNlJTIwc3RpciUyMGZyeSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMzYxNjR8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Marcelo de la Torre",photoCreditUrl:"https://unsplash.com/@marcelodlt",photoDownloadLocation:"https://api.unsplash.com/photos/BnkjG7OZzMw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Nnx8cG90YXRvJTIwYmVlZiUyMG95c3RlciUyMHNhdWNlJTIwc3RpciUyMGZyeSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMzYxNjR8MA"},
-    {id:"pos1",cat:"potato",name:"ポテトサラダ",desc:"ボリュームのある定番副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:450,img:"potato salad side",ing:["じゃがいも5個","きゅうり1本","ハムまたはベーコン適量","マヨネーズ大さじ4"],steps:["じゃがいもをゆでて潰す","きゅうりとハムを加える","マヨネーズで和える"]},
+    {id:"pos1",cat:"potato",name:"ポテトサラダ",desc:"ボリュームのある定番副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:450,img:"potato salad side",ing:["じゃがいも5個","きゅうり1本","ハムまたはベーコン適量","マヨネーズ大さじ4"],steps:["じゃがいもをゆでて潰す","きゅうりとハムを加える","マヨネーズで和える"],photoUrl:"https://images.unsplash.com/photo-1682050153093-06c8929ca24f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBwb3RhdG8lMjBzYWxhZCUyMGNyZWFteSUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ1Mnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Xavier Chng",photoCreditUrl:"https://unsplash.com/@cohesionsingapore",photoDownloadLocation:"https://api.unsplash.com/photos/cnEU2fk9hHk/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBwb3RhdG8lMjBzYWxhZCUyMGNyZWFteSUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ1Mnww"},
     {id:"pos2",cat:"potato",name:"じゃがいもの青のり和え",desc:"磯の香りがアクセント。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"potato seaweed butter salad side",ing:["じゃがいも4個","青のり適量","塩・バター少々"],steps:["じゃがいもをゆでる","一口大に切る","青のりとバターで和える"],photoUrl:"https://images.unsplash.com/photo-1593895648796-9139c6bee45c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwc2Vhd2VlZCUyMGZsYWtlcyUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzY1NHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Egidijus Bielskis",photoCreditUrl:"https://unsplash.com/@wizardwork",photoDownloadLocation:"https://api.unsplash.com/photos/Wp2DicA5Gi0/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwc2Vhd2VlZCUyMGZsYWtlcyUyMGRpc2h8ZW58MHwwfHx8MTc4OTI5MzY1NHww"},
     {id:"pos3",cat:"potato",name:"じゃがいもの甘辛煮",desc:"ご飯に合う甘辛味。",role:"side",genre:"japanese",weight:"healthy",cookingTime:45,difficulty:2,cost5:350,img:"potato sweet soy simmered side",ing:["じゃがいも4個","しょうゆ・みりん・砂糖各大さじ2"],steps:["じゃがいもを一口大に切る","下ゆでする","調味料で煮絡める"],photoUrl:"https://images.unsplash.com/photo-1537786090555-3ae8e11b1d4d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2ltbWVyZWQlMjBwb3RhdG8lMjBnbGF6ZWQlMjBjbG9zZXVwJTIwZGlzaHxlbnwwfDB8fHwxNzg5MzA3MjM4fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jonathan Farber",photoCreditUrl:"https://unsplash.com/@farber",photoDownloadLocation:"https://api.unsplash.com/photos/hltIeEQC_uQ/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2ltbWVyZWQlMjBwb3RhdG8lMjBnbGF6ZWQlMjBjbG9zZXVwJTIwZGlzaHxlbnwwfDB8fHwxNzg5MzA3MjM4fDA"},
     {id:"pos4",cat:"potato",name:"じゃがバター",desc:"シンプルながら満足感のある副菜。",role:"side",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:300,img:"buttered potato",ing:["じゃがいも5個","バター20g","塩少々"],steps:["じゃがいもを皮ごとゆでる","半分に切る","バターと塩をのせる"],photoUrl:"https://images.unsplash.com/photo-1633959639799-6d3f66e05710?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmFrZWQlMjBwb3RhdG8lMjBidXR0ZXIlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM2NTl8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Markus Winkler",photoCreditUrl:"https://unsplash.com/@markuswinkler",photoDownloadLocation:"https://api.unsplash.com/photos/9DEggBoY8CY/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmFrZWQlMjBwb3RhdG8lMjBidXR0ZXIlMjBkaXNofGVufDB8MHx8fDE3ODkyOTM2NTl8MA"},
@@ -1704,7 +1561,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"pi4",cat:"bell_pepper",name:"ピーマンと牛肉のオイスター炒め",desc:"ピーマンの苦みと旨みが合う。",genre:"chinese",weight:"hearty",cookingTime:10,difficulty:1,cost5:1300,img:"bell pepper beef oyster stir fry",ing:["ピーマン6個","牛切り落とし300g","オイスターソース大さじ2"],steps:["ピーマンを切る","牛肉と炒める","オイスターソースで味を調える"],photoUrl:"https://images.unsplash.com/photo-1783196736260-dd788dff4132?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8YmVsbCUyMHBlcHBlciUyMGJlZWYlMjBveXN0ZXIlMjBzdGlyJTIwZnJ5JTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNjE4OHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Alexandra Dobrin",photoCreditUrl:"https://unsplash.com/@_3puncte_",photoDownloadLocation:"https://api.unsplash.com/photos/HU64ydv7xhA/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8YmVsbCUyMHBlcHBlciUyMGJlZWYlMjBveXN0ZXIlMjBzdGlyJTIwZnJ5JTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIzNjE4OHww"},
     {id:"pi5",cat:"bell_pepper",name:"ピーマンと鶏肉のケチャップ炒め",desc:"子どもも食べやすい甘め。",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:800,img:"bell pepper chicken ketchup stir fry",ing:["ピーマン6個","鶏もも肉2枚","ケチャップ大さじ3"],steps:["鶏肉を焼く","ピーマンを加えて炒める","ケチャップで味を調える"],photoUrl:"https://images.unsplash.com/photo-1593536748574-705de25f2439?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8YmVsbCUyMHBlcHBlciUyMGNoaWNrZW4lMjBrZXRjaHVwJTIwc3RpciUyMGZyeSUyMHBsYXRlJTIwY2xvc2V1cHxlbnwwfDB8fHwxNzg5MjQwNjg1fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Ashkan Forouzani",photoCreditUrl:"https://unsplash.com/@ashkfor121",photoDownloadLocation:"https://api.unsplash.com/photos/c-zu3w9a97k/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8YmVsbCUyMHBlcHBlciUyMGNoaWNrZW4lMjBrZXRjaHVwJTIwc3RpciUyMGZyeSUyMHBsYXRlJTIwY2xvc2V1cHxlbnwwfDB8fHwxNzg5MjQwNjg1fDA"},
     {id:"pi6",cat:"bell_pepper",name:"ピーマンと厚揚げの炒め物",desc:"厚揚げでボリュームアップ。",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:700,img:"bell pepper fried tofu stir fry",ing:["ピーマン6個","厚揚げ2枚","しょうゆ大さじ1.5"],steps:["厚揚げを一口大に切る","ピーマンと炒める","しょうゆで味を調える"],photoUrl:"https://images.unsplash.com/photo-1644527199847-0a36951348c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVsbCUyMHBlcHBlciUyMGZyaWVkJTIwdG9mdSUyMHN0aXIlMjBmcnklMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MTkzfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Healthy Bowl",photoCreditUrl:"https://unsplash.com/@healthy_bowl_com",photoDownloadLocation:"https://api.unsplash.com/photos/35RaXZYxQ1M/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmVsbCUyMHBlcHBlciUyMGZyaWVkJTIwdG9mdSUyMHN0aXIlMjBmcnklMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MTkzfDA"},
-    {id:"pis1",cat:"bell_pepper",name:"ピーマンのおかか和え",desc:"かつお節の香りが良い。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"bell pepper bonito salad side",ing:["ピーマン6個","かつお節適量","しょうゆ小さじ2"],steps:["ピーマンを細切りにしてゆでる","水気を切る","かつお節としょうゆで和える"]},
+    {id:"pis1",cat:"bell_pepper",name:"ピーマンのおかか和え",desc:"かつお節の香りが良い。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"bell pepper bonito salad side",ing:["ピーマン6個","かつお節適量","しょうゆ小さじ2"],steps:["ピーマンを細切りにしてゆでる","水気を切る","かつお節としょうゆで和える"],photoUrl:"https://images.unsplash.com/photo-1643594697632-e88176fb63fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwZ3JlZW4lMjBwZXBwZXIlMjBib25pdG8lMjBmbGFrZXMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MzQyNDU3fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Thembi Johnson",photoCreditUrl:"https://unsplash.com/@tastytin",photoDownloadLocation:"https://api.unsplash.com/photos/eewm83mBW1E/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2xpY2VkJTIwZ3JlZW4lMjBwZXBwZXIlMjBib25pdG8lMjBmbGFrZXMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MzQyNDU3fDA"},
     {id:"pis2",cat:"bell_pepper",name:"ピーマンとじゃこの炒め物",desc:"じゃこの旨みが染みる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:500,img:"bell pepper dried fish stir fry side",ing:["ピーマン6個","ちりめんじゃこ大さじ3","ごま油大さじ1"],steps:["ピーマンを切る","ごま油でじゃことともに炒める","味を調えて仕上げる"],photoUrl:"https://images.unsplash.com/photo-1766323106504-6b44debfa313?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NXx8Z3JlZW4lMjBwZXBwZXIlMjBzdHJpcHMlMjBzbWFsbCUyMGZpc2glMjBzdGlyJTIwZnJ5JTIwcGxhdGV8ZW58MHwwfHx8MTc4OTMwOTUxOXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"You Le",photoCreditUrl:"https://unsplash.com/@le_y0u",photoDownloadLocation:"https://api.unsplash.com/photos/SlTylsFk63I/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NXx8Z3JlZW4lMjBwZXBwZXIlMjBzdHJpcHMlMjBzbWFsbCUyMGZpc2glMjBzdGlyJTIwZnJ5JTIwcGxhdGV8ZW58MHwwfHx8MTc4OTMwOTUxOXww"},
     {id:"pis3",cat:"bell_pepper",name:"ピーマンのごま和え",desc:"すりごまの風味豊かな副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"bell pepper sesame salad side",ing:["ピーマン6個","すりごま大さじ2","しょうゆ小さじ2"],steps:["ピーマンを細切りにしてゆでる","水気を切る","すりごまとしょうゆで和える"],photoUrl:"https://images.unsplash.com/photo-1653107510942-65c40093b90f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8YmVsbCUyMHBlcHBlciUyMHNlc2FtZSUyMHNhbGFkJTIwY2xvc2V1cCUyMGRpc2h8ZW58MHwwfHx8MTc4OTMwNzI1NXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Kostiantyn Vierkieiev",photoCreditUrl:"https://unsplash.com/@kostiantynvierkieiev",photoDownloadLocation:"https://api.unsplash.com/photos/LaIOpmrLRiE/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8YmVsbCUyMHBlcHBlciUyMHNlc2FtZSUyMHNhbGFkJTIwY2xvc2V1cCUyMGRpc2h8ZW58MHwwfHx8MTc4OTMwNzI1NXww"},
     {id:"pis4",cat:"bell_pepper",name:"丸ごとピーマンの焼き浸し",desc:"だしが染みた香ばしい副菜。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"whole bell pepper grilled dashi",ing:["ピーマン8個","だし300ml","しょうゆ大さじ2"],steps:["ピーマンを丸ごと網で焼く","だしとしょうゆを合わせる","焼いたピーマンを浸して味を含ませる"],photoUrl:"https://images.unsplash.com/photo-1609869882409-a5274ce68923?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8d2hvbGUlMjBncmlsbGVkJTIwYmVsbCUyMHBlcHBlciUyMGNsb3NldXAlMjBkaXNofGVufDB8MHx8fDE3ODkzMDcyNTh8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Theo Crazzolara",photoCreditUrl:"https://unsplash.com/@theocrazzolara",photoDownloadLocation:"https://api.unsplash.com/photos/gfmqaW_Pk20/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8d2hvbGUlMjBncmlsbGVkJTIwYmVsbCUyMHBlcHBlciUyMGNsb3NldXAlMjBkaXNofGVufDB8MHx8fDE3ODkzMDcyNTh8MA"},
@@ -1738,7 +1595,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"gw8",cat:"potato",name:"じゃがいものポタージュ",desc:"優しい甘さのなめらかスープ。",genre:"western",weight:"healthy",cookingTime:15,difficulty:1,cost5:600,img:"potato potage soup",ing:["じゃがいも4個","玉ねぎ1個","牛乳400ml","コンソメ1個"],steps:["じゃがいもと玉ねぎを煮る","ミキサーで滑らかにする","牛乳を加えて温める"],photoUrl:"https://images.unsplash.com/photo-1616501268826-ee9731c915d4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwc291cCUyMGJpc3F1ZSUyMGJvd2x8ZW58MHwwfHx8MTc4OTIzNjI0MXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Julia Kicova",photoCreditUrl:"https://unsplash.com/@justjullietta",photoDownloadLocation:"https://api.unsplash.com/photos/18YZ7zuQG4Q/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwc291cCUyMGJpc3F1ZSUyMGJvd2x8ZW58MHwwfHx8MTc4OTIzNjI0MXww"},
     {id:"gw9",cat:"onion",name:"玉ねぎと鶏肉のクリームシチュー",desc:"寒い日にほっとする定番シチュー。",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:1000,img:"onion chicken cream stew",ing:["玉ねぎ2個","鶏もも肉2枚","牛乳400ml","小麦粉大さじ3"],steps:["鶏肉と玉ねぎを炒める","小麦粉をまぶす","牛乳を加えて煮込む"],photoUrl:"https://images.unsplash.com/photo-1750190624187-3b2e2be39b30?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8b25pb24lMjBjaGlja2VuJTIwd2hpdGUlMjBjcmVhbSUyMHN0ZXclMjBib3dsfGVufDB8MHx8fDE3ODkyNDA3MDB8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Abdul Raheem Kannath",photoCreditUrl:"https://unsplash.com/@raheemblacksnows",photoDownloadLocation:"https://api.unsplash.com/photos/F1KZMNhW9HA/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8b25pb24lMjBjaGlja2VuJTIwd2hpdGUlMjBjcmVhbSUyMHN0ZXclMjBib3dsfGVufDB8MHx8fDE3ODkyNDA3MDB8MA"},
     {id:"gw10",cat:"pork",name:"豚肉のハーブパン粉焼き",desc:"揚げずに作る軽やかなカツ風。",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:800,img:"pork herb breadcrumb bake",ing:["豚ロース5枚","パン粉・乾燥ハーブ各適量","オリーブオイル大さじ1"],steps:["豚肉にパン粉とハーブをまぶす","オリーブオイルで焼く","中まで火を通して盛る"],photoUrl:"https://images.unsplash.com/photo-1556913241-def7c10b821d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YnJlYWRlZCUyMHBvcmslMjBjdXRsZXQlMjBoZXJiJTIwYmFrZWQlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MjQ2fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"sheri silver",photoCreditUrl:"https://unsplash.com/@sheri_silver",photoDownloadLocation:"https://api.unsplash.com/photos/sGHcnBJZCiw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YnJlYWRlZCUyMHBvcmslMjBjdXRsZXQlMjBoZXJiJTIwYmFrZWQlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MjQ2fDA"},
-    {id:"gw11",cat:"lettuce",name:"レタスとベーコンのシーザーサラダ",desc:"定番の洋風サラダ。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:700,img:"caesar salad lettuce bacon",ing:["レタス1個","ベーコン80g","粉チーズ・シーザードレッシング適量"],steps:["レタスをちぎる","ベーコンをカリカリに焼く","ドレッシングと粉チーズをかける"]},
+    {id:"gw11",cat:"lettuce",name:"レタスとベーコンのシーザーサラダ",desc:"定番の洋風サラダ。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:700,img:"caesar salad lettuce bacon",ing:["レタス1個","ベーコン80g","粉チーズ・シーザードレッシング適量"],steps:["レタスをちぎる","ベーコンをカリカリに焼く","ドレッシングと粉チーズをかける"],photoUrl:"https://images.unsplash.com/photo-1746211108786-ca20c8f80ecd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2Flc2FyJTIwc2FsYWQlMjBiYWNvbiUyMGxldHR1Y2UlMjBwYXJtZXNhbiUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ3MHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Cliffer Rebelo",photoCreditUrl:"https://unsplash.com/@cliffer14",photoDownloadLocation:"https://api.unsplash.com/photos/UdLsLK_KFLw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2Flc2FyJTIwc2FsYWQlMjBiYWNvbiUyMGxldHR1Y2UlMjBwYXJtZXNhbiUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ3MHww"},
     {id:"gw12",cat:"potato",name:"じゃがいもとベーコンのキッシュ",desc:"食べ応えのある卵料理。",genre:"western",weight:"hearty",cookingTime:25,difficulty:1,cost5:950,img:"potato bacon quiche",ing:["じゃがいも3個","ベーコン100g","卵4個","生クリーム150ml"],steps:["じゃがいもを薄切りにする","ベーコンと一緒にパイ皿に並べる","卵液を流し込んで焼く"],photoUrl:"https://images.unsplash.com/photo-1625874740599-4ba5ba56610e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwYmFjb24lMjBxdWljaGUlMjBiYWtlZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMzYyNDl8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Debby Hudson",photoCreditUrl:"https://unsplash.com/@hudsoncrafted",photoDownloadLocation:"https://api.unsplash.com/photos/QihSY3yO5iM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cG90YXRvJTIwYmFjb24lMjBxdWljaGUlMjBiYWtlZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMzYyNDl8MA"},
     {id:"gw13",cat:"chicken",name:"鶏もも肉のハーブロースト",desc:"香ばしく焼き上げたごちそうメイン。",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:900,img:"herb roast chicken thigh",ing:["鶏もも肉3枚","にんにく・乾燥ハーブ各適量","オリーブオイル大さじ2"],steps:["鶏肉にハーブとにんにくをすり込む","オリーブオイルで焼く","中まで火を通して仕上げる"],photoUrl:"https://images.unsplash.com/photo-1625351815551-555b4da0a3fd?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cm9hc3RlZCUyMGNoaWNrZW4lMjB0aGlnaCUyMGhlcmIlMjBnYXJsaWMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MjUxfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"tommao wang",photoCreditUrl:"https://unsplash.com/@tommaomaoer",photoDownloadLocation:"https://api.unsplash.com/photos/gSNWrZkb_xU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cm9hc3RlZCUyMGNoaWNrZW4lMjB0aGlnaCUyMGhlcmIlMjBnYXJsaWMlMjBwbGF0ZXxlbnwwfDB8fHwxNzg5MjM2MjUxfDA"},
     {id:"gw14",cat:"beef",name:"牛肉のガーリックステーキ",desc:"にんにく香る贅沢なステーキ。",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:1800,img:"beef garlic steak",ing:["牛肩ロース5枚","にんにく3かけ","バター15g","しょうゆ大さじ1"],steps:["にんにくを薄切りにして香りを出す","牛肉を焼く","バターとしょうゆで仕上げる"],photoUrl:"https://images.unsplash.com/photo-1558030006-450675393462?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGJlZWYlMjBzdGVhayUyMHBsYXRlJTIwY29va2VkJTIwZm9vZHxlbnwwfDB8fHwxNzg5MTkyMjY0fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Emerson Vieira",photoCreditUrl:"https://unsplash.com/@emersonvieira",photoDownloadLocation:"https://api.unsplash.com/photos/cpkPJ-U9eUM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Z3JpbGxlZCUyMGJlZWYlMjBzdGVhayUyMHBsYXRlJTIwY29va2VkJTIwZm9vZHxlbnwwfDB8fHwxNzg5MTkyMjY0fDA"},
@@ -1763,7 +1620,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"gwh3",cat:"cabbage",name:"キャベツと鶏むね肉のコールスロー風サラダ",desc:"たんぱく質もとれる食べ応えサラダ。",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:800,img:"cabbage chicken coleslaw salad",ing:["キャベツ1/2個","鶏むね肉2枚","マヨネーズ・酢各大さじ2"],steps:["鶏肉を蒸してほぐす","キャベツを細切りにする","マヨネーズと酢で和える"],photoUrl:"https://images.unsplash.com/photo-1573403707491-38a4ea19edc1?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y29sZXNsYXclMjBjYWJiYWdlJTIwY2hpY2tlbiUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0NTIzOXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jacques Bopp",photoCreditUrl:"https://unsplash.com/@jacquesbopp",photoDownloadLocation:"https://api.unsplash.com/photos/hhv1wKlzLIw/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y29sZXNsYXclMjBjYWJiYWdlJTIwY2hpY2tlbiUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0NTIzOXww"},
     {id:"gwh4",cat:"carrot",name:"にんじんとオレンジのサラダ",desc:"柑橘の甘みが爽やかな一皿。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:500,img:"carrot orange salad",ing:["にんじん3本","オレンジ1個","オリーブオイル大さじ1"],steps:["にんじんを細切りにする","オレンジを房どりする","オリーブオイルで和える"]},
     {id:"gwh5",cat:"onion",name:"玉ねぎのグリルサラダ",desc:"焼いた玉ねぎの甘みを楽しむ。",role:"side",genre:"western",weight:"healthy",cookingTime:20,difficulty:2,cost5:450,img:"grilled onion salad",ing:["玉ねぎ3個","オリーブオイル大さじ1","塩・粉チーズ各少々"],steps:["玉ねぎを厚切りにする","グリルまたはフライパンで焼く","塩と粉チーズをかける"]},
-    {id:"gwh6",cat:"potato",name:"じゃがいもとアスパラの温野菜サラダ",desc:"温野菜で優しい味わい。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:600,img:"potato asparagus warm salad",ing:["じゃがいも4個","アスパラ2束","オリーブオイル・レモン汁各適量"],steps:["じゃがいもとアスパラをゆでる","一口大に切る","オリーブオイルとレモン汁をかける"]},
+    {id:"gwh6",cat:"potato",name:"じゃがいもとアスパラの温野菜サラダ",desc:"温野菜で優しい味わい。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:600,img:"potato asparagus warm salad",ing:["じゃがいも4個","アスパラ2束","オリーブオイル・レモン汁各適量"],steps:["じゃがいもとアスパラをゆでる","一口大に切る","オリーブオイルとレモン汁をかける"],photoUrl:"https://images.unsplash.com/photo-1511994714008-b6d68a8b32a2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3RlYW1lZCUyMHBvdGF0byUyMGFzcGFyYWd1cyUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjQ3OHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Carly Jayne",photoCreditUrl:"https://unsplash.com/@lovelikesalt",photoDownloadLocation:"https://api.unsplash.com/photos/Lv174o7fn7Y/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c3RlYW1lZCUyMHBvdGF0byUyMGFzcGFyYWd1cyUyMHNhbGFkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjQ3OHww"},
     {id:"gwh7",cat:"pork",name:"豚肉とキャベツのポトフ",desc:"コトコト煮込んだ優しいスープ。",genre:"western",weight:"healthy",cookingTime:45,difficulty:2,cost5:900,img:"pork cabbage pot au feu",ing:["豚肩ロース塊300g","キャベツ1/2個","にんじん1本","コンソメ1個"],steps:["豚肉を下ゆでする","野菜とコンソメを加えて煮る","柔らかくなるまで煮込む"],photoUrl:"https://images.unsplash.com/photo-1788141485442-f0d4ce4dca2e?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cG9yayUyMGNhYmJhZ2UlMjBwb3QlMjBhdSUyMGZldSUyMHN0ZXclMjBib3dsfGVufDB8MHx8fDE3ODkyNDUyNDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Charles Chen",photoCreditUrl:"https://unsplash.com/@color0911",photoDownloadLocation:"https://api.unsplash.com/photos/YdMbzFOxbMQ/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cG9yayUyMGNhYmJhZ2UlMjBwb3QlMjBhdSUyMGZldSUyMHN0ZXclMjBib3dsfGVufDB8MHx8fDE3ODkyNDUyNDJ8MA"},
     {id:"gwh8",cat:"cabbage",name:"キャベツとベーコンのコンソメスープ",desc:"野菜がとれる優しいスープ。",genre:"western",weight:"healthy",cookingTime:15,difficulty:1,cost5:600,img:"cabbage bacon consomme soup",ing:["キャベツ1/2個","ベーコン60g","コンソメ1個","水800ml"],steps:["キャベツを切る","ベーコンと炒める","水とコンソメを加えて煮る"],photoUrl:"https://images.unsplash.com/photo-1625719998648-013ca947b200?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2FiYmFnZSUyMGJhY29uJTIwY29uc29tbWUlMjBzb3VwJTIwYm93bHxlbnwwfDB8fHwxNzg5MjQ1MjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"lu nan",photoCreditUrl:"https://unsplash.com/@lunnn",photoDownloadLocation:"https://api.unsplash.com/photos/NXJf-Ui2Cuk/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2FiYmFnZSUyMGJhY29uJTIwY29uc29tbWUlMjBzb3VwJTIwYm93bHxlbnwwfDB8fHwxNzg5MjQ1MjQ1fDA"},
     {id:"gwh9",cat:"carrot",name:"にんじんのグリルステーキ風",desc:"にんじんを主役にした変わり種。",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:500,img:"grilled carrot steak",ing:["にんじん4本","オリーブオイル大さじ2","塩・ハーブ各適量"],steps:["にんじんを縦割りにする","オリーブオイルで焼く","塩とハーブで味を調える"],photoUrl:"https://images.unsplash.com/photo-1585903211716-c5633c87554d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Z3JpbGxlZCUyMGNhcnJvdCUyMHN0ZWFrJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0NTI0N3ww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"amirali mirhashemian",photoCreditUrl:"https://unsplash.com/@amir_v_ali",photoDownloadLocation:"https://api.unsplash.com/photos/k0M7DdIjQIU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Z3JpbGxlZCUyMGNhcnJvdCUyMHN0ZWFrJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTI0NTI0N3ww"},
@@ -2082,20 +1939,20 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"fs25",cat:"fish",name:"鮭のマスタードマヨ焼き",desc:"粒マスタードの酸味がアクセント。",genre:"western",weight:"hearty",cookingTime:15,difficulty:1,tags:["時短"],cost5:1150,img:"salmon mustard mayo grilled",ing:["生鮭4切れ","粒マスタード大さじ2","マヨネーズ大さじ2"],steps:["鮭に軽く塩をふる","マスタードとマヨネーズを混ぜる","鮭を焼きながらたれを塗って仕上げる"],photoUrl:"https://images.unsplash.com/photo-1676300185165-3f543c1fcb72?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmFrZWQlMjBzYWxtb24lMjBtdXN0YXJkJTIwbWF5byUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMTE2MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Orkun Orcan",photoCreditUrl:"https://unsplash.com/@orkunorcan",photoDownloadLocation:"https://api.unsplash.com/photos/3ru16c1mSsU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8YmFrZWQlMjBzYWxtb24lMjBtdXN0YXJkJTIwbWF5byUyMHBsYXRlfGVufDB8MHx8fDE3ODkyMTE2MTJ8MA"},
     {id:"fs26",cat:"fish",name:"カツオのたたき薬味のせ",desc:"薬味とポン酢でさっぱりと。",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:2,tags:["時短"],cost5:1200,img:"katsuo bonito tataki",ing:["カツオ(刺身用)300g","みょうが・しょうが・大葉各適量","ポン酢適量"],steps:["カツオの表面をさっと炙るか刺身用をそのまま使う","薄切りにして皿に並べる","薬味をのせポン酢をかける"],photoUrl:"https://images.unsplash.com/photo-1530260626688-048279320445?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2VhcmVkJTIwYm9uaXRvJTIwdGF0YWtpJTIwc2xpY2VkJTIwcGxhdGUlMjBqYXBhbmVzZXxlbnwwfDB8fHwxNzg5MjExNjE1fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Wesual Click",photoCreditUrl:"https://unsplash.com/@wesual",photoDownloadLocation:"https://api.unsplash.com/photos/Hcdx1zVQJ6Y/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2VhcmVkJTIwYm9uaXRvJTIwdGF0YWtpJTIwc2xpY2VkJTIwcGxhdGUlMjBqYXBhbmVzZXxlbnwwfDB8fHwxNzg5MjExNjE1fDA"},
     {id:"fs27",cat:"fish",name:"えびチリ",desc:"ピリ辛のケチャップだれが食欲をそそる中華の定番。",genre:"chinese",weight:"hearty",cookingTime:20,difficulty:2,tags:["ご飯が進む"],cost5:1300,img:"ebi chili shrimp chinese",ing:["むきえび400g","豆板醤大さじ1","ケチャップ大さじ3","長ねぎ1本"],steps:["えびに片栗粉をまぶして揚げ焼きにする","長ねぎと豆板醤を炒める","ケチャップなどを加えてえびに絡める"],photoUrl:"https://images.unsplash.com/photo-1726514734163-063c77ef810d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwY2hpbGklMjBzYXVjZSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyNTc3MTJ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Alimentos Fotogénicos",photoCreditUrl:"https://unsplash.com/@alimentosfotogenicos",photoDownloadLocation:"https://api.unsplash.com/photos/vMnS5CnyWrY/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8c2hyaW1wJTIwY2hpbGklMjBzYXVjZSUyMHBsYXRlfGVufDB8MHx8fDE3ODkyNTc3MTJ8MA"},
-    {id:"sp1",cat:"tofu",name:"豆腐とわかめの味噌汁",desc:"定番の具だくさん味噌汁。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:350,img:"tofu wakame miso soup",ing:["豆腐1丁","乾燥わかめ大さじ2","味噌大さじ3","だし500ml"],steps:["だしを温める","豆腐とわかめを加える","味噌を溶き入れる"]},
-    {id:"sp2",cat:"daikon",name:"大根おろしとなめこの味噌汁",desc:"とろっとした食感がやさしい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:350,img:"daikon nameko miso soup",ing:["大根1/4本","なめこ1袋","味噌大さじ3","だし500ml"],steps:["だしを温めなめこを加える","大根おろしを加える","味噌を溶き入れる"]},
+    {id:"sp1",cat:"tofu",name:"豆腐とわかめの味噌汁",desc:"定番の具だくさん味噌汁。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:350,img:"tofu wakame miso soup",ing:["豆腐1丁","乾燥わかめ大さじ2","味噌大さじ3","だし500ml"],steps:["だしを温める","豆腐とわかめを加える","味噌を溶き入れる"],photoUrl:"https://images.unsplash.com/photo-1784448678101-51e8b1dfcee3?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NXx8bWlzbyUyMHNvdXAlMjB0b2Z1JTIwd2FrYW1lJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDg1fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Jamie Trinh",photoCreditUrl:"https://unsplash.com/@jtrinh_artwork",photoDownloadLocation:"https://api.unsplash.com/photos/MyIBscTsMBU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8NXx8bWlzbyUyMHNvdXAlMjB0b2Z1JTIwd2FrYW1lJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDg1fDA"},
+    {id:"sp2",cat:"daikon",name:"大根おろしとなめこの味噌汁",desc:"とろっとした食感がやさしい。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:350,img:"daikon nameko miso soup",ing:["大根1/4本","なめこ1袋","味噌大さじ3","だし500ml"],steps:["だしを温めなめこを加える","大根おろしを加える","味噌を溶き入れる"],photoUrl:"https://images.unsplash.com/photo-1663147634679-78f6374cdde6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8bWlzbyUyMHNvdXAlMjBncmF0ZWQlMjBkYWlrb24lMjBtdXNocm9vbSUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ4OHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Mingwei Lim",photoCreditUrl:"https://unsplash.com/@cmzw",photoDownloadLocation:"https://api.unsplash.com/photos/54mz5AdxW4s/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8bWlzbyUyMHNvdXAlMjBncmF0ZWQlMjBkYWlrb24lMjBtdXNocm9vbSUyMGJvd2x8ZW58MHwwfHx8MTc4OTM0MjQ4OHww"},
     {id:"sp3",cat:"cabbage",name:"キャベツと油揚げの味噌汁",desc:"野菜がしっかり摂れる一杯。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:2,cost5:350,img:"cabbage aburaage miso soup",ing:["キャベツ2枚","油揚げ1枚","味噌大さじ3","だし500ml"],steps:["だしを温めキャベツと油揚げを加える","柔らかくなるまで煮る","味噌を溶き入れる"]},
-    {id:"sp4",cat:"egg_natto",name:"かきたま中華スープ",desc:"ふわふわ卵の優しいスープ。",role:"side",genre:"chinese",weight:"healthy",cookingTime:5,difficulty:2,cost5:300,img:"egg drop chinese soup",ing:["卵2個","鶏ガラスープの素大さじ1","水500ml","片栗粉大さじ1"],steps:["スープを温めて味を調える","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"]},
+    {id:"sp4",cat:"egg_natto",name:"かきたま中華スープ",desc:"ふわふわ卵の優しいスープ。",role:"side",genre:"chinese",weight:"healthy",cookingTime:5,difficulty:2,cost5:300,img:"egg drop chinese soup",ing:["卵2個","鶏ガラスープの素大さじ1","水500ml","片栗粉大さじ1"],steps:["スープを温めて味を調える","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"],photoUrl:"https://images.unsplash.com/photo-1590133377962-a18b71fd78ea?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8Y2hpbmVzZSUyMGVnZyUyMGRyb3AlMjBzb3VwJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDk0fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Pichara",photoCreditUrl:"https://unsplash.com/@pichara",photoDownloadLocation:"https://api.unsplash.com/photos/CyLk-M8YM-s/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8Y2hpbmVzZSUyMGVnZyUyMGRyb3AlMjBzb3VwJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNDk0fDA"},
     {id:"sp5",cat:"green_onion",name:"長ねぎと春雨の中華スープ",desc:"つるっとした春雨が食べやすい。",role:"side",genre:"chinese",weight:"healthy",cookingTime:5,difficulty:1,cost5:350,img:"harusame chinese soup scallion",ing:["長ねぎ1本","春雨30g","鶏ガラスープの素大さじ1","水500ml"],steps:["スープを煮立てる","春雨と長ねぎを加える","春雨が柔らかくなるまで煮る"]},
-    {id:"sp6",cat:"potato",name:"じゃがいもの豆乳スープ",desc:"優しい甘みでほっとする一杯。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"potato soy milk soup",ing:["じゃがいも2個","豆乳300ml","コンソメ1個"],steps:["じゃがいもを柔らかくゆでる","豆乳とコンソメを加えて温める","お好みでつぶして仕上げる"]},
-    {id:"mu1",cat:"onion",name:"きのこのバターポン酢和え",desc:"数種のきのこを香ばしく。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"mushroom butter ponzu",ing:["しめじ・えのきなど合わせて2袋","バター10g","ポン酢大さじ2"],steps:["きのこをほぐす","バターで炒める","仕上げにポン酢をかける"]},
+    {id:"sp6",cat:"potato",name:"じゃがいもの豆乳スープ",desc:"優しい甘みでほっとする一杯。",role:"side",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"potato soy milk soup",ing:["じゃがいも2個","豆乳300ml","コンソメ1個"],steps:["じゃがいもを柔らかくゆでる","豆乳とコンソメを加えて温める","お好みでつぶして仕上げる"],photoUrl:"https://images.unsplash.com/photo-1619860859762-0569749bc607?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cG90YXRvJTIwc295JTIwbWlsayUyMHNvdXAlMjBib3dsJTIwY3JlYW15fGVufDB8MHx8fDE3ODkzNDI0OTl8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Choi sungwoo",photoCreditUrl:"https://unsplash.com/@beancurd",photoDownloadLocation:"https://api.unsplash.com/photos/4kFexr8iJuU/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8cG90YXRvJTIwc295JTIwbWlsayUyMHNvdXAlMjBib3dsJTIwY3JlYW15fGVufDB8MHx8fDE3ODkzNDI0OTl8MA"},
+    {id:"mu1",cat:"onion",name:"きのこのバターポン酢和え",desc:"数種のきのこを香ばしく。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"mushroom butter ponzu",ing:["しめじ・えのきなど合わせて2袋","バター10g","ポン酢大さじ2"],steps:["きのこをほぐす","バターで炒める","仕上げにポン酢をかける"],photoUrl:"https://images.unsplash.com/photo-1519077336050-4ca5cac9d64f?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bXVzaHJvb20lMjBidXR0ZXIlMjBwb256dSUyMHNhdXRlJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjUwMXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Siniz Kim",photoCreditUrl:"https://unsplash.com/@siniz",photoDownloadLocation:"https://api.unsplash.com/photos/aWWl29-VX7Y/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8bXVzaHJvb20lMjBidXR0ZXIlMjBwb256dSUyMHNhdXRlJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjUwMXww"},
     {id:"mu2",cat:"tofu",name:"しめじと油揚げの煮浸し",desc:"だしがしみた優しい一品。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:2,cost5:350,img:"shimeji aburaage simmered",ing:["しめじ1袋","油揚げ1枚","だし・しょうゆ各適量"],steps:["だしとしょうゆを煮立てる","しめじと油揚げを加える","味がしみるまで煮る"]},
-    {id:"mu3",cat:"green_onion",name:"えのきの梅おかか和え",desc:"梅の酸味でさっぱりと。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:300,img:"enoki mushroom plum okaka",ing:["えのき1袋","梅干し1個","かつお節適量"],steps:["えのきをさっとゆでる","梅肉と和える","かつお節をのせる"]},
+    {id:"mu3",cat:"green_onion",name:"えのきの梅おかか和え",desc:"梅の酸味でさっぱりと。",role:"side",genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:300,img:"enoki mushroom plum okaka",ing:["えのき1袋","梅干し1個","かつお節適量"],steps:["えのきをさっとゆでる","梅肉と和える","かつお節をのせる"],photoUrl:"https://images.unsplash.com/photo-1523218507958-81785af4f6e2?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZW5va2klMjBtdXNocm9vbSUyMHBsdW0lMjBib25pdG8lMjBzYWxhZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI1MDZ8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Augustine Fou",photoCreditUrl:"https://unsplash.com/@augustinefou",photoDownloadLocation:"https://api.unsplash.com/photos/DE4e_Sl0UbY/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8ZW5va2klMjBtdXNocm9vbSUyMHBsdW0lMjBib25pdG8lMjBzYWxhZCUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI1MDZ8MA"},
     {id:"mu4",cat:"carrot",name:"きのこと人参のきんぴら",desc:"甘辛い味付けでご飯に合う。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"mushroom carrot kinpira",ing:["しめじ・エリンギなど1.5袋","にんじん1/2本","しょうゆ・みりん各大さじ1.5"],steps:["にんじんを細切りにする","きのこと一緒に炒める","調味料で味を調える"]},
-    {id:"mu5",cat:"green_onion",name:"しいたけの照り焼き",desc:"肉厚なしいたけを香ばしく。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:2,cost5:400,img:"shiitake mushroom teriyaki",ing:["しいたけ8枚","しょうゆ・みりん各大さじ1.5"],steps:["しいたけの軸を取る","フライパンで両面を焼く","調味料を加えて絡める"]},
+    {id:"mu5",cat:"green_onion",name:"しいたけの照り焼き",desc:"肉厚なしいたけを香ばしく。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:2,cost5:400,img:"shiitake mushroom teriyaki",ing:["しいたけ8枚","しょうゆ・みりん各大さじ1.5"],steps:["しいたけの軸を取る","フライパンで両面を焼く","調味料を加えて絡める"],photoUrl:"https://images.unsplash.com/photo-1772198537624-5501e3667457?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8c2hpaXRha2UlMjBtdXNocm9vbSUyMHRlcml5YWtpJTIwZ2xhemVkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjUxMnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Yosuke Ota",photoCreditUrl:"https://unsplash.com/@yosuke_ota",photoDownloadLocation:"https://api.unsplash.com/photos/2LgVZ1RVKRQ/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8c2hpaXRha2UlMjBtdXNocm9vbSUyMHRlcml5YWtpJTIwZ2xhemVkJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTM0MjUxMnww"},
     {id:"eg1",cat:"chives",name:"にら玉のうま煮",desc:"だしでとろっと仕上げる。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:350,img:"chives egg simmered",ing:["ニラ1束","卵2個","だし100ml","しょうゆ少々"],steps:["だしとしょうゆを煮立てる","ニラを加える","溶き卵を回し入れてとじる"]},
-    {id:"eg2",cat:"tomato",name:"トマトと卵の中華炒め",desc:"中華の定番、優しい酸味。",role:"side",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"tomato egg chinese stir fry",ing:["トマト2個","卵3個","塩・こしょう各少々"],steps:["トマトをくし切りにする","卵を炒めて取り出す","トマトを炒め卵を戻し味を調える"]},
-    {id:"eg3",cat:"daikon",name:"大根と卵のとろみ煮",desc:"あんかけでほっとする味。",role:"side",genre:"japanese",weight:"healthy",cookingTime:15,difficulty:2,cost5:350,img:"daikon egg simmered",ing:["大根1/3本","卵2個","だし200ml","片栗粉大さじ1"],steps:["大根をやわらかく煮る","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"]},
+    {id:"eg2",cat:"tomato",name:"トマトと卵の中華炒め",desc:"中華の定番、優しい酸味。",role:"side",genre:"chinese",weight:"healthy",cookingTime:10,difficulty:1,cost5:400,img:"tomato egg chinese stir fry",ing:["トマト2個","卵3個","塩・こしょう各少々"],steps:["トマトをくし切りにする","卵を炒めて取り出す","トマトを炒め卵を戻し味を調える"],photoUrl:"https://images.unsplash.com/photo-1596075153303-43dee8cad180?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9tYXRvJTIwc2NyYW1ibGVkJTIwZWdnJTIwc3RpciUyMGZyeSUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI1MTd8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"The-Lore",photoCreditUrl:"https://unsplash.com/@soumeya",photoDownloadLocation:"https://api.unsplash.com/photos/asVTQvmV8Yk/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8dG9tYXRvJTIwc2NyYW1ibGVkJTIwZWdnJTIwc3RpciUyMGZyeSUyMHBsYXRlfGVufDB8MHx8fDE3ODkzNDI1MTd8MA"},
+    {id:"eg3",cat:"daikon",name:"大根と卵のとろみ煮",desc:"あんかけでほっとする味。",role:"side",genre:"japanese",weight:"healthy",cookingTime:15,difficulty:2,cost5:350,img:"daikon egg simmered",ing:["大根1/3本","卵2個","だし200ml","片栗粉大さじ1"],steps:["大根をやわらかく煮る","水溶き片栗粉でとろみをつける","溶き卵を回し入れる"],photoUrl:"https://images.unsplash.com/photo-1640267825526-e1f620195173?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8ZGFpa29uJTIwZWdnJTIwdGhpY2slMjBzYXVjZSUyMHNpbW1lcmVkJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNTE5fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"TOMOKO UJI",photoCreditUrl:"https://unsplash.com/@ujitomo",photoDownloadLocation:"https://api.unsplash.com/photos/F5rMDdxGq-8/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8M3x8ZGFpa29uJTIwZWdnJTIwdGhpY2slMjBzYXVjZSUyMHNpbW1lcmVkJTIwYm93bHxlbnwwfDB8fHwxNzg5MzQyNTE5fDA"},
     {id:"eg4",cat:"chives",name:"三つ葉の卵とじ椀",desc:"香り豊かな上品な一椀。",role:"side",genre:"japanese",weight:"healthy",cookingTime:10,difficulty:1,cost5:300,img:"mitsuba egg soup",ing:["三つ葉1束","卵2個","だし200ml"],steps:["だしを温める","三つ葉を加える","溶き卵を回し入れて火を止める"]},
     {id:"hv1",cat:"cabbage",name:"キャベツのペペロンチーノ炒め",desc:"にんにくと唐辛子でパンチのある副菜。",role:"side",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:400,img:"cabbage peperoncino",ing:["キャベツ1/4個","にんにく1かけ","赤唐辛子・オリーブオイル各適量"],steps:["キャベツをざく切りにする","にんにくと唐辛子を油で炒める","キャベツを加えて炒める"]},
     {id:"hv2",cat:"potato",name:"じゃがいものチーズガレット",desc:"外はカリッと中はほくほく。",role:"side",genre:"western",weight:"hearty",cookingTime:15,difficulty:2,cost5:450,img:"potato cheese galette",ing:["じゃがいも2個","とろけるチーズ50g","塩・こしょう各少々"],steps:["じゃがいもを細切りにする","フライパンでチーズと一緒に焼き固める","両面カリッと焼く"]},
@@ -2196,33 +2053,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"bulk", emoji:"🍚", label:"たくさん食べさせたい", greeting:"育ち盛りにたっぷり食べさせたい日のあなたへ",
       cats:[], genres:[], weights:["hearty"], filter:function(m){ return m.tags && m.tags.indexOf("育ち盛り") !== -1; }}
   ];
-
-  /* =========================================================
-     ひらりのセリフ(2026-09 案内役化)
-     推薦ロジックには一切影響しない、見た目上の一言だけの仕組み。
-     ========================================================= */
-  var MASCOT_LINES = {
-    hero: ["今日は何、食べたい気分?", "今日のごはん、一緒に考えよう。", "がっつり?さっぱり?選んでみて。"],
-    thinkingReroll: "じゃあ、もうひとつ。",
-    thinkingDefault: "ちょっと考えてみるね。",
-    thinking: {
-      hearty:"がっつり系、考えてみるね。", drink:"おつまみ、探してみる。", quick:"ラクな一品、選んでるよ。",
-      save:"お財布に優しいやつ、あるかな。", meat:"お肉系、いくつか浮かんできた。", fish:"お魚、何がいいかな。",
-      light:"軽めのやつ、考え中。", new:"ちょっと変わったの、探してみる。", cleanup:"冷蔵庫の中、思い出してるところ。",
-      family:"家族が喜びそうなの、考えてる。", bulk:"たっぷり系、選んでるよ。"
-    },
-    hirameki: {
-      hearty:"今日はしっかり食べよ。", drink:"今日はこれで一杯、どう。", quick:"今日はラクしておいしく。",
-      save:"お財布にもやさしい一品。", meat:"お肉なら、これどう?", fish:"魚の気分なら、これ。",
-      light:"今日は軽めでいこうか。", new:"ちょっと冒険してみる?", cleanup:"その食材、使い切ろう。",
-      family:"みんな喜びそう、これ。", bulk:"しっかりボリュームで。"
-    },
-    decided: ["よし、今日はこれで決まり!", "いいね。今日のごはん決まった。", "おいしくできますように。", "今日も一つ、ひらめいたね。"]
-  };
-  function mascotLine(list){
-    return Array.isArray(list) ? list[Math.floor(Math.random() * list.length)] : list;
-  }
-
   var LS_PHOTO_CACHE = "konndate_photo_cache_v3";
   var SERVING_OPTIONS = [1, 2, 3, 4, 5];
   var BASE_SERVINGS = 5;
@@ -2268,9 +2098,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function recordSessionPick(combo){
     sessionMainHistory.unshift({name: combo.main.name, cat: combo.main.cat, genre: combo.main.genre});
     sessionMainHistory = sessionMainHistory.slice(0, SESSION_MEMORY);
-    [combo.side1, combo.side2].filter(Boolean).forEach(function(m){
-      sessionSideHistory.unshift({name:m.name, cat:m.cat});
-    });
+    sessionSideHistory.unshift({name: combo.side1.name, cat: combo.side1.cat});
+    sessionSideHistory.unshift({name: combo.side2.name, cat: combo.side2.cat});
     sessionSideHistory = sessionSideHistory.slice(0, SESSION_MEMORY * 2);
     if(combo.staple){
       sessionStapleHistory.unshift({name: combo.staple.name, staple: combo.staple.staple});
@@ -2351,7 +2180,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function allMenus(){
-    return BASE_MENUS.filter(function(m){return m.id !== "b115";}).concat(customMenus);
+    return BASE_MENUS.concat(customMenus);
   }
 
   function todayStr(){
@@ -2488,11 +2317,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   var comboIntro = document.getElementById("comboIntro");
   var moodGreeting = document.getElementById("moodGreeting");
-  var mascotResult = document.getElementById("mascotResult");
-  var mascotLoading = document.getElementById("mascotLoading");
-  var thinkingLine = document.getElementById("thinkingLine");
-  var decidedLine = document.getElementById("decidedLine");
-  document.getElementById("heroLine").textContent = mascotLine(MASCOT_LINES.hero);
   var spinBtn = document.getElementById("spinBtn");
   var decideRow = document.getElementById("decideRow");
   var againBtn = document.getElementById("againBtn");
@@ -2501,72 +2325,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var decidedPanel = document.getElementById("decidedPanel");
   var decidedRecap = document.getElementById("decidedRecap");
   var shoppingListBtn = document.getElementById("shoppingListBtn");
-  var shoppingPanel = document.getElementById("shoppingPanel");
-  var shoppingItems = document.getElementById("shoppingItems");
-  var shoppingStatus = document.getElementById("shoppingStatus");
-  var shoppingCopyText = document.getElementById("shoppingCopyText");
-  function clearShopping(){
-    if(!shoppingPanel) return;
-    document.getElementById("actionBar").classList.remove("is-decided");
-    shoppingPanel.hidden = true;
-    shoppingListBtn.setAttribute("aria-expanded","false");
-    shoppingItems.textContent = "";
-    shoppingStatus.textContent = "";
-    shoppingCopyText.hidden = true;
-  }
-  function shoppingRows(combo){
-    var rows = [];
-    comboMenus(combo).forEach(function(menu){
-      (menu.ing || []).forEach(function(raw){
-        var text = scaleIngredientText(raw, servingsRatio());
-        var match = text.match(/^(.+?)(大さじ|小さじ)?(\d+\/\d+|\d+(?:\.\d+)?)(kg|g|ml|L|個|本|枚|缶|丁|玉|株|束|袋|合|かけ|杯)?$/);
-        if(!match || /[・、各]/.test(match[1]) || (!match[2] && !match[4])){
-          rows.push({text:text, dishes:[menu.name]}); return;
-        }
-        var amount = match[3].split('/').map(Number);
-        var qty = amount.length === 2 ? amount[0]/amount[1] : amount[0];
-        var name = match[1].trim().replace(/^玉ねぎ$/, "たまねぎ");
-        var unit = (match[2] || '') + (match[4] || '');
-        var existing = rows.find(function(r){return r.name === name && r.unit === unit;});
-        if(existing){existing.qty += qty;existing.dishes.push(menu.name);}
-        else rows.push({name:name,unit:unit,qty:qty,dishes:[menu.name]});
-      });
-    });
-    return rows.map(function(r){
-      if(r.name){var q = String(Math.round(r.qty*100)/100);r.text=r.name+(/^(大|小)さじ/.test(r.unit) ? r.unit+q : q+r.unit);}
-      return r;
-    });
-  }
-  function renderShopping(){
-    shoppingItems.textContent = "";
-    shoppingStatus.textContent = "";
-    shoppingCopyText.hidden = true;
-    document.getElementById("shoppingTitle").textContent = "買い物リスト（"+servings+"人分）";
-    shoppingRows(currentPicks).forEach(function(row){
-      var label = document.createElement("label");
-      label.style.cssText="display:block;padding:10px 0;border-bottom:1px solid var(--border);overflow-wrap:anywhere";
-      var input = document.createElement("input");input.type="checkbox";input.dataset.material=row.text;
-      label.appendChild(input);label.appendChild(document.createTextNode(" "+row.text));
-      var detail=document.createElement("small");detail.textContent=row.dishes.join(" / ");detail.style.cssText="display:block;color:var(--text-muted);margin-left:24px";
-      label.appendChild(detail);shoppingItems.appendChild(label);
-    });
-  }
-  shoppingListBtn.addEventListener("click",function(){
-    if(!currentPicks)return;
-    var opening=shoppingPanel.hidden;
-    if(opening && !shoppingItems.children.length)renderShopping();
-    shoppingPanel.hidden=!opening;shoppingListBtn.setAttribute("aria-expanded",String(opening));
-    if(opening)trackEvent("open_shopping_list",{servings:servings});
-  });
-  document.getElementById("copyShoppingBtn").addEventListener("click",function(){
-    var materials=Array.from(shoppingItems.querySelectorAll("input:not(:checked)")).map(function(input){return "・"+input.dataset.material;});
-    if(!materials.length){shoppingStatus.textContent="必要な材料はすべてチェック済みです。";return;}
-    var text="買い物リスト（"+servings+"人分）\n"+materials.join("\n");
-    function fallback(){shoppingCopyText.value=text;shoppingCopyText.hidden=false;shoppingCopyText.focus();shoppingCopyText.select();shoppingStatus.textContent="テキストを選択してコピーしてください。";}
-    if(navigator.clipboard && navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(function(){shoppingStatus.textContent="未チェックの材料をコピーしました。";}).catch(fallback);
-    else fallback();
-  });
-
   var newDayBtn = document.getElementById("newDayBtn");
   var sidesHeading = document.getElementById("sidesHeading");
   var stapleHeading = document.getElementById("stapleHeading");
@@ -2733,14 +2491,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function mainPool(){
-    var pool = allMenus().filter(function(m){ return roleOf(m) === "main" && !SOUP_STYLE_RE.test(m.name) && !/丼|ごはん|ご飯|チャーハン|炒飯|パスタ|焼きそば|うどん|ラーメン|オムライス|リゾット|雑炊|おにぎり|サンド|トースト/.test(m.name); });
+    var pool = allMenus().filter(function(m){ return roleOf(m) === "main"; });
     if(selectedCats.length > 0){
       pool = pool.filter(function(m){ return selectedCats.indexOf(m.cat) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
     if(activeMood){
       var moodPool = pool.filter(matchesMood);
-      if(moodPool.length > 0 || activeMood.id === "quick") pool = moodPool;
+      if(moodPool.length > 0) pool = moodPool;
     }
     var recent = recentNamesByRole("main", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
@@ -2762,14 +2520,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function staplePool(){
-    var pool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !/フレンチトースト|パンケーキ|甘い|甘め/.test(m.name + (m.desc || "")); });
+    var pool = allMenus().filter(function(m){ return roleOf(m) === "staple"; });
     if(selectedStaple.length > 0){
       pool = pool.filter(function(m){ return selectedStaple.indexOf(m.staple) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
     if(activeMood){
       var moodPool = pool.filter(matchesMood);
-      if(moodPool.length > 0 || activeMood.id === "quick") pool = moodPool;
+      if(moodPool.length > 0) pool = moodPool;
     }
     var recent = recentNamesByRole("staple", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
@@ -2826,39 +2584,24 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return [];
   }
 
-  function comboMenus(combo){
-    return SLOTS.map(function(key){ return combo[key]; }).filter(Boolean);
-  }
-
   function pickCombo(){
+    var stPool = staplePool();
+    if(stPool.length === 0) return null;
+    var staplePick = pickRandom(stPool);
+
     var mPool = mainPool();
     if(mPool.length === 0) return null;
     var mainPick = pickRandom(mPool);
-    var stPool = staplePool();
-    // On low-effort days use a ready-to-serve staple, not a second cooked dish.
-    var quick = activeMood && activeMood.id === "quick";
-    var staplePick;
-    if(quick){
-      var kind = selectedStaple[0] || "rice";
-      if(kind === "noodle") staplePick = {name:"冷凍うどん",cat:"egg_natto",role:"staple",staple:"noodle",ing:["冷凍うどん5玉","めんつゆ適量"],steps:["うどんは袋の表示に従って加熱する。めんつゆは商品の表示通りに薄めて添える。"],cost5:500};
-      else if(kind === "bread") staplePick = {name:"食事パン",cat:"egg_natto",role:"staple",staple:"bread",ing:["食事パン5個"],steps:["そのまま盛り付ける。温める場合は商品の表示に従う。"],cost5:500};
-      else staplePick = {name:"ごはん（炊飯済み・パック）",cat:"egg_natto",role:"staple",staple:"rice",ing:["ごはん1000g"],steps:["炊飯済みのごはんを温めて盛る。パックごはんは商品の加熱表示に従う。"],cost5:500};
-      staplePick.isPlainStaple = true;
-      return {staple:staplePick,main:mainPick,side1:null,side2:null};
-    }
-    if(stPool.length === 0) return null;
-    var compatible = stPool.filter(function(m){return m.genre === mainPick.genre && m.cat !== mainPick.cat;});
-    staplePick = pickRandom(compatible.length ? compatible : stPool);
-    var chosen = [staplePick,mainPick];
-    function nextSide(){
-      var pool = sidePool(mainPick, chosen.map(function(m){return m.name;}), chosen.map(function(m){return m.cat;}), chosen.some(isSaladStyle));
-      pool = pool.filter(function(m){return !SOUP_STYLE_RE.test(m.name) || !chosen.some(function(x){return SOUP_STYLE_RE.test(x.name);});});
-      var side = pool.length ? pickRandom(pool) : null;
-      if(side) chosen.push(side);
-      return side;
-    }
-    var side1 = nextSide();
-    return {staple:staplePick,main:mainPick,side1:side1,side2:nextSide()};
+
+    var sPool1 = sidePool(mainPick, [mainPick.name], [mainPick.cat], false);
+    if(sPool1.length === 0) return null;
+    var side1 = pickRandom(sPool1);
+
+    var sPool2 = sidePool(mainPick, [mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
+    if(sPool2.length === 0) return null;
+    var side2 = pickRandom(sPool2);
+
+    return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
   }
 
   function reasonFor(mainMenu){
@@ -2888,7 +2631,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   function scaleNumber(value, ratio){
     var scaled = value * ratio;
-    if(scaled < 0.125) return String(Math.max(0.01, Math.round(scaled * 100) / 100));
+    if(scaled <= 0.05) return "少々";
     if(scaled < 1){
       var q = Math.round(scaled * 4) / 4;
       var fracMap = {0.25:"1/4", 0.5:"1/2", 0.75:"3/4", 1:"1"};
@@ -2902,14 +2645,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function scaleIngredientText(text, ratio){
-    // Only scale quantities next to units; preserve names such as 6Pチーズ.
-    if(/^(?:卵|鶏卵)\s*[0-9]/.test(text)){
-      return text.replace(/(\d+(?:\.\d+)?)(?=個)/, function(n){return Math.max(1, Math.round(Number(n)*ratio));});
-    }
     if(ratio === 1) return text;
-    return text.replace(/(?:(\d+)\s*\/\s*(\d+)|\d+(?:\.\d+)?)(?=\s*(?:kg|g|ml|L|個|本|枚|缶|丁|玉|株|束|袋|合|かけ|杯)|$)/g, function(match, num, den, offset){
-      var prefix = text.slice(0, offset);
-      if(prefix.lastIndexOf("(") > prefix.lastIndexOf(")") || prefix.lastIndexOf("（") > prefix.lastIndexOf("）")) return match;
+    return text.replace(/(\d+)\s*\/\s*(\d+)|\d+(?:\.\d+)?/g, function(match, num, den){
       var value = (num !== undefined) ? (parseInt(num, 10) / parseInt(den, 10)) : parseFloat(match);
       return scaleNumber(value, ratio);
     });
@@ -2936,7 +2673,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function updateBudget(combo){
-    var costs = comboMenus(combo).map(function(menu){ return menu.cost5 || 0; });
+    var costs = SLOTS.map(function(key){ return combo[key].cost5 || 0; });
     var total = costs.reduce(function(a, b){ return a + b; }, 0);
     var scaled = Math.round(total * servingsRatio() / 50) * 50;
     budgetBox.hidden = false;
@@ -2982,26 +2719,21 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   function showPick(combo){
     currentPicks = combo;
-    clearShopping();
     recordSessionPick(combo);
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
-    mascotLoading.hidden = true;
     moodGreeting.hidden = false;
-    mascotResult.hidden = false;
-    moodGreeting.textContent = (activeMood && MASCOT_LINES.hirameki[activeMood.id])
-      || (activeMood ? activeMood.greeting : reasonFor(combo.main));
+    moodGreeting.textContent = activeMood ? activeMood.greeting : reasonFor(combo.main);
     comboRequestId++;
     var requestId = comboRequestId;
     SLOTS.forEach(function(key){
       var menu = combo[key];
       var els = slotEls[key];
-      if(!menu){ els.block.hidden = true; return; }
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
       els.name.textContent = menu.name;
       els.desc.textContent = menu.desc || "";
-      els.tag.hidden = !!menu.isPlainStaple;
+      els.tag.hidden = false;
       els.tag.textContent = cat.label;
       els.tag.style.setProperty("--dot", cat.dot);
       els.tag.style.setProperty("--chip-bg", cat.bg);
@@ -3046,7 +2778,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
       fillRecipe(els, menu);
       setShopLink(els, menu);
-      if(menu.isPlainStaple){setPhotoEmpty(els);return;}
       setPhotoLoading(els);
 
       resolvePhoto(menu, function(photo){
@@ -3060,7 +2791,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       });
     });
     stapleHeading.hidden = false;
-    sidesHeading.hidden = !combo.side1 && !combo.side2;
+    sidesHeading.hidden = false;
     updateBudget(combo);
     spinBtn.hidden = true;
     decideRow.hidden = false;
@@ -3069,11 +2800,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function refreshServingsDisplay(){
     if(!currentPicks) return;
     SLOTS.forEach(function(key){
-      if(currentPicks[key]) fillRecipe(slotEls[key], currentPicks[key]);
+      fillRecipe(slotEls[key], currentPicks[key]);
     });
     updateBudget(currentPicks);
-    if(!shoppingPanel.hidden) renderShopping();
-    else shoppingItems.textContent = "";
     var mainPrice = Math.round((currentPicks.main.cost5 || 0) * servingsRatio() / 50) * 50;
     if(mainPrice > 0){
       priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
@@ -3088,11 +2817,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     clearInterval(spinTimer);
     comboRequestId++;
     currentPicks = null;
-    clearShopping();
     comboIntro.hidden = false;
     moodGreeting.hidden = true;
-    mascotResult.hidden = true;
-    mascotLoading.hidden = true;
     stapleHeading.hidden = true;
     sidesHeading.hidden = true;
     timePillMain.hidden = true;
@@ -3124,11 +2850,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     comboIntro.hidden = true;
     moodGreeting.hidden = true;
-    mascotResult.hidden = true;
-    mascotLoading.hidden = false;
-    thinkingLine.textContent = source === "reroll"
-      ? MASCOT_LINES.thinkingReroll
-      : (activeMood && MASCOT_LINES.thinking[activeMood.id]) || MASCOT_LINES.thinkingDefault;
     stapleHeading.hidden = true;
     sidesHeading.hidden = true;
     timePillMain.hidden = true;
@@ -3151,7 +2872,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       setPhotoLoading(els);
     });
 
-    var tickStaplePool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !/フレンチトースト|パンケーキ|甘い|甘め/.test(m.name + (m.desc || "")); });
+    var tickStaplePool = allMenus().filter(function(m){ return roleOf(m) === "staple"; });
     var tickMainPool = mainPool();
     var tickSidePool = allMenus().filter(function(m){ return roleOf(m) === "side"; });
 
@@ -3194,19 +2915,19 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       date: todayStr(),
       staple: currentPicks.staple ? {name: currentPicks.staple.name, cat: currentPicks.staple.cat} : null,
       main: {name: currentPicks.main.name, cat: currentPicks.main.cat},
-      sides: [currentPicks.side1, currentPicks.side2].filter(Boolean).map(function(m){return {name:m.name,cat:m.cat};})
+      sides: [
+        {name: currentPicks.side1.name, cat: currentPicks.side1.cat},
+        {name: currentPicks.side2.name, cat: currentPicks.side2.cat}
+      ]
     });
     history = history.slice(0, 30);
     safeSet(LS_HISTORY, history);
     renderHistory();
     showToast("今日の献立に決定しました！");
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
-    decidedRecap.textContent = comboMenus(currentPicks).map(function(m){return m.name;}).join(" ＋ ");
-    decidedLine.textContent = mascotLine(MASCOT_LINES.decided);
+    decidedRecap.textContent = currentPicks.staple.name + " ＋ " + currentPicks.main.name + " ＋ " + currentPicks.side1.name + " ＋ " + currentPicks.side2.name;
     decideRow.hidden = true;
     decidedPanel.hidden = false;
-    document.getElementById("actionBar").classList.add("is-decided");
-    decidedPanel.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block:"start"});
   });
 
   newDayBtn.addEventListener("click", function(){
@@ -3225,7 +2946,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var text = "今日の晩ごはん、決まりました。\n\n" +
       "主食：" + currentPicks.staple.name + "\n" +
       "主菜：" + currentPicks.main.name + "\n" +
-      ([currentPicks.side1,currentPicks.side2].filter(Boolean).length ? "副菜：" + [currentPicks.side1,currentPicks.side2].filter(Boolean).map(function(m){return m.name;}).join("・") + "\n\n" : "\n") +
+      "副菜：" + currentPicks.side1.name + "・" + currentPicks.side2.name + "\n\n" +
       "ごはんのひらめき係で決めました。";
     var url = location.href;
     if(navigator.share){
