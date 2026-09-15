@@ -2640,29 +2640,43 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
   }
 
+  var MOOD_DESCRIPTOR = {
+    hearty: "ガッツリ気分の日には",
+    drink: "お酒のお供にしたい日には",
+    quick: "とにかくラクしたい日には",
+    save: "節約したい日には",
+    meat: "お肉が食べたい日には",
+    fish: "お魚が食べたい日には",
+    light: "軽めに済ませたい日には",
+    new: "いつもと違うものを食べたい日には",
+    cleanup: "冷蔵庫を片付けたい日には",
+    family: "家族を喜ばせたい日には",
+    bulk: "育ち盛りにたっぷり食べさせたい日には"
+  };
+  var MOOD_IMPLIES_CAT = {meat: true, fish: true};
+
+  function dishFactSentence(mainMenu, moodId){
+    if(mainMenu.tags && mainMenu.tags.length > 0){
+      return "「" + mainMenu.tags[0] + "」が魅力で、" + mainMenu.cookingTime + "分の一品だから";
+    }
+    var cat = CAT_MAP[mainMenu.cat];
+    var genre = GENRE_MAP[mainMenu.genre];
+    var genreLabel = genre ? genre.label : "";
+    var base = (moodId && MOOD_IMPLIES_CAT[moodId])
+      ? genreLabel + "の一品"
+      : genreLabel + (cat ? "の" + cat.label + "料理" : "の一品");
+    return base + "で、" + mainMenu.cookingTime + "分・5人分約" + (mainMenu.cost5 || 0).toLocaleString("ja-JP") + "円だから";
+  }
+
   function reasonFor(mainMenu){
-    if(activeMood){
-      var reasons = {
-        hearty: "ガッツリ気分にぴったりだから",
-        drink: "お酒のお供にぴったりだから",
-        quick: (typeof mainMenu.cookingTime === "number" ? mainMenu.cookingTime + "分で作れるから" : "サッと作れる一品だから"),
-        save: "お財布にやさしい一品だから",
-        meat: "お肉をしっかり食べたい日にぴったりだから",
-        fish: "お魚が食べたい日にぴったりだから",
-        light: "軽めに済ませたい日にぴったりだから",
-        new: "いつもと違う一品だから",
-        cleanup: "冷蔵庫の食材整理にも使えるから",
-        family: "家族みんなが喜びそうな一品だから"
-      };
-      if(reasons[activeMood.id]) return reasons[activeMood.id];
+    var fact = dishFactSentence(mainMenu, activeMood ? activeMood.id : null);
+    if(activeMood && MOOD_DESCRIPTOR[activeMood.id]){
+      return MOOD_DESCRIPTOR[activeMood.id] + "、" + fact;
     }
     if(history[0] && history[0].main && history[0].main.cat !== mainMenu.cat){
-      return "最近とは違う食材で気分転換に";
+      return "最近とは違う食材で気分転換に、" + fact;
     }
-    if(mainMenu.tags && mainMenu.tags.length > 0){
-      return mainMenu.tags[0] + "な一品だから";
-    }
-    return "今日のおすすめの一品です";
+    return fact;
   }
 
   function scaleNumber(value, ratio){
@@ -2759,7 +2773,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
     moodGreeting.hidden = false;
-    moodGreeting.textContent = activeMood ? activeMood.greeting : reasonFor(combo.main);
+    moodGreeting.textContent = reasonFor(combo.main);
     comboRequestId++;
     var requestId = comboRequestId;
     SLOTS.forEach(function(key){
