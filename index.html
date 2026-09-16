@@ -329,6 +329,106 @@ section{margin-bottom:28px;}
   margin:0 0 18px;
   text-wrap:balance;
 }
+
+/* ===== ひらり(案内役キャラクター) =====
+   4つの決定的な瞬間(誘う/考える→ひらめく/讃える)だけに登場する。
+   状態ごとに専用ポーズ(hirameki-reveal / hirameki-thinking / hirameki-decided)
+   の画像を直接指定している。ポーズ画像を更新する場合は、各<img>の
+   パスを差し替えるだけで反映できるようにしてある。 */
+.mascot{
+  display:block;
+  height:auto;
+  flex:none;
+}
+.mascot-bubble{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px 14px 14px 4px;
+  padding:9px 14px;
+  font-family:"Shippori Mincho", serif;
+  font-size:14px;
+  color:var(--text);
+  box-shadow:0 4px 12px -8px rgba(43,39,34,.25);
+  text-align:left;
+  text-wrap:balance;
+}
+
+/* ①ファーストビュー */
+.hero-mascot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+.hero-mascot img{
+  width:112px;
+  animation:mascotBreathe 3s ease-in-out infinite;
+}
+
+/* ③ひらめき結果(考える → ひらめく) */
+.result-lede{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:0 0 18px;
+}
+.mascot-inline{
+  width:48px;
+}
+.mascot-intro{
+  width:64px;
+}
+.mascot-loading{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  margin:0 0 18px;
+}
+.mascot-loading img{
+  width:56px;
+  animation:mascotTilt 1.1s ease-in-out infinite;
+}
+
+/* ④決定時 */
+.decided-mascot{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin:0 0 8px;
+}
+.decided-mascot img{
+  width:40px;
+  animation:mascotHop .4s ease both;
+}
+
+@keyframes mascotBreathe{
+  0%,100%{ transform:translateY(0); }
+  50%{ transform:translateY(-2px); }
+}
+@keyframes mascotTilt{
+  0%,100%{ transform:rotate(0deg); }
+  50%{ transform:rotate(-4deg); }
+}
+@keyframes mascotPopIn{
+  from{ opacity:0; transform:scale(.92); }
+  to{ opacity:1; transform:scale(1); }
+}
+@keyframes mascotHop{
+  0%{ transform:translateY(0); }
+  40%{ transform:translateY(-5px); }
+  100%{ transform:translateY(0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .hero-mascot img, .mascot-loading img, .decided-mascot img{
+    animation:none;
+  }
+}
 .dish-block{
   text-align:left;
   padding:18px 0;
@@ -799,9 +899,18 @@ footer.site-footer .footer-copyright{
   font-size:16px;
   font-weight:600;
   color:var(--text);
-  margin:0 0 18px;
-  text-align:center;
+  margin:0;
+  text-align:left;
   text-wrap:balance;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px 14px 14px 4px;
+  padding:9px 14px;
+  box-shadow:0 4px 12px -8px rgba(43,39,34,.25);
+  animation:mascotPopIn .25s ease both;
+}
+@media (prefers-reduced-motion: reduce){
+  .mood-greeting{ animation:none; }
 }
 .dish-block-main{animation:resultReveal .35s ease both;}
 .sides-row{animation:resultReveal .4s ease both;}
@@ -1040,6 +1149,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <p class="eyebrow">今日の夕飯、どうする？</p>
     <h1>ごはんのひらめき係</h1>
     <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
+    <div class="hero-mascot">
+      <img class="mascot" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
+      <p class="mascot-bubble" id="heroLine"></p>
+    </div>
   </header>
 
   <section class="mood-section">
@@ -1050,8 +1163,21 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   <section>
     <div class="card roulette-card" id="rouletteCard">
       <p class="result-eyebrow">今日のひらめき</p>
-      <p class="mood-greeting" id="moodGreeting" hidden></p>
-      <p class="combo-intro" id="comboIntro">気分を選ぶと、今日のひらめきが届きます。</p>
+
+      <div class="result-lede">
+        <img class="mascot mascot-inline" id="mascotResult" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy" hidden>
+        <p class="mood-greeting" id="moodGreeting" hidden></p>
+      </div>
+
+      <div class="mascot-loading" id="mascotLoading" hidden>
+        <img class="mascot" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
+        <p class="mascot-bubble" id="thinkingLine"></p>
+      </div>
+
+      <div class="combo-intro" id="comboIntro">
+        <img class="mascot mascot-intro" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
+        <p>気分を選ぶと、今日のひらめきが届きます。</p>
+      </div>
 
       <p class="staple-heading" id="stapleHeading" hidden>今日の主食</p>
       <div class="dish-block dish-block-staple" id="blockStaple" hidden>
@@ -1319,6 +1445,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     </div>
 
     <div class="decided-panel" id="decidedPanel" hidden>
+      <div class="decided-mascot">
+        <img class="mascot" src="assets/character/hirameki-decided.webp" width="240" height="244" alt="" loading="lazy">
+        <p class="mascot-bubble" id="decidedLine"></p>
+      </div>
       <p class="decided-message">今日の晩ごはんが決まりました。</p>
       <p class="decided-recap" id="decidedRecap"></p>
       <button class="btn btn-secondary" id="shareBtn">
@@ -2089,6 +2219,30 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"bulk", emoji:"🍚", label:"たくさん食べさせたい", greeting:"育ち盛りにたっぷり食べさせたい日のあなたへ",
       cats:[], genres:[], weights:["hearty"], filter:function(m){ return m.tags && m.tags.indexOf("育ち盛り") !== -1; }}
   ];
+
+  /* =========================================================
+     ひらりのセリフ(2026-09 案内役化)
+     推薦ロジックには一切影響しない、見た目上の一言だけの仕組み。
+     ひらめき結果のセリフ(moodGreeting)は reasonFor() が生成する
+     料理ごとの推薦理由を使うため、ここでは hero/thinking/decided
+     の3箇所のみ担当する。
+     ========================================================= */
+  var MASCOT_LINES = {
+    hero: ["今日は何、食べたい気分?", "今日のごはん、一緒に考えよう。", "がっつり?さっぱり?選んでみて。"],
+    thinkingReroll: "じゃあ、もうひとつ。",
+    thinkingDefault: "ちょっと考えてみるね。",
+    thinking: {
+      hearty:"がっつり系、考えてみるね。", drink:"おつまみ、探してみる。", quick:"ラクな一品、選んでるよ。",
+      save:"お財布に優しいやつ、あるかな。", meat:"お肉系、いくつか浮かんできた。", fish:"お魚、何がいいかな。",
+      light:"軽めのやつ、考え中。", new:"ちょっと変わったの、探してみる。", cleanup:"冷蔵庫の中、思い出してるところ。",
+      family:"家族が喜びそうなの、考えてる。", bulk:"たっぷり系、選んでるよ。"
+    },
+    decided: ["よし、今日はこれで決まり!", "いいね。今日のごはん決まった。", "おいしくできますように。", "今日も一つ、ひらめいたね。"]
+  };
+  function mascotLine(list){
+    return Array.isArray(list) ? list[Math.floor(Math.random() * list.length)] : list;
+  }
+
   var LS_PHOTO_CACHE = "konndate_photo_cache_v3";
   var SERVING_OPTIONS = [1, 2, 3, 4, 5];
   var BASE_SERVINGS = 5;
@@ -2353,6 +2507,11 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   var comboIntro = document.getElementById("comboIntro");
   var moodGreeting = document.getElementById("moodGreeting");
+  var mascotResult = document.getElementById("mascotResult");
+  var mascotLoading = document.getElementById("mascotLoading");
+  var thinkingLine = document.getElementById("thinkingLine");
+  var decidedLine = document.getElementById("decidedLine");
+  document.getElementById("heroLine").textContent = mascotLine(MASCOT_LINES.hero);
   var spinBtn = document.getElementById("spinBtn");
   var decideRow = document.getElementById("decideRow");
   var againBtn = document.getElementById("againBtn");
@@ -2772,7 +2931,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     recordSessionPick(combo);
     comboIntro.hidden = true;
     decidedPanel.hidden = true;
+    mascotLoading.hidden = true;
     moodGreeting.hidden = false;
+    mascotResult.hidden = false;
     moodGreeting.textContent = reasonFor(combo.main);
     comboRequestId++;
     var requestId = comboRequestId;
@@ -2869,6 +3030,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     currentPicks = null;
     comboIntro.hidden = false;
     moodGreeting.hidden = true;
+    mascotResult.hidden = true;
+    mascotLoading.hidden = true;
     stapleHeading.hidden = true;
     sidesHeading.hidden = true;
     timePillMain.hidden = true;
@@ -2900,6 +3063,11 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     comboIntro.hidden = true;
     moodGreeting.hidden = true;
+    mascotResult.hidden = true;
+    mascotLoading.hidden = false;
+    thinkingLine.textContent = source === "reroll"
+      ? MASCOT_LINES.thinkingReroll
+      : (activeMood && MASCOT_LINES.thinking[activeMood.id]) || MASCOT_LINES.thinkingDefault;
     stapleHeading.hidden = true;
     sidesHeading.hidden = true;
     timePillMain.hidden = true;
@@ -2976,6 +3144,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     showToast("今日の献立に決定しました！");
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
     decidedRecap.textContent = currentPicks.staple.name + " ＋ " + currentPicks.main.name + " ＋ " + currentPicks.side1.name + " ＋ " + currentPicks.side2.name;
+    decidedLine.textContent = mascotLine(MASCOT_LINES.decided);
     decideRow.hidden = true;
     decidedPanel.hidden = false;
   });
