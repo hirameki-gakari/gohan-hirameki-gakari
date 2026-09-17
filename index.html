@@ -2310,6 +2310,83 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   ];
 
   /* =========================================================
+     気分別 献立テンプレート(2026-09 追加)
+     「気分→料理を個別に選ぶ」のではなく「気分→献立の型を決める→
+     枠ごとに料理を選ぶ→献立全体を検証する」という流れにするための
+     設計。MOODSの cats/genres/weights/filter は各皿単位の緩やかな
+     スコアリング(好みのタイブレーク)に、こちらのMOOD_TEMPLATESは
+     献立全体の構造・必須条件・検証に使う、という役割分担。
+     structure:
+       "default" … 主食+主菜+副菜+副菜(または一品献立)の、既存の
+                    4枠構成(buildDefaultCombo)をそのまま使う
+       "single"  … 主食(一品完結)＋任意の軽い副菜/汁物のみ。
+                    tired/quickのような「品数を絞りたい」気分用
+       "drink"   … 主菜(お酒に合う一品)＋おつまみ2品＋任意の締め。
+                    主食を必須にしない、drink専用の構成
+     requiredCategories は「肉・魚」のような必須条件。厳格に扱い、
+     0件でも無条件のプールへフォールバックしない(mainPool/staplePool
+     側で担保)。
+     ========================================================= */
+  var MOOD_TEMPLATES = {
+    drink: {
+      structure: "drink",
+      maxItems: 4,
+      finishProbability: 0.35,
+      displayLabels: {staple:"🍙 締め(任意)", main:"🍶 お酒に合う一品", side1:"🥜 おつまみ①", side2:"🥜 おつまみ②"}
+    },
+    tired: {
+      structure: "single",
+      maxItems: 3,
+      maxTotalTime: 20,
+      maxDifficulty: 1,
+      optionalSide: true,
+      optionalSoup: true
+    },
+    quick: {
+      structure: "single",
+      maxItems: 2,
+      maxTotalTime: 15,
+      maxDifficulty: 1,
+      optionalSide: true,
+      optionalSoup: false
+    },
+    fish: {
+      structure: "default",
+      requiredCategories: ["fish"]
+    },
+    meat: {
+      structure: "default",
+      requiredCategories: ["chicken", "pork", "beef"]
+    },
+    light: {
+      structure: "default",
+      maxItems: 3,
+      forbiddenNamePatterns: [/大盛り/, /特盛り/, /どっさり/, /デカ/],
+      preferredWeights: ["healthy"]
+    },
+    save: {
+      structure: "default",
+      // 5人分換算の献立合計費用の上限。ランダムな4品構成の合計は
+      // おおよそ中央値3,100円前後(2026-09時点のBASE_MENUS実測)なので、
+      // 下位25〜30%程度に収まる水準を目安にする。
+      maxTotalCost: 2800
+    },
+    family: {
+      structure: "default",
+      maxSpicyItems: 1
+    },
+    DEFAULT: {
+      structure: "default"
+    }
+  };
+  function getTemplate(moodId){
+    return (moodId && MOOD_TEMPLATES[moodId]) || MOOD_TEMPLATES.DEFAULT;
+  }
+  function selectTemplate(mood){
+    return getTemplate(mood ? mood.id : null);
+  }
+
+  /* =========================================================
      ひらりのセリフ(2026-09 案内役化)
      推薦ロジックには一切影響しない、見た目上の一言だけの仕組み。
      ひらめき結果のセリフ(moodGreeting)は reasonFor() が生成する
@@ -2633,6 +2710,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   var SLOTS = ["staple", "main", "side1", "side2"];
   var SLOT_SUFFIX = {staple:"Staple", main:"Main", side1:"Side1", side2:"Side2"};
+  var DEFAULT_ROLE_LABELS = {staple:"🍚 主食", main:"🍖 主菜", side1:"🥬 副菜", side2:"🥬 副菜②"};
   var slotEls = {};
   SLOTS.forEach(function(key){
     var s = SLOT_SUFFIX[key];
@@ -2849,7 +2927,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       pool = pool.filter(function(m){ return selectedCats.indexOf(m.cat) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
-    if(activeMood){
+    var requiredCats = activeMood ? getTemplate(activeMood.id).requiredCategories : null;
+    if(requiredCats && requiredCats.length > 0){
+      // 肉・魚のような必須条件は、0件になっても無条件の全体プールへは
+      // フォールバックしない(pickCombo側の再抽選・別枠探索に委ねる)。
+      pool = pool.filter(function(m){ return requiredCats.indexOf(m.cat) !== -1; });
+    }else if(activeMood){
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
     }
@@ -2881,7 +2964,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       pool = pool.filter(function(m){ return selectedStaple.indexOf(m.staple) !== -1; });
     }
     pool = pool.filter(matchesGenreWeight);
-    if(activeMood){
+    var requiredCatsStaple = activeMood ? getTemplate(activeMood.id).requiredCategories : null;
+    if(requiredCatsStaple && requiredCatsStaple.length > 0){
+      pool = pool.filter(function(m){ return requiredCatsStaple.indexOf(m.cat) !== -1; });
+    }else if(activeMood){
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
     }
@@ -3047,7 +3133,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return topScoringBand(candidates, function(m){ return scoreSide(m, contextMenus); }, 3);
   }
 
-  function pickCombo(){
+  // 既定の献立構成(主食・主菜・副菜・副菜(または一品献立))を1回分組み立てる。
+  // 以前のpickCombo()そのもの。fish/meatの必須カテゴリはmainPool/staplePool
+  // 側で厳格に扱われるため、ここでの呼び出し方は変わらない。
+  function buildDefaultCombo(){
     // 基本構成(主食・主菜・副菜・汁物の4カテゴリ)をやや優先しつつ、
     // 丼・カレー・麺などの一品献立も一定確率で出す。plain(白いごはん/
     // 食パン)は数が少ないため、比率をそのままpickComboの出現率にはせず、
@@ -3097,6 +3186,302 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }
 
     return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
+  }
+
+  // structure:"single" (tired/quick)。主食枠に一品完結型の料理(丼・麺など)
+  // だけを置き、主菜は使わない。軽い副菜・汁物は任意でもう1品まで。
+  function buildSingleCombo(template){
+    var pool = staplePool(false); // wantPlain=false → 一品完結型のみ
+    if(typeof template.maxDifficulty === "number"){
+      var easy = pool.filter(function(m){ return (m.difficulty || 1) <= template.maxDifficulty; });
+      if(easy.length > 0) pool = easy;
+    }
+    if(typeof template.maxTotalTime === "number"){
+      var fast = pool.filter(function(m){ return typeof m.cookingTime !== "number" || m.cookingTime <= template.maxTotalTime; });
+      if(fast.length > 0) pool = fast;
+    }
+    if(pool.length === 0) return null;
+    var staplePick = pickRandom(pool);
+
+    var side = null, soup = null;
+    var remainingTime = typeof template.maxTotalTime === "number"
+      ? Math.max(0, template.maxTotalTime - (staplePick.cookingTime || 0))
+      : Infinity;
+
+    if(template.optionalSide && Math.random() < 0.5){
+      var sidePoolC = lightSidePool([staplePick], [staplePick.name]);
+      sidePoolC = sidePoolC.filter(function(m){ return typeof m.cookingTime !== "number" || m.cookingTime <= remainingTime; });
+      if(sidePoolC.length > 0) side = pickRandom(sidePoolC);
+    }
+    if(template.optionalSoup && Math.random() < 0.5){
+      var excludeNames = [staplePick.name].concat(side ? [side.name] : []);
+      var soupCands = soupPool(excludeNames, [staplePick, side]);
+      soupCands = soupCands.filter(function(m){ return typeof m.cookingTime !== "number" || m.cookingTime <= remainingTime; });
+      if(soupCands.length > 0) soup = pickRandom(soupCands);
+    }
+
+    var combo = {staple: staplePick, main: null, side1: side, side2: soup};
+    // maxItemsを超える場合は、軽い方(汁物→副菜の順)から間引く
+    while(typeof template.maxItems === "number" && comboMenus(combo).length > template.maxItems){
+      if(combo.side2){ combo.side2 = null; }
+      else if(combo.side1){ combo.side1 = null; }
+      else break;
+    }
+    return combo;
+  }
+
+  // structure:"drink"。主食を必須にせず、主菜(お酒に合う一品)＋おつまみ2品
+  // ＋任意の締めで構成する。
+  function buildDrinkCombo(template){
+    var mPoolAll = allMenus().filter(function(m){ return roleOf(m) === "main"; }).filter(matchesGenreWeight);
+    var tagged = mPoolAll.filter(function(m){ return m.tags && m.tags.indexOf("おつまみ") !== -1; });
+    var recentMain = recentNamesByRole("main", 3);
+    var freshTagged = tagged.filter(function(m){ return recentMain.indexOf(m.name) === -1; });
+    // 「おつまみ」タグの品目は数が少ないため、タグ一致をまず優先しつつ、
+    // 尽きた場合は通常の主菜プールにフォールバックする(タグは強制条件では
+    // なく優先条件として扱う)。
+    var mainSource = freshTagged.length > 0 ? freshTagged
+      : (tagged.length > 0 ? tagged
+      : mPoolAll.filter(function(m){ return recentMain.indexOf(m.name) === -1; }));
+    if(mainSource.length === 0) mainSource = mPoolAll;
+    mainSource = mainSource.filter(function(m){ return !isDisliked(m); }).length > 0
+      ? mainSource.filter(function(m){ return !isDisliked(m); }) : mainSource;
+    if(mainSource.length === 0) return null;
+    var mainPick = pickRandom(topScoringBand(mainSource, scoreMain, 4));
+
+    var s1Pool = sidePool([mainPick], [mainPick.name], [mainPick.cat], isSaladStyle(mainPick), [cookingMethodOf(mainPick)]);
+    if(s1Pool.length === 0) return null;
+    var side1 = pickRandom(s1Pool);
+
+    var s2Pool = sidePool([mainPick, side1], [mainPick.name, side1.name], [mainPick.cat, side1.cat],
+      isSaladStyle(mainPick) || isSaladStyle(side1), [cookingMethodOf(mainPick), cookingMethodOf(side1)]);
+    if(s2Pool.length === 0) return null;
+    var side2 = pickRandom(s2Pool);
+
+    var finish = null;
+    if(Math.random() < (template.finishProbability || 0)){
+      // 締め: 白いごはん・食パンそのもの(plain)は量が多すぎるため除外し、
+      // 一品完結型のうち軽め(hearty以外)のものを優先する。
+      var finishPool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !m.plain; });
+      var lightFinish = finishPool.filter(function(m){ return m.weight !== "hearty"; });
+      var finishSource = lightFinish.length > 0 ? lightFinish : finishPool;
+      if(finishSource.length > 0) finish = pickRandom(finishSource);
+    }
+
+    return {staple: finish, main: mainPick, side1: side1, side2: side2};
+  }
+
+  function buildComboForTemplate(template){
+    if(template.structure === "drink") return buildDrinkCombo(template);
+    if(template.structure === "single") return buildSingleCombo(template);
+    return buildDefaultCombo();
+  }
+
+  // 献立全体の推定調理時間。並行調理を考慮した精密な見積りは行わず、
+  // 安全側に「最大の1品の時間 ＋ 他の料理の追加作業時間(4割換算)」とする。
+  function estimatedTotalTime(combo){
+    var times = comboMenus(combo).map(function(m){ return typeof m.cookingTime === "number" ? m.cookingTime : 15; });
+    if(times.length === 0) return 0;
+    var maxTime = Math.max.apply(null, times);
+    var sumOthers = times.reduce(function(s, t){ return s + t; }, 0) - maxTime;
+    return Math.round(maxTime + sumOthers * 0.4);
+  }
+
+  function estimatedTotalCost(combo){
+    return comboMenus(combo).reduce(function(sum, m){ return sum + (m.cost5 || 0); }, 0);
+  }
+
+  // 1品あたりの作業工程数(レシピのsteps件数をそのまま使う簡易近似)。
+  function estimateActiveSteps(m){
+    return (m.steps || []).length || 1;
+  }
+  // 1品あたりの使用調理器具数の簡易推定(実測データが無いため、調理法名
+  // から粗く見積もる。揚げ物・煮物・麺類は鍋やフライパンを複数使いがちと仮定)。
+  function estimateCookware(m){
+    var method = cookingMethodOf(m);
+    if(method === "fry" || method === "simmer") return 2;
+    if(m.role === "staple" && m.staple === "noodle") return 2;
+    return 1;
+  }
+
+  // 献立全体のハード検証。ここで弾かれたものは再抽選の対象になる
+  // (肉・魚などの必須条件はプール側で既に厳格化されているため、ここでは
+  // 「表示中の献立」という最終形に対する二重チェックとして働く)。
+  function validateCombo(combo, moodId){
+    if(!combo) return false;
+    var menus = comboMenus(combo);
+    if(menus.length === 0) return false;
+    var template = getTemplate(moodId);
+
+    if(typeof template.maxItems === "number" && menus.length > template.maxItems) return false;
+
+    if(template.requiredCategories && template.requiredCategories.length > 0){
+      if(!menus.some(function(m){ return template.requiredCategories.indexOf(m.cat) !== -1; })) return false;
+    }
+
+    if(template.forbiddenNamePatterns){
+      var hasForbiddenName = menus.some(function(m){
+        return template.forbiddenNamePatterns.some(function(re){ return re.test(m.name); });
+      });
+      if(hasForbiddenName) return false;
+    }
+
+    if(typeof template.maxTotalTime === "number" && estimatedTotalTime(combo) > template.maxTotalTime) return false;
+
+    if(typeof template.maxDifficulty === "number"){
+      if(menus.some(function(m){ return (m.difficulty || 1) > template.maxDifficulty; })) return false;
+    }
+
+    if(typeof template.maxTotalCost === "number" && estimatedTotalCost(combo) > template.maxTotalCost) return false;
+
+    if(typeof template.maxSpicyItems === "number"){
+      var spicyCount = menus.filter(function(m){ return tasteTagsOf(m).indexOf("spicy") !== -1; }).length;
+      if(spicyCount > template.maxSpicyItems) return false;
+    }
+
+    // 副菜①・②の重複禁止(全気分共通)
+    if(combo.side1 && combo.side2 && combo.side1.name === combo.side2.name) return false;
+
+    // drink固有: 締めが出た場合、白いごはん・食パンそのもの(plain)は禁止
+    if(moodId === "drink" && combo.staple && combo.staple.plain) return false;
+
+    return true;
+  }
+
+  // 献立全体の評価。単体の料理スコアではなく、テンプレートの狙いに
+  // どれだけ献立全体として応えているかを採点する。validateComboを
+  // 通った候補どうしを比べ、より良いものを選ぶために使う。
+  function scoreMenuCombination(combo, template){
+    var menus = comboMenus(combo);
+    if(menus.length === 0) return -999;
+    var score = 0;
+
+    // 気分一致(皿ごとの緩いフィット)
+    if(activeMood){
+      menus.forEach(function(m){
+        if(activeMood.filter && activeMood.filter(m)) score += 3;
+        if(activeMood.cats && activeMood.cats.indexOf(m.cat) !== -1) score += 2;
+      });
+    }
+
+    // 必須食材カテゴリの存在
+    if(template.requiredCategories && template.requiredCategories.length > 0){
+      if(menus.some(function(m){ return template.requiredCategories.indexOf(m.cat) !== -1; })) score += 10;
+    }
+
+    // 品数(テンプレートの上限に近いほど良い。超過は大きく減点)
+    if(typeof template.maxItems === "number"){
+      score -= Math.max(0, menus.length - template.maxItems) * 20;
+    }
+
+    // 合計調理時間・作業工程数・調理器具数。
+    // これらの「効率」は、テンプレートが時間/難易度に明示的な上限を
+    // 課している場合(tired/quickのようなmaxTotalTime・maxDifficulty指定
+    // つきのテンプレート)にのみ評価する。structure自体では判定しない
+    // (drinkは品数が多い構造だが「時短」が目的ではないため、締めが
+    // 付いたというだけで一律減点されると本来出るはずの締めがほぼ出なく
+    // なってしまう)。品数が多いことそのものが不利にならないよう、
+    // 該当しないテンプレートでは効率面をスコアに含めない。
+    var totalTime = estimatedTotalTime(combo);
+    var caresAboutEfficiency =
+      typeof template.maxTotalTime === "number" || typeof template.maxDifficulty === "number";
+    if(typeof template.maxTotalTime === "number"){
+      score -= Math.max(0, totalTime - template.maxTotalTime) * 2;
+    }else if(caresAboutEfficiency){
+      score -= totalTime * 0.05;
+    }
+    if(caresAboutEfficiency){
+      var totalSteps = menus.reduce(function(s, m){ return s + estimateActiveSteps(m); }, 0);
+      score -= totalSteps * 0.3;
+      var totalCookware = menus.reduce(function(s, m){ return s + estimateCookware(m); }, 0);
+      score -= totalCookware * 0.5;
+    }
+
+    // 献立総額
+    var totalCost = estimatedTotalCost(combo);
+    if(typeof template.maxTotalCost === "number"){
+      score -= Math.max(0, totalCost - template.maxTotalCost) * 0.02;
+    }
+
+    // 味付け・主要食材の重複ペナルティ(全ペア総当たり)
+    for(var i = 0; i < menus.length; i++){
+      for(var j = i + 1; j < menus.length; j++){
+        var overlap = tasteTagsOf(menus[i]).filter(function(t){ return tasteTagsOf(menus[j]).indexOf(t) !== -1; });
+        score -= overlap.length * 2;
+        if(heavyCatOf(menus[i]) && heavyCatOf(menus[i]) === heavyCatOf(menus[j])) score -= 15;
+      }
+    }
+
+    // ジャンル整合性(3ジャンル全部混ざるより1〜2種類にまとまっている方が良い)
+    var genres = {};
+    menus.forEach(function(m){ if(m.genre) genres[m.genre] = true; });
+    if(Object.keys(genres).length >= 3) score -= 6;
+
+    // ボリューム(weight)の一致度・禁止名パターン
+    if(template.preferredWeights){
+      menus.forEach(function(m){
+        if(template.preferredWeights.indexOf(m.weight) !== -1) score += 1;
+      });
+    }
+    if(template.forbiddenNamePatterns){
+      var forbiddenHit = menus.some(function(m){
+        return template.forbiddenNamePatterns.some(function(re){ return re.test(m.name); });
+      });
+      if(forbiddenHit) score -= 40;
+    }
+
+    // 子どもの食べやすさ(強い辛味の品数)
+    var spicyCount = menus.filter(function(m){ return tasteTagsOf(m).indexOf("spicy") !== -1; }).length;
+    if(typeof template.maxSpicyItems === "number"){
+      score -= Math.max(0, spicyCount - template.maxSpicyItems) * 15;
+    }
+
+    // 締めの適切さ(drink限定): 締めがheartyだとやや重すぎるので軽く減点
+    if(template.structure === "drink" && combo.staple && combo.staple.weight === "hearty"){
+      score -= 4;
+    }
+
+    return score;
+  }
+
+  // 検証を通らない場合の最終手段。テンプレートを既定の4枠構成へ変更し
+  // (=①テンプレート変更)、それでも必須カテゴリだけは緩めない(=③条件を
+  // 解除しない)。何度か試して見つからなければnullを返し、呼び出し側で
+  // 「条件に合う候補が不足」として扱う(=③)。
+  function safeFallbackCombo(template){
+    var requiredCats = template.requiredCategories || null;
+    for(var i = 0; i < 6; i++){
+      var combo = buildDefaultCombo();
+      if(!combo) continue;
+      var menus = comboMenus(combo);
+      if(requiredCats && requiredCats.length > 0){
+        if(!menus.some(function(m){ return requiredCats.indexOf(m.cat) !== -1; })) continue;
+      }
+      if(combo.side1 && combo.side2 && combo.side1.name === combo.side2.name) continue;
+      return combo;
+    }
+    return null;
+  }
+
+  // 献立生成のエントリポイント。気分→テンプレート決定→構築→検証→採点、
+  // を最大10回試し、検証を通った中で最もスコアの高い献立を返す。
+  // 1回も検証を通らなければ、テンプレートを緩めた安全な最終手段を試す。
+  function pickCombo(){
+    var template = selectTemplate(activeMood);
+    var moodId = activeMood ? activeMood.id : null;
+    var bestCombo = null, bestScore = -Infinity;
+    for(var i = 0; i < 10; i++){
+      var combo = buildComboForTemplate(template);
+      if(!combo) continue;
+      if(!validateCombo(combo, moodId)) continue;
+      var score = scoreMenuCombination(combo, template);
+      if(score > bestScore){
+        bestScore = score;
+        bestCombo = combo;
+      }
+    }
+    if(bestCombo) return bestCombo;
+    return safeFallbackCombo(template);
   }
 
   // combo(staple/main/side1/side2)のうち、実在するもの(null除く)だけを
@@ -3178,6 +3563,41 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return "最近とは違う食材で気分転換に、" + fact;
     }
     return fact;
+  }
+
+  // 献立「全体」のおすすめ理由。1品だけでなく、実際に表示されている
+  // 主食/主菜/副菜の組み合わせに必ず言及する(テンプレートの構造ごとに
+  // 文の組み立て方を変える)。
+  function reasonForCombo(combo, moodId){
+    var mood = moodId ? MOODS.find(function(m){ return m.id === moodId; }) : null;
+    var template = getTemplate(moodId);
+    var totalTime = estimatedTotalTime(combo);
+
+    if(template.structure === "drink"){
+      var snacks = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
+      var snackText = snacks.length > 0 ? snacks.join("と") + "の冷たい小鉢2品" : "おつまみ2品";
+      var finishText = combo.staple
+        ? "。締めに" + combo.staple.name + "も軽く楽しめます"
+        : "。締めなしで軽く楽しめます";
+      return combo.main.name + "と、" + snackText + "で、お酒を飲みながらつまみやすい組み合わせです" + finishText + "。";
+    }
+
+    if(template.structure === "single"){
+      var extras = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
+      var extraText = extras.length > 0 ? "、" + extras.join("と") + "を添えて" : "";
+      var effortText = mood && mood.id === "tired" ? "洗い物も少なめで" : "サッと";
+      return combo.staple.name + "だけで完結する一皿" + extraText + "。合計約" + totalTime + "分、" + effortText + "作れます。";
+    }
+
+    // structure:"default"(定食・一品献立)
+    var heroDish = combo.main || combo.staple;
+    var fact = dishFactSentence(heroDish, moodId);
+    var sideNames = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
+    var lede = mood && MOOD_DESCRIPTOR[mood.id] ? MOOD_DESCRIPTOR[mood.id] + "、" : "";
+    var comboText = sideNames.length > 0
+      ? heroDish.name + "に" + sideNames.join("と") + "を合わせた献立です"
+      : heroDish.name + "の献立です";
+    return lede + comboText + "。" + fact + "。全体で約" + totalTime + "分ほどが目安です。";
   }
 
   // =========================================================
@@ -3338,7 +3758,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     moodGreeting.hidden = false;
     mascotResult.hidden = false;
     var heroForReason = combo.main || combo.staple;
-    moodGreeting.textContent = reasonFor(heroForReason);
+    var activeMoodId = activeMood ? activeMood.id : null;
+    var activeTemplate = getTemplate(activeMoodId);
+    moodGreeting.textContent = reasonForCombo(combo, activeMoodId);
     var hiramekiScore = hiramekiScoreFor(heroForReason, activeMood ? activeMood.id : null);
     hiramekiScoreLabel.textContent = "💡 ひらめき度 " + hiramekiScore.percent + "%";
     hiramekiScoreReasons.innerHTML = hiramekiScore.reasons.map(function(r){ return "<li>" + escapeHtml(r) + "</li>"; }).join("");
@@ -3357,8 +3779,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         return;
       }
       if(key === "main") mainShown = true;
-      if(key === "side2" && els.role){
-        els.role.textContent = isSoupStyle(menu) ? "🥣 汁物" : "🥬 副菜②";
+      if(els.role){
+        var labels = activeTemplate.displayLabels || DEFAULT_ROLE_LABELS;
+        if(key === "side2"){
+          els.role.textContent = isSoupStyle(menu) ? "🥣 汁物" : (labels.side2 || DEFAULT_ROLE_LABELS.side2);
+        }else{
+          els.role.textContent = labels[key] || DEFAULT_ROLE_LABELS[key];
+        }
       }
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
@@ -3644,11 +4071,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var shareBtn = document.getElementById("shareBtn");
   shareBtn.addEventListener("click", function(){
     if(!currentPicks) return;
-    trackEvent("share_menu", {method: navigator.share ? "web_share" : "clipboard", main_name: currentPicks.main.name});
+    var shareHero = currentPicks.main || currentPicks.staple;
+    trackEvent("share_menu", {method: navigator.share ? "web_share" : "clipboard", main_name: shareHero ? shareHero.name : ""});
+    // drink/tired/quickなどのテンプレートでは主食・主菜のどちらかがnullの
+    // ことがあるため、comboMenus()で実在する皿だけを取り出して組み立てる。
+    var shareLines = comboMenus(currentPicks).map(function(m){ return "・" + m.name; }).join("\n");
     var text = "今日の晩ごはん、決まりました。\n\n" +
-      "主食：" + currentPicks.staple.name + "\n" +
-      "主菜：" + currentPicks.main.name + "\n" +
-      "副菜：" + currentPicks.side1.name + "・" + currentPicks.side2.name + "\n\n" +
+      shareLines + "\n\n" +
       "ごはんのひらめき係で決めました。";
     var url = location.href;
     if(navigator.share){
