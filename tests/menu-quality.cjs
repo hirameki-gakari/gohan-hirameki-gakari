@@ -9,7 +9,8 @@ const base=source.slice(source.indexOf('var BASE_MENUS ='),source.indexOf('  var
 run(base);
 run(`var customMenus=[], SLOTS=['staple','main','side1','side2'], servings=2, BASE_SERVINGS=5;
 var selectedCats=[],selectedGenres=[],selectedWeights=[],selectedStaple=[],activeMood=null;
-var sessionMainHistory=[],sessionStapleHistory=[],sessionSideHistory=[],history=[];`);
+var sessionMainHistory=[],sessionStapleHistory=[],sessionSideHistory=[],history=[],feedback=[];
+function safeSet(){} // LS書き込みはブラウザのみで確認するため、テストではno-op`);
 
 // 定数(SALAD_STYLE_RE, HEAVY_CATSなど)は手打ちコピーせず、ソースから
 // そのまま抜き出して評価する(実装とテストの二重管理によるズレを防ぐ)。
@@ -21,6 +22,7 @@ for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE',
 }
 
 for(const name of ['allMenus','roleOf','pickRandom','recentNamesByRole','matchesGenreWeight','matchesMood','topScoringBand',
+  'catPreferenceBonus','isDisliked','clearLikeDislike','recordFeedback',
   'scoreMain','mainPool','scoreStaple','staplePool','isSaladStyle','isSoupStyle','isOneDishStaple',
   'cookingMethodOf','tasteTagsOf','heavyCatOf','scoreSide','sidePool','soupPool','lightSidePool','pickCombo',
   'comboMenus','shoppingRows','scaleNumber','scaleIngredientText','servingsRatio']){
@@ -98,4 +100,33 @@ for(let n=0;n<100;n++){
 }
 run(`activeMood=null;`);
 
-console.log('PASS: '+N+'献立スイープ(サラダ重複・汁物重複・一品献立モード・主要食材重複)、時短主菜、買い物リスト集計、材料スケーリング');
+// ----- フィードバック(好き/苦手)が推薦に反映されること -----
+// 「苦手」を伝えた特定の1品は、200回スピンしても一度も出てこない
+// (mainPool/staplePool/sidePool すべてで、名前ベースのハード除外が効く)。
+const dislikedName = run(`allMenus().find(m=>roleOf(m)==='main').name`);
+run(`recordFeedback({name:${JSON.stringify(dislikedName)},cat:'x-test-cat-a'}, 'dislike', null);`);
+for(let n=0;n<200;n++){
+  const c=run('pickCombo()');assert(c);
+  const menus=Object.values(c).filter(Boolean);
+  assert(!menus.some(m=>m.name===dislikedName), '苦手料理「'+dislikedName+'」が再び推薦された');
+}
+run(`feedback=[];`); // 次のチェックへの影響を消す
+
+// 「好き」を繰り返し伝えたカテゴリは、スコアが上がる(発見の余地が
+// 残るよう、上限でクランプされている=完全固定化しないことも確認)。
+run(`for(let i=0;i<10;i++) recordFeedback({name:'dummy-'+i, cat:'pref-cat'}, 'like', null);`);
+assert.equal(run(`catPreferenceBonus('pref-cat')`), 6, '好みボーナスが上限(6)でクランプされていない');
+assert.equal(run(`catPreferenceBonus('untouched-cat')`), 0, '無関係なカテゴリにボーナスが漏れている');
+run(`feedback=[];`);
+
+// 苦手→好きに変えたら、苦手による除外が解除されること(古い評価が
+// 残って食い違わないことの確認)
+const toggleName = run(`allMenus().find(m=>roleOf(m)==='side').name`);
+run(`recordFeedback({name:${JSON.stringify(toggleName)},cat:'x-toggle'}, 'dislike', null);`);
+assert.equal(run(`isDisliked({name:${JSON.stringify(toggleName)}})`), true);
+run(`recordFeedback({name:${JSON.stringify(toggleName)},cat:'x-toggle'}, 'like', null);`);
+assert.equal(run(`isDisliked({name:${JSON.stringify(toggleName)}})`), false, '苦手→好きに変えても除外されたまま');
+assert.equal(run(`feedback.filter(f=>f.name===${JSON.stringify(toggleName)}).length`), 1, '古いlike/dislikeが残っている');
+run(`feedback=[];`);
+
+console.log('PASS: '+N+'献立スイープ(サラダ重複・汁物重複・一品献立モード・主要食材重複)、時短主菜、買い物リスト集計、材料スケーリング、フィードバック反映(苦手除外・好み加点の上限)');

@@ -912,6 +912,48 @@ footer.site-footer .footer-copyright{
 @media (prefers-reduced-motion: reduce){
   .mood-greeting{ animation:none; }
 }
+.hirameki-score{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:6px 0 0;
+  padding:5px 10px;
+  border:none;
+  background:transparent;
+  color:var(--accent-strong);
+  font-family:"Zen Kaku Gothic New", sans-serif;
+  font-size:12px;
+  font-weight:700;
+  cursor:pointer;
+}
+.hirameki-score-why{
+  font-weight:600;
+  color:var(--text-muted);
+  text-decoration:underline;
+  text-underline-offset:2px;
+}
+.hirameki-score-reasons{
+  margin:0 0 4px;
+  padding:10px 14px;
+  list-style:none;
+  background:var(--surface-2);
+  border-radius:10px;
+  font-size:12px;
+  color:var(--text-muted);
+  line-height:1.7;
+}
+.hirameki-score-reasons li{margin:0;}
+.cross-link-banner{
+  margin:8px 0 0;
+  font-size:12.5px;
+  text-align:center;
+}
+.cross-link-banner a{
+  color:var(--accent-strong);
+  font-weight:700;
+  text-decoration:none;
+  border-bottom:1px dashed var(--accent-strong);
+}
 .dish-block-main{animation:resultReveal .35s ease both;}
 .sides-row{animation:resultReveal .4s ease both;}
 @keyframes resultReveal{
@@ -1048,6 +1090,34 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   background:var(--accent-strong);
   box-shadow:0 4px 16px rgba(60,30,10,.16);
 }
+.feedback-row{
+  display:flex;
+  justify-content:center;
+  gap:8px;
+  margin:2px 0 6px;
+}
+.feedback-btn{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  padding:8px 14px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  border-radius:999px;
+  cursor:pointer;
+  font-family:"Zen Kaku Gothic New", sans-serif;
+  color:var(--text-muted);
+  font-size:12.5px;
+  font-weight:600;
+  transition:border-color .15s, color .15s, background .15s;
+}
+.feedback-btn:active{transform:scale(.97);}
+.feedback-btn[aria-pressed="true"]{
+  border-color:var(--accent);
+  color:var(--accent-strong);
+  background:var(--accent-soft);
+}
+.feedback-btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px;}
 .decided-panel{
   display:flex;
   flex-direction:column;
@@ -1150,13 +1220,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <h1>ごはんのひらめき係</h1>
     <p class="hero-sub">あなたの今日の気分から、ひと皿を。</p>
     <div class="hero-mascot">
-      <img class="mascot" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
+      <img class="mascot" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
       <p class="mascot-bubble" id="heroLine"></p>
     </div>
   </header>
 
   <section class="mood-section">
-    <p class="mood-heading">今日の気分は？</p>
+    <p class="mood-heading">🌙 今日どんな夜？</p>
     <div class="mood-grid" id="moodGrid" role="group" aria-label="今日の気分"></div>
   </section>
 
@@ -1167,6 +1237,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       <div class="result-lede">
         <img class="mascot mascot-inline" id="mascotResult" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy" hidden>
         <p class="mood-greeting" id="moodGreeting" hidden></p>
+        <button class="hirameki-score" id="hiramekiScoreBtn" type="button" hidden>
+          <span id="hiramekiScoreLabel"></span><span class="hirameki-score-why">なぜ？</span>
+        </button>
+        <ul class="hirameki-score-reasons" id="hiramekiScoreReasons" hidden></ul>
+        <p class="cross-link-banner" id="crossLinkBanner" hidden>
+          <a href="https://hirameki-gakari.github.io/omise-hirameki-gakari/">🍽️ 今日は外で食べる、を選ぶこともできます</a>
+        </p>
       </div>
 
       <div class="mascot-loading" id="mascotLoading" hidden>
@@ -1175,7 +1252,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       </div>
 
       <div class="combo-intro" id="comboIntro">
-        <img class="mascot mascot-intro" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
+        <img class="mascot mascot-intro" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
         <p>気分を選ぶと、今日のひらめきが届きます。</p>
       </div>
 
@@ -1439,9 +1516,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     <button class="btn btn-primary" id="spinBtn">ひらめく</button>
 
+    <div class="feedback-row" id="feedbackRow" hidden>
+      <button class="feedback-btn" id="likeBtn" type="button" aria-pressed="false">❤️ 好き</button>
+      <button class="feedback-btn" id="dislikeBtn" type="button" aria-pressed="false">🙅 苦手</button>
+    </div>
+
     <div class="decide-row" id="decideRow" hidden>
-      <button class="btn btn-primary btn-decide" id="confirmBtn">この献立に決める</button>
-      <button class="btn-link" id="againBtn">もう一度ひらめく</button>
+      <button class="btn btn-primary btn-decide" id="confirmBtn">👍 この献立に決める</button>
+      <button class="btn-link" id="againBtn">🔄 もう一度ひらめく</button>
     </div>
 
     <div class="decided-panel" id="decidedPanel" hidden>
@@ -2175,6 +2257,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var LS_SELECTED_WEIGHTS = "konndate_selected_weights_v1";
   var LS_SELECTED_STAPLE = "konndate_selected_staple_v1";
   var LS_SERVINGS = "konndate_servings_v1";
+  var LS_FEEDBACK = "konndate_feedback_v1";
   var GENRES = [
     {id:"japanese", label:"和食"},
     {id:"western", label:"洋食"},
@@ -2194,6 +2277,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var STAPLE_MAP = {}; STAPLES.forEach(function(s){ STAPLE_MAP[s.id] = s; });
 
   var MOODS = [
+    {id:"tired", emoji:"😫", label:"疲れた", greeting:"今日は疲れているあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){ return (typeof m.difficulty === "number" && m.difficulty <= 1) || (m.tags && m.tags.indexOf("時短") !== -1); }},
     {id:"hearty", emoji:"🔥", label:"ガッツリ食べたい", greeting:"今日はガッツリいきたいあなたへ",
       cats:[], genres:[], weights:["hearty"], filter:null},
     {id:"drink", emoji:"🍺", label:"今日は飲みたい", greeting:"今日は一杯やりたいあなたへ",
@@ -2219,7 +2304,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         return m.tags && m.tags.some(function(t){ return ["育ち盛り","ご褒美"].indexOf(t) !== -1; });
       }},
     {id:"bulk", emoji:"🍚", label:"たくさん食べさせたい", greeting:"育ち盛りにたっぷり食べさせたい日のあなたへ",
-      cats:[], genres:[], weights:["hearty"], filter:function(m){ return m.tags && m.tags.indexOf("育ち盛り") !== -1; }}
+      cats:[], genres:[], weights:["hearty"], filter:function(m){ return m.tags && m.tags.indexOf("育ち盛り") !== -1; }},
+    {id:"surprise", emoji:"✨", label:"おまかせ", greeting:"今日はおまかせで決めたいあなたへ",
+      cats:[], genres:[], weights:[], filter:null}
   ];
 
   /* =========================================================
@@ -2234,10 +2321,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     thinkingReroll: "じゃあ、もうひとつ。",
     thinkingDefault: "ちょっと考えてみるね。",
     thinking: {
+      tired:"あまり頑張らなくていいやつ、探してるよ。",
       hearty:"がっつり系、考えてみるね。", drink:"おつまみ、探してみる。", quick:"ラクな一品、選んでるよ。",
       save:"お財布に優しいやつ、あるかな。", meat:"お肉系、いくつか浮かんできた。", fish:"お魚、何がいいかな。",
       light:"軽めのやつ、考え中。", new:"ちょっと変わったの、探してみる。", cleanup:"冷蔵庫の中、思い出してるところ。",
-      family:"家族が喜びそうなの、考えてる。", bulk:"たっぷり系、選んでるよ。"
+      family:"家族が喜びそうなの、考えてる。", bulk:"たっぷり系、選んでるよ。",
+      surprise:"じゃあ、おまかせで選んでみるね。"
     },
     decided: ["よし、今日はこれで決まり!", "いいね。今日のごはん決まった。", "おいしくできますように。", "今日も一つ、ひらめいたね。"]
   };
@@ -2267,6 +2356,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   var customMenus = safeGet(LS_CUSTOM, []);
   var history = safeGet(LS_HISTORY, []);
+  var feedback = safeGet(LS_FEEDBACK, []);
   var selectedCats = safeGet(LS_SELECTED_CATS, []);
   var selectedGenres = safeGet(LS_SELECTED_GENRES, []).slice(0, 1);
   var selectedWeights = safeGet(LS_SELECTED_WEIGHTS, []).slice(0, 1);
@@ -2520,6 +2610,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var decideRow = document.getElementById("decideRow");
   var againBtn = document.getElementById("againBtn");
   var confirmBtn = document.getElementById("confirmBtn");
+  var feedbackRow = document.getElementById("feedbackRow");
+  var likeBtn = document.getElementById("likeBtn");
+  var dislikeBtn = document.getElementById("dislikeBtn");
+  var hiramekiScoreBtn = document.getElementById("hiramekiScoreBtn");
+  var hiramekiScoreLabel = document.getElementById("hiramekiScoreLabel");
+  var hiramekiScoreReasons = document.getElementById("hiramekiScoreReasons");
+  var crossLinkBanner = document.getElementById("crossLinkBanner");
   var emptyNote = document.getElementById("emptyNote");
   var decidedPanel = document.getElementById("decidedPanel");
   var decidedRecap = document.getElementById("decidedRecap");
@@ -2659,6 +2756,62 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return true;
   }
 
+  // =========================================================
+  // フィードバック(👍これにする/❤️好き/🙅苦手)の保存と、推薦への反映。
+  // 個人情報は保存せず、料理名・カテゴリ・ジャンル・気分・日時のみ。
+  // 「使うほど分かってくれる」を実現するが、完全固定化はしない
+  // (下のscoreMain/scoreStaple/scoreSideに小さめの加減点として効くだけで、
+  //  variety/freshnessの既存ロジックと同じtopScoringBandの仕組みの中で
+  //  「発見」の余地を残す)。
+  // =========================================================
+  // 同じ料理への過去のlike/dislikeを取り除く(decideの記録=「実際に作った
+  // 履歴」は評価ではないので触らない)。好き/苦手ボタンをトグルで外した時や、
+  // 苦手→好きに変えた時に、古い評価が残って食い違わないようにするため。
+  function clearLikeDislike(menu){
+    feedback = feedback.filter(function(f){
+      return f.name !== menu.name || (f.action !== "like" && f.action !== "dislike");
+    });
+  }
+
+  function recordFeedback(menu, action, moodId){
+    if(!menu) return;
+    if(action === "like" || action === "dislike"){
+      clearLikeDislike(menu);
+    }
+    feedback.unshift({
+      date: new Date().toISOString(),
+      name: menu.name,
+      cat: menu.cat,
+      genre: menu.genre || null,
+      mood: moodId || null,
+      action: action // "decide" | "like" | "dislike"
+    });
+    feedback = feedback.slice(0, 300);
+    safeSet(LS_FEEDBACK, feedback);
+  }
+
+  // カテゴリ単位の好み集計(cat -> tally)。decide/likeは加点、dislikeは
+  // 強めに減点する(苦手なものが再び上位に来にくくする)。件数が少ない
+  // うちは影響を小さく保つため、生の合計ではなく上下限をクランプする。
+  // like/dislike直後にも効くよう、キャッシュせずfeedbackから毎回計算する。
+  function catPreferenceBonus(cat){
+    var t = 0;
+    feedback.forEach(function(f){
+      if(f.cat !== cat) return;
+      t += f.action === "dislike" ? -3 : (f.action === "like" ? 2 : 1);
+    });
+    if(t > 6) t = 6;
+    if(t < -6) t = -6;
+    return t;
+  }
+
+  // 直近で「苦手」と伝えられた料理名は、通常のプールから明確に除外する。
+  // 「もう一度見せられ続けない」ことを確実にするための、カテゴリの緩い
+  // 加減点とは別の、名前ベースのハード除外。
+  function isDisliked(m){
+    return feedback.some(function(f){ return f.action === "dislike" && f.name === m.name; });
+  }
+
   // ----- scoring: turns plain random selection into a lightweight
   // "recommendation" that favors mood-fit, variety and freshness, while
   // always keeping some randomness (top-scoring band, not a single winner).
@@ -2686,6 +2839,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       if(activeMood.cats && activeMood.cats.indexOf(m.cat) !== -1) score += 5;
     }
     if(m.tags && m.tags.length > 0) score += 2; // curated / characterful dishes get a small nudge
+    score += catPreferenceBonus(m.cat); // 好き/苦手フィードバックの反映
     return score;
   }
 
@@ -2699,6 +2853,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
     }
+    var notDisliked = pool.filter(function(m){ return !isDisliked(m); });
+    if(notDisliked.length > 0) pool = notDisliked;
     var recent = recentNamesByRole("main", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
     if(avoided.length > 0) pool = avoided;
@@ -2715,6 +2871,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       if(activeMood.filter && activeMood.filter(m)) score += 8;
     }
     if(m.tags && m.tags.length > 0) score += 2;
+    score += catPreferenceBonus(m.cat);
     return score;
   }
 
@@ -2728,6 +2885,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
     }
+    var notDislikedStaple = pool.filter(function(m){ return !isDisliked(m); });
+    if(notDislikedStaple.length > 0) pool = notDislikedStaple;
     // 献立モード(定食 or 一品献立)を先に絞り込んでからスコアリングする。
     // 該当なし(例: 麺のみ選択時はplainな麺が存在しない)の場合は、
     // モード指定を無視して通常通り全体から選ぶ。
@@ -2815,6 +2974,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var sessionIdx = sessionSideHistory.findIndex(function(h){ return h.name === side.name; });
     if(sessionIdx !== -1) score -= 20 - sessionIdx * 2;
     if(side.tags && side.tags.length > 0) score += 1;
+    score += catPreferenceBonus(side.cat);
     return score;
   }
 
@@ -2822,6 +2982,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     // 汁物(味噌汁・スープなど)は専用の soupPool() 経由でのみ選ぶ。通常の
     // 副菜プールに混ざると、汁物枠と重複して2品汁物になりうるため除外する。
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
+    var notDislikedSides = allSides.filter(function(m){ return !isDisliked(m); });
+    if(notDislikedSides.length > 0) allSides = notDislikedSides;
     var pool = allSides.filter(matchesGenreWeight);
     var recent = recentNamesByRole("side", 3);
     var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
@@ -2856,6 +3018,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // 極端な連続表示を抑えている。
   function soupPool(excludeNames, contextMenus){
     var soups = allMenus().filter(function(m){ return roleOf(m) === "side" && isSoupStyle(m); });
+    var notDislikedSoups = soups.filter(function(m){ return !isDisliked(m); });
+    if(notDislikedSoups.length > 0) soups = notDislikedSoups;
     var recent = recentNamesByRole("side", 5);
     var avoidHeavyCats = (contextMenus || []).filter(Boolean).map(heavyCatOf).filter(Boolean);
     var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
@@ -2872,6 +3036,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // サラダ/和え物中心の「小鉢」的な側面を少し優先する(汁物は別枠で選ぶため除外)。
   function lightSidePool(contextMenus, excludeNames){
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
+    var notDislikedLight = allSides.filter(function(m){ return !isDisliked(m); });
+    if(notDislikedLight.length > 0) allSides = notDislikedLight;
     var pool = allSides.filter(matchesGenreWeight);
     var recent = recentNamesByRole("side", 3);
     var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
@@ -2971,6 +3137,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   var MOOD_DESCRIPTOR = {
+    tired: "疲れて何もしたくない日には",
     hearty: "ガッツリ気分の日には",
     drink: "お酒のお供にしたい日には",
     quick: "とにかくラクしたい日には",
@@ -2981,7 +3148,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     new: "いつもと違うものを食べたい日には",
     cleanup: "冷蔵庫を片付けたい日には",
     family: "家族を喜ばせたい日には",
-    bulk: "育ち盛りにたっぷり食べさせたい日には"
+    bulk: "育ち盛りにたっぷり食べさせたい日には",
+    surprise: "気分を決めきれない日には"
   };
   var MOOD_IMPLIES_CAT = {meat: true, fish: true};
 
@@ -3010,6 +3178,67 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return "最近とは違う食材で気分転換に、" + fact;
     }
     return fact;
+  }
+
+  // =========================================================
+  // ひらめき度: 根拠のない乱数ではなく、実際にその献立を選んだ理由
+  // (気分との一致・好みとの一致・時短や予算などの条件一致)を3つの
+  // 観点でそれぞれ点数化し、合計する。内訳は「なぜ?」で確認できる。
+  // =========================================================
+  function hiramekiScoreFor(mainMenu, moodId){
+    var reasons = [];
+    var mood = moodId ? MOODS.find(function(mo){ return mo.id === moodId; }) : null;
+
+    // 1. 気分との一致(最大40点)
+    var moodScore;
+    if(mood){
+      var directHit = (mood.filter && mood.filter(mainMenu)) ||
+        (mood.cats && mood.cats.indexOf(mainMenu.cat) !== -1) ||
+        (mood.genres && mainMenu.genre && mood.genres.indexOf(mainMenu.genre) !== -1) ||
+        (mood.weights && mainMenu.weight && mood.weights.indexOf(mainMenu.weight) !== -1);
+      if(directHit){
+        moodScore = 40;
+        reasons.push("🌙 今日の気分「" + mood.label + "」に、しっかり合っています");
+      }else{
+        moodScore = 20;
+        reasons.push("🌙 今日の気分「" + mood.label + "」を意識して選びました");
+      }
+    }else{
+      moodScore = 10;
+      reasons.push("🌙 気分を選ばずおまかせで選びました");
+    }
+
+    // 2. 好みとの一致(最大30点。データが無ければ中間点)
+    var pref = catPreferenceBonus(mainMenu.cat);
+    var prefScore = Math.round((pref + 6) / 12 * 30);
+    if(pref > 1){
+      reasons.push("❤️ これまで「好き」と伝えてくれた系統の料理です");
+    }else if(pref < -1){
+      reasons.push("🆕 これまでとは違う系統。新しい発見になるかもしれません");
+    }else{
+      reasons.push("🍽️ まだ好みのデータが少ないジャンルです");
+    }
+
+    // 3. 条件(時短・予算など)との一致(最大30点)
+    var condScore;
+    var wantsQuick = mood && (mood.id === "quick" || mood.id === "tired");
+    var wantsBudget = mood && mood.id === "save";
+    if(wantsQuick && typeof mainMenu.cookingTime === "number" && mainMenu.cookingTime <= 20){
+      condScore = 30;
+      reasons.push("⏱️ " + mainMenu.cookingTime + "分で作れて、時間の条件にも合っています");
+    }else if(wantsBudget && mainMenu.cost5 && mainMenu.cost5 <= 850){
+      condScore = 30;
+      reasons.push("💰 5人分約" + mainMenu.cost5.toLocaleString("ja-JP") + "円と、予算の条件にも合っています");
+    }else if(mainMenu.tags && mainMenu.tags.length > 0){
+      condScore = 20;
+      reasons.push("🏷️ 「" + mainMenu.tags[0] + "」らしさのある一品です");
+    }else{
+      condScore = 12;
+      reasons.push("🔄 直近とかぶらない組み合わせを選んでいます");
+    }
+
+    var percent = Math.min(98, moodScore + prefScore + condScore);
+    return {percent: percent, reasons: reasons};
   }
 
   function scaleNumber(value, ratio){
@@ -3108,7 +3337,15 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     mascotLoading.hidden = true;
     moodGreeting.hidden = false;
     mascotResult.hidden = false;
-    moodGreeting.textContent = reasonFor(combo.main || combo.staple);
+    var heroForReason = combo.main || combo.staple;
+    moodGreeting.textContent = reasonFor(heroForReason);
+    var hiramekiScore = hiramekiScoreFor(heroForReason, activeMood ? activeMood.id : null);
+    hiramekiScoreLabel.textContent = "💡 ひらめき度 " + hiramekiScore.percent + "%";
+    hiramekiScoreReasons.innerHTML = hiramekiScore.reasons.map(function(r){ return "<li>" + escapeHtml(r) + "</li>"; }).join("");
+    hiramekiScoreReasons.hidden = true;
+    hiramekiScoreBtn.setAttribute("aria-expanded", "false");
+    hiramekiScoreBtn.hidden = false;
+    crossLinkBanner.hidden = !(activeMood && activeMood.id === "tired");
     comboRequestId++;
     var requestId = comboRequestId;
     var mainShown = false;
@@ -3193,6 +3430,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     updateBudget(combo);
     spinBtn.hidden = true;
     decideRow.hidden = false;
+    feedbackRow.hidden = false;
+    likeBtn.setAttribute("aria-pressed", "false");
+    dislikeBtn.setAttribute("aria-pressed", "false");
   }
 
   function refreshServingsDisplay(){
@@ -3228,6 +3468,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     SLOTS.forEach(function(key){ slotEls[key].block.hidden = true; });
     spinBtn.hidden = false;
     decideRow.hidden = true;
+    feedbackRow.hidden = true;
+    hiramekiScoreBtn.hidden = true;
+    hiramekiScoreReasons.hidden = true;
+    crossLinkBanner.hidden = true;
     decidedPanel.hidden = true;
     emptyNote.hidden = true;
     budgetBox.hidden = true;
@@ -3264,6 +3508,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     pricePillMain.hidden = true;
     spinBtn.hidden = true;
     decideRow.hidden = true;
+    feedbackRow.hidden = true;
+    hiramekiScoreBtn.hidden = true;
+    hiramekiScoreReasons.hidden = true;
+    crossLinkBanner.hidden = true;
     decidedPanel.hidden = true;
     budgetBox.hidden = true;
     SLOTS.forEach(function(key){
@@ -3336,10 +3584,52 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     showToast("今日の献立に決定しました！");
     var heroDish = currentPicks.main || currentPicks.staple;
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: heroDish.cat, main_name: heroDish.name});
+    comboMenus(currentPicks).forEach(function(m){
+      recordFeedback(m, "decide", activeMood ? activeMood.id : null);
+    });
     decidedRecap.textContent = comboMenus(currentPicks).map(function(m){ return m.name; }).join(" ＋ ");
     decidedLine.textContent = mascotLine(MASCOT_LINES.decided);
     decideRow.hidden = true;
+    feedbackRow.hidden = true;
     decidedPanel.hidden = false;
+  });
+
+  likeBtn.addEventListener("click", function(){
+    if(!currentPicks) return;
+    var heroDish = currentPicks.main || currentPicks.staple;
+    var nowActive = likeBtn.getAttribute("aria-pressed") !== "true";
+    likeBtn.setAttribute("aria-pressed", nowActive ? "true" : "false");
+    dislikeBtn.setAttribute("aria-pressed", "false");
+    if(nowActive){
+      recordFeedback(heroDish, "like", activeMood ? activeMood.id : null);
+      trackEvent("menu_feedback", {action: "like", main_cat: heroDish.cat, main_name: heroDish.name});
+      showToast("覚えておくね！似た感じのを増やしていくよ。");
+    }else{
+      clearLikeDislike(heroDish);
+      safeSet(LS_FEEDBACK, feedback);
+    }
+  });
+
+  dislikeBtn.addEventListener("click", function(){
+    if(!currentPicks) return;
+    var heroDish = currentPicks.main || currentPicks.staple;
+    var nowActive = dislikeBtn.getAttribute("aria-pressed") !== "true";
+    dislikeBtn.setAttribute("aria-pressed", nowActive ? "true" : "false");
+    likeBtn.setAttribute("aria-pressed", "false");
+    if(nowActive){
+      recordFeedback(heroDish, "dislike", activeMood ? activeMood.id : null);
+      trackEvent("menu_feedback", {action: "dislike", main_cat: heroDish.cat, main_name: heroDish.name});
+      showToast("教えてくれてありがとう。次からは控えめにするね。");
+    }else{
+      clearLikeDislike(heroDish);
+      safeSet(LS_FEEDBACK, feedback);
+    }
+  });
+
+  hiramekiScoreBtn.addEventListener("click", function(){
+    var expanded = hiramekiScoreBtn.getAttribute("aria-expanded") === "true";
+    hiramekiScoreBtn.setAttribute("aria-expanded", expanded ? "false" : "true");
+    hiramekiScoreReasons.hidden = expanded;
   });
 
   newDayBtn.addEventListener("click", function(){
