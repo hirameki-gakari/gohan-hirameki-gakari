@@ -1190,7 +1190,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           <div class="photo-credit" id="photoCreditStaple" hidden><a id="photoCreditLinkStaple" href="#" target="_blank" rel="noopener"></a></div>
         </div>
         <div class="dish-head">
-          <span class="dish-role">主食</span>
+          <span class="dish-role" id="roleStaple">🍚 主食</span>
           <span class="dish-tag" id="tagStaple"></span>
           <span class="meta-badge" id="genreStaple" hidden></span>
           <span class="meta-badge" id="weightStaple" hidden></span>
@@ -1227,7 +1227,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
           <div class="photo-credit" id="photoCreditMain" hidden><a id="photoCreditLinkMain" href="#" target="_blank" rel="noopener"></a></div>
         </div>
         <div class="dish-head">
-          <span class="dish-role">主菜</span>
+          <span class="dish-role" id="roleMain">🍖 主菜</span>
           <span class="dish-tag" id="tagMain"></span>
           <span class="meta-badge" id="genreMain" hidden></span>
           <span class="meta-badge" id="weightMain" hidden></span>
@@ -1263,7 +1263,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       <div class="sides-row">
       <div class="dish-block dish-block-side" id="blockSide1" hidden>
         <div class="dish-head">
-          <span class="dish-role">副菜①</span>
+          <span class="dish-role" id="roleSide1">🥬 副菜</span>
           <span class="dish-tag" id="tagSide1"></span>
           <span class="meta-badge" id="genreSide1" hidden></span>
           <span class="meta-badge" id="weightSide1" hidden></span>
@@ -1300,7 +1300,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
       <div class="dish-block dish-block-side" id="blockSide2" hidden>
         <div class="dish-head">
-          <span class="dish-role">副菜②</span>
+          <span class="dish-role" id="roleSide2">🥣 汁物</span>
           <span class="dish-tag" id="tagSide2"></span>
           <span class="meta-badge" id="genreSide2" hidden></span>
           <span class="meta-badge" id="weightSide2" hidden></span>
@@ -2163,7 +2163,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     {id:"bd7",cat:"tomato",name:"チーズたっぷりピザトースト",desc:"子どもも大好きな定番の朝ごはん・軽食。",role:"staple",staple:"bread",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,tags:["主食","時短","育ち盛り"],cost5:750,img:"pizza toast cheese",ing:["食パン4枚","ピザ用チーズ100g","ケチャップ大さじ3","ピーマン・玉ねぎなど適量"],steps:["食パンにケチャップを塗る","野菜とチーズをのせる","トースターで焼き色がつくまで焼く"],photoUrl:"https://images.unsplash.com/photo-1672856398893-2fb52d807874?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cGl6emElMjB0b2FzdCUyMGNoZWVzZXxlbnwwfDB8fHwxNzg5MTg0ODY5fDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"P S",photoCreditUrl:"https://unsplash.com/@psparvej03",photoDownloadLocation:"https://api.unsplash.com/photos/RrR6lOzjDlA/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8cGl6emElMjB0b2FzdCUyMGNoZWVzZXxlbnwwfDB8fHwxNzg5MTg0ODY5fDA"},
     {id:"bd8",cat:"lettuce",name:"野菜たっぷりクラブサンド",desc:"彩り野菜と卵、ハムを重ねたボリュームサンド。",role:"staple",staple:"bread",genre:"western",weight:"healthy",cookingTime:15,difficulty:1,tags:["主食"],cost5:900,img:"club sandwich vegetables",ing:["食パン6枚","レタス・トマト各適量","ハム6枚","卵3個","マヨネーズ適量"],steps:["卵を厚焼きにする","食パンに具材を重ねて挟む","食べやすく切り分ける"],photoUrl:"https://images.unsplash.com/photo-1553909489-cd47e0907980?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2x1YiUyMHNhbmR3aWNoJTIwdmVnZXRhYmxlc3xlbnwwfDB8fHwxNzg5MTg0ODcwfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Mae Mu",photoCreditUrl:"https://unsplash.com/@picoftasty",photoDownloadLocation:"https://api.unsplash.com/photos/IZ0LRt1khgM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2x1YiUyMHNhbmR3aWNoJTIwdmVnZXRhYmxlc3xlbnwwfDB8fHwxNzg5MTg0ODcwfDA"},
     {id:"bd9",cat:"potato",name:"コロッケパン",desc:"揚げたてコロッケを挟んだ惣菜パン風の一品。",role:"staple",staple:"bread",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,tags:["主食","育ち盛り"],cost5:800,img:"korokke croquette bread",ing:["コッペパン4個","じゃがいも4個","合いびき肉150g","パン粉・卵・小麦粉各適量","ソース適量"],steps:["じゃがいもと炒めたひき肉を混ぜて成形する","衣をつけて揚げる","パンに挟んでソースをかける"],photoUrl:"https://images.unsplash.com/photo-1567234669003-dce7a7a88821?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y3JvcXVldHRlJTIwc2FuZHdpY2glMjBicmVhZCUyMGZvb2R8ZW58MHwwfHx8MTc4OTE5MjM0NHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Suea Sivilaisith",photoCreditUrl:"https://unsplash.com/@suea",photoDownloadLocation:"https://api.unsplash.com/photos/VsaXdUF-fnE/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y3JvcXVldHRlJTIwc2FuZHdpY2glMjBicmVhZCUyMGZvb2R8ZW58MHwwfHx8MTc4OTE5MjM0NHww"},
-    {id:"bd10",cat:"fish",name:"ツナメルトサンド",desc:"ツナとチーズのコクが後を引く一品。",role:"staple",staple:"bread",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,tags:["主食","時短"],cost5:800,img:"tuna melt sandwich",ing:["食パン4枚","ツナ缶2缶","マヨネーズ大さじ3","とろけるチーズ4枚"],steps:["ツナとマヨネーズを混ぜる","食パンにのせてチーズをかける","トースターでチーズが溶けるまで焼く"],photoUrl:"https://images.unsplash.com/photo-1475090169767-40ed8d18f67d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMG1lbHQlMjBzYW5kd2ljaHxlbnwwfDB8fHwxNzg5MTg0ODcyfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Asnim Ansari",photoCreditUrl:"https://unsplash.com/@asnimansari",photoDownloadLocation:"https://api.unsplash.com/photos/SqYmTDQYMjo/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMG1lbHQlMjBzYW5kd2ljaHxlbnwwfDB8fHwxNzg5MTg0ODcyfDA"}
+    {id:"bd10",cat:"fish",name:"ツナメルトサンド",desc:"ツナとチーズのコクが後を引く一品。",role:"staple",staple:"bread",genre:"western",weight:"healthy",cookingTime:10,difficulty:1,tags:["主食","時短"],cost5:800,img:"tuna melt sandwich",ing:["食パン4枚","ツナ缶2缶","マヨネーズ大さじ3","とろけるチーズ4枚"],steps:["ツナとマヨネーズを混ぜる","食パンにのせてチーズをかける","トースターでチーズが溶けるまで焼く"],photoUrl:"https://images.unsplash.com/photo-1475090169767-40ed8d18f67d?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMG1lbHQlMjBzYW5kd2ljaHxlbnwwfDB8fHwxNzg5MTg0ODcyfDA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Asnim Ansari",photoCreditUrl:"https://unsplash.com/@asnimansari",photoDownloadLocation:"https://api.unsplash.com/photos/SqYmTDQYMjo/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8dHVuYSUyMG1lbHQlMjBzYW5kd2ljaHxlbnwwfDB8fHwxNzg5MTg0ODcyfDA"},
+    {id:"pl1",cat:"potato",name:"白いごはん",desc:"炊きたてのシンプルな白米。",role:"staple",staple:"rice",plain:true,genre:"japanese",weight:"healthy",cookingTime:5,difficulty:1,cost5:150,img:"steamed white rice bowl",ing:["米2合"],steps:["米を研いで炊飯器で炊く"]},
+    {id:"pl2",cat:"potato",name:"食パン",desc:"シンプルにトーストした一枚。",role:"staple",staple:"bread",plain:true,genre:"western",weight:"healthy",cookingTime:5,difficulty:1,cost5:150,img:"toasted bread slice",ing:["食パン(6枚切り)2枚"],steps:["食パンをトースターで焼く"]}
   ];
 
   var LS_CUSTOM = "konndate_custom_v1";
@@ -2286,10 +2288,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var sessionSideHistory = [];
   var sessionStapleHistory = [];
   function recordSessionPick(combo){
-    sessionMainHistory.unshift({name: combo.main.name, cat: combo.main.cat, genre: combo.main.genre});
-    sessionMainHistory = sessionMainHistory.slice(0, SESSION_MEMORY);
-    sessionSideHistory.unshift({name: combo.side1.name, cat: combo.side1.cat});
-    sessionSideHistory.unshift({name: combo.side2.name, cat: combo.side2.cat});
+    if(combo.main){
+      sessionMainHistory.unshift({name: combo.main.name, cat: combo.main.cat, genre: combo.main.genre});
+      sessionMainHistory = sessionMainHistory.slice(0, SESSION_MEMORY);
+    }
+    if(combo.side1) sessionSideHistory.unshift({name: combo.side1.name, cat: combo.side1.cat});
+    if(combo.side2) sessionSideHistory.unshift({name: combo.side2.name, cat: combo.side2.cat});
     sessionSideHistory = sessionSideHistory.slice(0, SESSION_MEMORY * 2);
     if(combo.staple){
       sessionStapleHistory.unshift({name: combo.staple.name, staple: combo.staple.staple});
@@ -2537,6 +2541,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var s = SLOT_SUFFIX[key];
     slotEls[key] = {
       block: document.getElementById("block" + s),
+      role: document.getElementById("role" + s),
       tag: document.getElementById("tag" + s),
       genreBadge: document.getElementById("genre" + s),
       weightBadge: document.getElementById("weight" + s),
@@ -2629,13 +2634,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var names = [];
     history.forEach(function(h){
       if(daysAgo(h.date) >= days) return;
-      if(h.main){
-        if(role === "main") names.push(h.main.name);
-        if(role === "side") h.sides.forEach(function(s){ names.push(s.name); });
-        if(role === "staple" && h.staple) names.push(h.staple.name);
-      }else if(h.name){
-        if(role === "main") names.push(h.name);
+      if(role === "main"){
+        if(h.main) names.push(h.main.name);
+        else if(h.name) names.push(h.name);
       }
+      if(role === "side" && h.sides) h.sides.forEach(function(s){ names.push(s.name); });
+      if(role === "staple" && h.staple) names.push(h.staple.name);
     });
     return names;
   }
@@ -2714,7 +2718,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return score;
   }
 
-  function staplePool(){
+  function staplePool(wantPlain){
     var pool = allMenus().filter(function(m){ return roleOf(m) === "staple"; });
     if(selectedStaple.length > 0){
       pool = pool.filter(function(m){ return selectedStaple.indexOf(m.staple) !== -1; });
@@ -2723,6 +2727,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(activeMood){
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
+    }
+    // 献立モード(定食 or 一品献立)を先に絞り込んでからスコアリングする。
+    // 該当なし(例: 麺のみ選択時はplainな麺が存在しない)の場合は、
+    // モード指定を無視して通常通り全体から選ぶ。
+    if(typeof wantPlain === "boolean"){
+      var byMode = pool.filter(function(m){ return !!m.plain === wantPlain; });
+      if(byMode.length > 0) pool = byMode;
     }
     var recent = recentNamesByRole("staple", 3);
     var avoided = pool.filter(function(m){ return recent.indexOf(m.name) === -1; });
@@ -2734,29 +2745,90 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function isSaladStyle(menu){ return SALAD_STYLE_RE.test(menu.name); }
   var FRIED_STYLE_RE = /揚げ|フライ|カツ|唐揚げ|竜田揚げ/;
   var VEG_CATS = ["onion","carrot","green_onion","tomato","lettuce","cabbage","potato","burdock","bell_pepper","chives","daikon"];
-  var SOUP_STYLE_RE = /味噌汁|スープ/;
+  var SOUP_STYLE_RE = /味噌汁|スープ|お吸い物|吸い物|とじ椀|けんちん汁|豚汁|クッパ|ポタージュ|チゲ/;
+  function isSoupStyle(menu){ return SOUP_STYLE_RE.test(menu.name); }
 
-  function scoreSide(side, mainMenu){
-    var score = 0;
-    if(mainMenu){
-      if(mainMenu.weight === "hearty" && side.weight === "healthy") score += 4;
-      if(FRIED_STYLE_RE.test(mainMenu.name) && VEG_CATS.indexOf(side.cat) !== -1) score += 3;
-      if(mainMenu.cat === "fish" && SOUP_STYLE_RE.test(side.name)) score += 5;
-      if(mainMenu.weight === "healthy" && side.weight === "hearty") score += 2; // let a light main be balanced by a heartier side
+  // 主食が「一品完結型」(丼・カレー・麺・パスタ・サンドなど)かどうか。
+  // BASE_MENUSのstaple(role:"staple")は全品がこの一品完結型で、白いごはん/
+  // 食パンだけがplain:trueの「素の主食」。一品完結型が選ばれた回は、別に
+  // 「主菜」を重ねて出すと同じ食材・ボリュームが重複しやすいため、
+  // pickCombo()側で主菜を出さない(=一品献立)モードに切り替える。
+  function isOneDishStaple(m){ return !!m && !m.plain; }
+
+  // 調理法(重複を避けたい/分散させたい)。名前ベースの簡易分類で、
+  // 既存データを変更せずに判定する。
+  var METHOD_RULES = [
+    [/揚げ|フライ|カツ|唐揚げ|竜田揚げ/, "fry"],
+    [/照り焼き|グリル|ロースト|ステーキ|串焼き|網焼き/, "grill"],
+    [/煮|おでん|炊き合わせ/, "simmer"],
+    [/炒め/, "stirfry"],
+    [/蒸し/, "steam"],
+    [/茹で|ゆで|しゃぶしゃぶ/, "boil"],
+    [/和え|ナムル|ぬた/, "dressed"],
+    [SOUP_STYLE_RE, "soup"],
+    [/サラダ|マリネ|ラペ|コールスロー|酢の物|なます|刺身|冷奴|漬け|冷やし/, "raw"]
+  ];
+  function cookingMethodOf(m){
+    for(var i = 0; i < METHOD_RULES.length; i++){
+      if(METHOD_RULES[i][0].test(m.name)) return METHOD_RULES[i][1];
     }
+    return "other";
+  }
+
+  // 味付け系統(完全排除ではなくスコアへのペナルティ用)。1品で複数系統に
+  // マッチしてよい(例:「味噌カツ」は揚げ+味噌)。
+  var TASTE_RULES = [
+    [/味噌/, "miso"],
+    [/醤油|照り焼き|甘辛|甘酢/, "soysweet"],
+    [/塩/, "salt"],
+    [/酢|さっぱり|レモン|梅/, "sour"],
+    [/クリーム|チーズ|グラタン|ホワイトソース/, "creamy"],
+    [/カレー|スパイス|エスニック|キムチ|チリ|担々/, "spicy"],
+    [/トマト|イタリアン|パスタ|ピザ/, "italian"],
+    [/中華|ごま油|オイスター|チンジャオ|回鍋肉/, "chinese"]
+  ];
+  function tasteTagsOf(m){
+    var tags = [];
+    TASTE_RULES.forEach(function(r){ if(r[0].test(m.name)) tags.push(r[1]); });
+    return tags;
+  }
+
+  // 主要食材(重複を避けたいのはこの範囲のみ。薬味・少量の副材料は対象外)
+  var HEAVY_CATS = {chicken:1, pork:1, beef:1, fish:1, egg_natto:1, tofu:1, potato:1};
+  function heavyCatOf(m){ return HEAVY_CATS[m.cat] ? m.cat : null; }
+
+  function scoreSide(side, contextMenus){
+    var score = 0;
+    var ctx = (contextMenus || []).filter(Boolean);
+    var sideMethod = cookingMethodOf(side);
+    var sideTastes = tasteTagsOf(side);
+    ctx.forEach(function(m){
+      if(m.weight === "hearty" && side.weight === "healthy") score += 2;
+      if(FRIED_STYLE_RE.test(m.name) && VEG_CATS.indexOf(side.cat) !== -1) score += 3;
+      if(m.cat === "fish" && isSoupStyle(side)) score += 5;
+      if(m.weight === "healthy" && side.weight === "hearty") score += 1;
+      if(cookingMethodOf(m) === sideMethod) score -= 6; // 調理法の重複ペナルティ
+      var overlapTastes = tasteTagsOf(m).filter(function(t){ return sideTastes.indexOf(t) !== -1; });
+      score -= overlapTastes.length * 2; // 味付け重複はペナルティ(禁止ではない)
+      if(heavyCatOf(m) && heavyCatOf(m) === heavyCatOf(side)) score -= 8; // 主要食材の重複ペナルティ
+    });
     var sessionIdx = sessionSideHistory.findIndex(function(h){ return h.name === side.name; });
     if(sessionIdx !== -1) score -= 20 - sessionIdx * 2;
     if(side.tags && side.tags.length > 0) score += 1;
     return score;
   }
 
-  function sidePool(mainMenu, excludeNames, excludeCats, avoidSalad){
-    var allSides = allMenus().filter(function(m){ return roleOf(m) === "side"; });
+  function sidePool(contextMenus, excludeNames, excludeCats, avoidSalad, avoidMethods){
+    // 汁物(味噌汁・スープなど)は専用の soupPool() 経由でのみ選ぶ。通常の
+    // 副菜プールに混ざると、汁物枠と重複して2品汁物になりうるため除外する。
+    var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
     var pool = allSides.filter(matchesGenreWeight);
     var recent = recentNamesByRole("side", 3);
     var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
     var byVariety = function(m){
-      return byName(m) && excludeCats.indexOf(m.cat) === -1 && !(avoidSalad && isSaladStyle(m));
+      return byName(m) && excludeCats.indexOf(m.cat) === -1 &&
+        !(avoidSalad && isSaladStyle(m)) &&
+        !(avoidMethods && avoidMethods.indexOf(cookingMethodOf(m)) !== -1);
     };
     var freshByVariety = function(m){ return recent.indexOf(m.name) === -1 && byVariety(m); };
     var fresh = function(m){ return recent.indexOf(m.name) === -1 && byName(m); };
@@ -2773,30 +2845,129 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     ];
     for(var i = 0; i < tiers.length; i++){
       if(tiers[i].length > 0){
-        return topScoringBand(tiers[i], function(m){ return scoreSide(m, mainMenu); }, 3);
+        return topScoringBand(tiers[i], function(m){ return scoreSide(m, contextMenus); }, 3);
       }
     }
     return [];
   }
 
+  // 汁物専用プール。データ上は「副菜」だが名前がSOUP_STYLE_REに一致するもの。
+  // 件数が少ない(2026-09時点で7品)ため、鮮度チェックの期間をやや長めにして
+  // 極端な連続表示を抑えている。
+  function soupPool(excludeNames, contextMenus){
+    var soups = allMenus().filter(function(m){ return roleOf(m) === "side" && isSoupStyle(m); });
+    var recent = recentNamesByRole("side", 5);
+    var avoidHeavyCats = (contextMenus || []).filter(Boolean).map(heavyCatOf).filter(Boolean);
+    var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
+    var byIngredient = function(m){ var hc = heavyCatOf(m); return !hc || avoidHeavyCats.indexOf(hc) === -1; };
+    var freshByIngredient = soups.filter(function(m){ return recent.indexOf(m.name) === -1 && byName(m) && byIngredient(m); });
+    if(freshByIngredient.length > 0) return freshByIngredient;
+    var byIngredientOnly = soups.filter(function(m){ return byName(m) && byIngredient(m); });
+    if(byIngredientOnly.length > 0) return byIngredientOnly;
+    var fresh = soups.filter(function(m){ return recent.indexOf(m.name) === -1 && byName(m); });
+    return fresh.length > 0 ? fresh : soups.filter(byName);
+  }
+
+  // 一品完結型の主食(丼・カレー・麺など)と組み合わせる、軽めの副菜プール。
+  // サラダ/和え物中心の「小鉢」的な側面を少し優先する(汁物は別枠で選ぶため除外)。
+  function lightSidePool(contextMenus, excludeNames){
+    var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
+    var pool = allSides.filter(matchesGenreWeight);
+    var recent = recentNamesByRole("side", 3);
+    var byName = function(m){ return excludeNames.indexOf(m.name) === -1; };
+    var fresh = pool.filter(function(m){ return recent.indexOf(m.name) === -1 && byName(m); });
+    var candidates = fresh.length > 0 ? fresh : pool.filter(byName);
+    if(candidates.length === 0) candidates = allSides.filter(byName);
+    return topScoringBand(candidates, function(m){ return scoreSide(m, contextMenus); }, 3);
+  }
+
   function pickCombo(){
-    var stPool = staplePool();
+    // 基本構成(主食・主菜・副菜・汁物の4カテゴリ)をやや優先しつつ、
+    // 丼・カレー・麺などの一品献立も一定確率で出す。plain(白いごはん/
+    // 食パン)は数が少ないため、比率をそのままpickComboの出現率にはせず、
+    // ここで明示的に配分する。
+    var wantTeishoku = Math.random() < 0.55;
+    var stPool = staplePool(wantTeishoku);
+    if(stPool.length === 0) stPool = staplePool();
     if(stPool.length === 0) return null;
     var staplePick = pickRandom(stPool);
+
+    if(isOneDishStaple(staplePick)){
+      // 一品献立モード: 丼・カレー・麺などが主役なので、別の「主菜」は
+      // 重ねない。軽めの副菜(小鉢)+可能なら汁物、をもう1品添える程度に
+      // とどめる(例: 親子丼 ＋ おひたし ＋ 味噌汁)。
+      var lPool = lightSidePool([staplePick], [staplePick.name]);
+      var lightSide = lPool.length > 0 ? pickRandom(lPool) : null;
+
+      var excludeForSoup = [staplePick.name];
+      if(lightSide) excludeForSoup.push(lightSide.name);
+      var soupCands = soupPool(excludeForSoup, [staplePick, lightSide]);
+      var soupSide = soupCands.length > 0 ? pickRandom(soupCands) : null;
+
+      return {staple: staplePick, main: null, side1: lightSide, side2: soupSide};
+    }
 
     var mPool = mainPool();
     if(mPool.length === 0) return null;
     var mainPick = pickRandom(mPool);
 
-    var sPool1 = sidePool(mainPick, [mainPick.name], [mainPick.cat], false);
+    var sPool1 = sidePool([staplePick, mainPick], [mainPick.name], [mainPick.cat], isSaladStyle(mainPick), [cookingMethodOf(mainPick)]);
     if(sPool1.length === 0) return null;
     var side1 = pickRandom(sPool1);
 
-    var sPool2 = sidePool(mainPick, [mainPick.name, side1.name], [mainPick.cat, side1.cat], isSaladStyle(side1));
-    if(sPool2.length === 0) return null;
-    var side2 = pickRandom(sPool2);
+    // 4品目(汁物枠)。汁物の在庫が少ないため、鮮度のよいものがあるときだけ
+    // 優先的に選び、ない場合は通常の副菜にフォールバックする。主菜自体が
+    // 「〜スープ」のような汁物系の一皿のときは、汁物を重ねると2品汁物に
+    // なってしまうため、この優先枠自体をスキップする。
+    var soupCandidates2 = isSoupStyle(mainPick) ? [] : soupPool([mainPick.name, side1.name], [staplePick, mainPick, side1]);
+    var side2;
+    if(soupCandidates2.length > 0 && Math.random() < 0.7){
+      side2 = pickRandom(soupCandidates2);
+    }else{
+      var sPool2 = sidePool([staplePick, mainPick, side1], [mainPick.name, side1.name], [mainPick.cat, side1.cat],
+        isSaladStyle(mainPick) || isSaladStyle(side1), [cookingMethodOf(mainPick), cookingMethodOf(side1)]);
+      if(sPool2.length === 0) return null;
+      side2 = pickRandom(sPool2);
+    }
 
     return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
+  }
+
+  // combo(staple/main/side1/side2)のうち、実在するもの(null除く)だけを
+  // 配列で返す。一品献立モードではmainがnull、副菜が1品のみのことがある。
+  function comboMenus(combo){
+    return SLOTS.map(function(key){ return combo[key]; }).filter(Boolean);
+  }
+
+  // 献立の材料をまとめた買い物リスト用の集計(同じ食材・単位はまとめて
+  // 数量を合算する)。UIの「買い物リスト」ボタンは現状未実装(準備中)だが、
+  // 将来の実装に備えてロジック単体をテスト可能な形で残しておく。
+  function shoppingRows(combo){
+    var rows = [];
+    comboMenus(combo).forEach(function(menu){
+      (menu.ing || []).forEach(function(raw){
+        var text = scaleIngredientText(raw, servingsRatio());
+        var match = text.match(/^(.+?)(大さじ|小さじ)?(\d+\/\d+|\d+(?:\.\d+)?)(kg|g|ml|L|個|本|枚|缶|丁|玉|株|束|袋|合|かけ|杯)?$/);
+        if(!match || /[・、各]/.test(match[1]) || (!match[2] && !match[4])){
+          rows.push({text: text, dishes: [menu.name]});
+          return;
+        }
+        var amount = match[3].split("/").map(Number);
+        var qty = amount.length === 2 ? amount[0] / amount[1] : amount[0];
+        var name = match[1].trim().replace(/^玉ねぎ$/, "たまねぎ");
+        var unit = (match[2] || "") + (match[4] || "");
+        var existing = rows.find(function(r){ return r.name === name && r.unit === unit; });
+        if(existing){ existing.qty += qty; existing.dishes.push(menu.name); }
+        else rows.push({name: name, unit: unit, qty: qty, dishes: [menu.name]});
+      });
+    });
+    return rows.map(function(r){
+      if(r.name){
+        var q = String(Math.round(r.qty * 100) / 100);
+        r.text = r.name + (/^(大|小)さじ/.test(r.unit) ? r.unit + q : q + r.unit);
+      }
+      return r;
+    });
   }
 
   var MOOD_DESCRIPTOR = {
@@ -2815,8 +2986,11 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var MOOD_IMPLIES_CAT = {meat: true, fish: true};
 
   function dishFactSentence(mainMenu, moodId){
-    if(mainMenu.tags && mainMenu.tags.length > 0){
-      return "「" + mainMenu.tags[0] + "」が魅力で、" + mainMenu.cookingTime + "分の一品だから";
+    // "主食"のような役割ラベルはそれ自体が理由として情報量に乏しいため、
+    // タグ由来の理由文には使わない(他のタグがあればそちらを優先)。
+    var usefulTag = mainMenu.tags && mainMenu.tags.filter(function(t){ return t !== "主食"; })[0];
+    if(usefulTag){
+      return "「" + usefulTag + "」が魅力で、" + mainMenu.cookingTime + "分の一品だから";
     }
     var cat = CAT_MAP[mainMenu.cat];
     var genre = GENRE_MAP[mainMenu.genre];
@@ -2882,7 +3056,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function updateBudget(combo){
-    var costs = SLOTS.map(function(key){ return combo[key].cost5 || 0; });
+    var costs = comboMenus(combo).map(function(m){ return m.cost5 || 0; });
     var total = costs.reduce(function(a, b){ return a + b; }, 0);
     var scaled = Math.round(total * servingsRatio() / 50) * 50;
     budgetBox.hidden = false;
@@ -2934,12 +3108,21 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     mascotLoading.hidden = true;
     moodGreeting.hidden = false;
     mascotResult.hidden = false;
-    moodGreeting.textContent = reasonFor(combo.main);
+    moodGreeting.textContent = reasonFor(combo.main || combo.staple);
     comboRequestId++;
     var requestId = comboRequestId;
+    var mainShown = false;
     SLOTS.forEach(function(key){
       var menu = combo[key];
       var els = slotEls[key];
+      if(!menu){
+        els.block.hidden = true;
+        return;
+      }
+      if(key === "main") mainShown = true;
+      if(key === "side2" && els.role){
+        els.role.textContent = isSoupStyle(menu) ? "🥣 汁物" : "🥬 副菜②";
+      }
       var cat = CAT_MAP[menu.cat];
       els.block.hidden = false;
       els.name.textContent = menu.name;
@@ -3001,6 +3184,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         }
       });
     });
+    if(!mainShown){
+      timePillMain.hidden = true;
+      pricePillMain.hidden = true;
+    }
     stapleHeading.hidden = false;
     sidesHeading.hidden = false;
     updateBudget(combo);
@@ -3011,17 +3198,19 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function refreshServingsDisplay(){
     if(!currentPicks) return;
     SLOTS.forEach(function(key){
-      fillRecipe(slotEls[key], currentPicks[key]);
+      if(currentPicks[key]) fillRecipe(slotEls[key], currentPicks[key]);
     });
     updateBudget(currentPicks);
-    var mainPrice = Math.round((currentPicks.main.cost5 || 0) * servingsRatio() / 50) * 50;
-    if(mainPrice > 0){
-      priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
-      pricePillMain.hidden = false;
-    }else{
-      pricePillMain.hidden = true;
+    if(currentPicks.main){
+      var mainPrice = Math.round((currentPicks.main.cost5 || 0) * servingsRatio() / 50) * 50;
+      if(mainPrice > 0){
+        priceValueMain.textContent = mainPrice.toLocaleString("ja-JP");
+        pricePillMain.hidden = false;
+      }else{
+        pricePillMain.hidden = true;
+      }
+      servingsValueMain.textContent = servings;
     }
-    servingsValueMain.textContent = servings;
   }
 
   function resetResult(){
@@ -3051,7 +3240,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return;
     }
     emptyNote.hidden = true;
-    trackEvent("generate_menu", {mood: activeMood ? activeMood.id : "none", main_cat: combo.main.cat, genre: combo.main.genre || "", source: source || "manual"});
+    var heroDish = combo.main || combo.staple;
+    trackEvent("generate_menu", {mood: activeMood ? activeMood.id : "none", main_cat: heroDish.cat, genre: heroDish.genre || "", one_dish: !combo.main, source: source || "manual"});
     if(source === "reroll"){
       trackEvent("reroll_menu", {mood: activeMood ? activeMood.id : "none"});
     }
@@ -3078,6 +3268,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     budgetBox.hidden = true;
     SLOTS.forEach(function(key){
       var els = slotEls[key];
+      if(key === "main" && !combo.main){
+        els.block.hidden = true;
+        return;
+      }
       els.block.hidden = false;
       els.name.classList.add("spinning");
       els.tag.hidden = true;
@@ -3100,7 +3294,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     spinTimer = setInterval(function(){
       ticks++;
       slotEls.staple.name.textContent = pickRandom(tickStaplePool).name;
-      slotEls.main.name.textContent = pickRandom(tickMainPool).name;
+      if(combo.main) slotEls.main.name.textContent = pickRandom(tickMainPool).name;
       slotEls.side1.name.textContent = pickRandom(tickSidePool).name;
       slotEls.side2.name.textContent = pickRandom(tickSidePool).name;
       if(ticks >= maxTicks){
@@ -3132,18 +3326,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     history.unshift({
       date: todayStr(),
       staple: currentPicks.staple ? {name: currentPicks.staple.name, cat: currentPicks.staple.cat} : null,
-      main: {name: currentPicks.main.name, cat: currentPicks.main.cat},
-      sides: [
-        {name: currentPicks.side1.name, cat: currentPicks.side1.cat},
-        {name: currentPicks.side2.name, cat: currentPicks.side2.cat}
-      ]
+      main: currentPicks.main ? {name: currentPicks.main.name, cat: currentPicks.main.cat} : null,
+      sides: comboMenus({staple: null, main: null, side1: currentPicks.side1, side2: currentPicks.side2})
+        .map(function(m){ return {name: m.name, cat: m.cat}; })
     });
     history = history.slice(0, 30);
     safeSet(LS_HISTORY, history);
     renderHistory();
     showToast("今日の献立に決定しました！");
-    trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: currentPicks.main.cat, main_name: currentPicks.main.name});
-    decidedRecap.textContent = currentPicks.staple.name + " ＋ " + currentPicks.main.name + " ＋ " + currentPicks.side1.name + " ＋ " + currentPicks.side2.name;
+    var heroDish = currentPicks.main || currentPicks.staple;
+    trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: heroDish.cat, main_name: heroDish.name});
+    decidedRecap.textContent = comboMenus(currentPicks).map(function(m){ return m.name; }).join(" ＋ ");
     decidedLine.textContent = mascotLine(MASCOT_LINES.decided);
     decideRow.hidden = true;
     decidedPanel.hidden = false;
@@ -3196,8 +3389,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       return;
     }
     recent.forEach(function(h){
-      var name = h.main ? h.main.name : h.name;
-      var catId = h.main ? h.main.cat : h.cat;
+      var name = h.main ? h.main.name : (h.staple ? h.staple.name : h.name);
+      var catId = h.main ? h.main.cat : (h.staple ? h.staple.cat : h.cat);
       var cat = CAT_MAP[catId] || CATS[0];
       var md = h.date.slice(5).replace("-", "/");
 
