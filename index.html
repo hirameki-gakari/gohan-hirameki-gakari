@@ -2394,18 +2394,38 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
      の3箇所のみ担当する。
      ========================================================= */
   var MASCOT_LINES = {
-    hero: ["今日は何、食べたい気分?", "今日のごはん、一緒に考えよう。", "がっつり?さっぱり?選んでみて。"],
-    thinkingReroll: "じゃあ、もうひとつ。",
-    thinkingDefault: "ちょっと考えてみるね。",
+    hero: [
+      "今日は、どんな夜かな？",
+      "おなかの声、ちょっとだけ教えて。",
+      "頭のあかり、まだ消えてるの。えらんでくれたら、ぴかっ。",
+      "えらぶだけでいいよ。あとは、ひらりにおまかせ。",
+      "今日のごはん、いっしょにひらめこう。",
+      "きょうは、なにが食べたい顔してる？"
+    ],
+    thinkingReroll: ["じゃあ、別の子を呼んでくるね。", "手帳、ぱらぱらめくってみるね。", "おっけー、もうひとつ探してくるよ。"],
+    thinkingDefault: ["うーん…頭のあかり、ぽわぽわしてきた。", "ちょっと待ってね。いま、ひらめき中。"],
     thinking: {
-      tired:"あまり頑張らなくていいやつ、探してるよ。",
-      hearty:"がっつり系、考えてみるね。", drink:"おつまみ、探してみる。", quick:"ラクな一品、選んでるよ。",
-      save:"お財布に優しいやつ、あるかな。", meat:"お肉系、いくつか浮かんできた。", fish:"お魚、何がいいかな。",
-      light:"軽めのやつ、考え中。", new:"ちょっと変わったの、探してみる。", cleanup:"冷蔵庫の中、思い出してるところ。",
-      family:"家族が喜びそうなの、考えてる。", bulk:"たっぷり系、選んでるよ。",
-      surprise:"じゃあ、おまかせで選んでみるね。"
+      tired: ["ひと息つけるやつ、探してくるね。", "おつかれさま。がんばらないやつを、そっと選ぶよ。"],
+      hearty: ["おなかがぐぅって言ってるね。しっかりめ、探すよ。", "ガツンといくよ。手帳のいちばん熱いページ、めくってる。"],
+      drink: ["乾杯の前に、おつまみ会議してるよ。", "ひと口目に合うの、そろえてくるね。"],
+      quick: ["ぱぱっと行ってくる！すぐ戻るね。", "手ぎわよくいこう。ひらり、ダッシュ。"],
+      save: ["お財布とそうだん中…", "ふところにやさしいの、こそっと探してるよ。"],
+      meat: ["じゅわ〜っとしたの、いま浮かんでるよ。", "お肉の気分だね。どの子にしようかな。"],
+      fish: ["お魚さんね。今日は、どの子がいいかな。", "海のごはん、思い浮かべてるよ。"],
+      light: ["ふわっと軽いの、選ぶね。", "おなかにやさしいの、探してるよ。"],
+      new: ["いつもと違うの、ちょっとだけ冒険しよ。ひらり、わくわく。", "ちょっと変わったの、手帳のすみっこにあった気がする。"],
+      cleanup: ["冷蔵庫のなか、こっそりのぞいてくるね。", "のこりものたちに、出番をあげたいな。"],
+      family: ["みんなのにこにこ顔、思い浮かべてるよ。", "家族が喜びそうなの、考え中。"],
+      bulk: ["おかわり続出のやつ、考えてる。おなか、空けといてね。", "たっぷり系、探してくるよ。"],
+      surprise: ["おまかせだね。ひらり、ちょっとはりきるよ。", "目をつぶって、手帳をぱっと開いてみるね。"]
     },
-    decided: ["よし、今日はこれで決まり!", "いいね。今日のごはん決まった。", "おいしくできますように。", "今日も一つ、ひらめいたね。"]
+    decided: [
+      "よし、決まり！おいしくできますように。",
+      "いいね、今夜はこれでぴかっ。",
+      "メモしたよ。あとは、いただきますだけ。",
+      "ひらめきは、ひと口めで完成するんだよ。",
+      "今日のごはん、ひらりも楽しみ。"
+    ]
   };
   function mascotLine(list){
     return Array.isArray(list) ? list[Math.floor(Math.random() * list.length)] : list;
@@ -3565,39 +3585,85 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return fact;
   }
 
-  // 献立「全体」のおすすめ理由。1品だけでなく、実際に表示されている
-  // 主食/主菜/副菜の組み合わせに必ず言及する(テンプレートの構造ごとに
-  // 文の組み立て方を変える)。
+  // 献立「全体」に対するひらりのひとこと(結果の吹き出し)。
+  // 実際に表示されている料理名に必ず触れつつ、ひらりの口調(やわらかく、
+  // 頭のあかり・手帳といった自分の持ち物にも触れる)で短く話す。
+  var HIRARI_MOOD_LEDES = {
+    tired: ["おつかれさま。", "今日はがんばらなくていいよ。"],
+    hearty: ["ガッツリいきたい日だね。", "おなか、ぐぅって鳴ってるね。"],
+    quick: ["サッといこう。", "いそぐ日だね。"],
+    save: ["お財布にやさしくいこう。", "今日は節約モードだね。"],
+    meat: ["お肉の気分だね。", "じゅわっとしたい日だね。"],
+    fish: ["お魚の気分だね。", "海のごはん、いいね。"],
+    light: ["軽やかにいきたい日だね。", "おなか、やさしめでいこう。"],
+    new: ["いつもと違うの、ためしてみよう。", "ちょっと冒険する日だね。"],
+    cleanup: ["冷蔵庫、すっきりさせちゃおう。", "のこりものに、出番だよ。"],
+    family: ["みんなで食べたら、きっとにこにこ。", "家族の笑顔がうかぶね。"],
+    bulk: ["おかわり、いっぱいしそうだね。", "育ち盛りに、たっぷりね。"],
+    surprise: ["おまかせ、うけたまわりました。", "ひらり、はりきっちゃうよ。"]
+  };
+  var HIRARI_TAG_PHRASES = {
+    "ガツン系": "ガツンとくる味で", "時短": "サッとできて", "節約": "お財布にやさしくて",
+    "育ち盛り": "育ち盛りがおかわりしそうで", "ボリューム": "ボリュームたっぷりで", "ご飯が進む": "ごはんがすすんで",
+    "ご褒美": "ちょっとご褒美感があって", "懐かし": "どこか懐かしくて", "昭和": "どこか懐かしくて", "平成": "どこか懐かしくて",
+    "世界旅行": "旅気分も味わえて", "韓国": "旅気分も味わえて", "台湾": "旅気分も味わえて", "タイ": "旅気分も味わえて",
+    "メキシコ": "旅気分も味わえて", "イタリア": "旅気分も味わえて", "ハワイ": "旅気分も味わえて",
+    "冷蔵庫一掃": "冷蔵庫もすっきりして", "ヘルシー": "ほどよくヘルシーで", "さっぱり": "さっぱりいただけて",
+    "レンジ": "レンジにおまかせで", "定番": "安心の定番で", "鍋": "あったまって", "スタミナ": "スタミナもついて",
+    "高タンパク": "たんぱく質もしっかりで", "豪華見え": "ちょっと豪華に見えて", "バズり": "ちょっと話題の味で"
+  };
+  var HIRARI_GENRE_PHRASES = {japanese: "ほっとする和の味で", western: "ちょっと洋風気分で", chinese: "中華の香りがして"};
+
+  // 結果の最後に、ときどき添えるひらりらしいひとこと(頭のあかり・手帳)。
+  var HIRARI_FLOURISHES = [
+    "いま、頭のあかりがぴかっとしたよ。",
+    "手帳のはしっこに、ちゃんとメモしたよ。",
+    "これ、ぜったい合うと思う。",
+    "ひらり、ちょっとお腹がすいてきたかも。"
+  ];
+  function hirariFlourish(){
+    return Math.random() < 0.4 ? pickRandom(HIRARI_FLOURISHES) : "";
+  }
+
+  function hirariTagPhrase(menu){
+    var tags = menu.tags || [];
+    for(var i = 0; i < tags.length; i++){
+      if(HIRARI_TAG_PHRASES[tags[i]]) return HIRARI_TAG_PHRASES[tags[i]];
+    }
+    return HIRARI_GENRE_PHRASES[menu.genre] || "";
+  }
+
   function reasonForCombo(combo, moodId){
-    var mood = moodId ? MOODS.find(function(m){ return m.id === moodId; }) : null;
     var template = getTemplate(moodId);
     var totalTime = estimatedTotalTime(combo);
+    var extras = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
 
     if(template.structure === "drink"){
-      var snacks = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
-      var snackText = snacks.length > 0 ? snacks.join("と") + "の冷たい小鉢2品" : "おつまみ2品";
-      var finishText = combo.staple
-        ? "。締めに" + combo.staple.name + "も軽く楽しめます"
-        : "。締めなしで軽く楽しめます";
-      return combo.main.name + "と、" + snackText + "で、お酒を飲みながらつまみやすい組み合わせです" + finishText + "。";
+      var snackText = extras.length > 0 ? "、" + extras.join("と") : "";
+      var tail = combo.staple
+        ? "おつまみ会議の結果、こうなったよ。最後は" + combo.staple.name + "でしめるのもいいね。"
+        : pickRandom(["おつまみ会議、満場一致でこの組み合わせ。締めなしで、軽くいこう。", "ちびちびつまめる組み合わせだよ。乾杯の準備、できたね。"]);
+      return combo.main.name + "に" + snackText + "。" + tail;
     }
 
     if(template.structure === "single"){
-      var extras = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
-      var extraText = extras.length > 0 ? "、" + extras.join("と") + "を添えて" : "";
-      var effortText = mood && mood.id === "tired" ? "洗い物も少なめで" : "サッと";
-      return combo.staple.name + "だけで完結する一皿" + extraText + "。合計約" + totalTime + "分、" + effortText + "作れます。";
+      var withExtras = extras.length > 0 ? "、" + extras.join("と") + "をそえて" : "";
+      if(moodId === "tired"){
+        return "おつかれさま。" + combo.staple.name + "ひとつで大丈夫" + withExtras + "、約" + totalTime + "分。洗い物も少なめだよ。" + hirariFlourish();
+      }
+      return "サッといこう。" + combo.staple.name + "で" + withExtras + "、約" + totalTime + "分。もう、おなかが待ってるね。";
     }
 
     // structure:"default"(定食・一品献立)
     var heroDish = combo.main || combo.staple;
-    var fact = dishFactSentence(heroDish, moodId);
-    var sideNames = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
-    var lede = mood && MOOD_DESCRIPTOR[mood.id] ? MOOD_DESCRIPTOR[mood.id] + "、" : "";
-    var comboText = sideNames.length > 0
-      ? heroDish.name + "に" + sideNames.join("と") + "を合わせた献立です"
-      : heroDish.name + "の献立です";
-    return lede + comboText + "。" + fact + "。全体で約" + totalTime + "分ほどが目安です。";
+    var ledes = HIRARI_MOOD_LEDES[moodId];
+    var lede = ledes ? pickRandom(ledes) : "";
+    var dishText = extras.length > 0
+      ? heroDish.name + "に、" + extras.join("と") + "をそえたよ。"
+      : heroDish.name + "を選んだよ。";
+    var phrase = hirariTagPhrase(heroDish);
+    var timeText = pickRandom(["約" + totalTime + "分が目安だよ。", "約" + totalTime + "分あれば作れそう。"]);
+    return lede + dishText + (phrase ? phrase + "、" : "") + timeText + hirariFlourish();
   }
 
   // =========================================================
@@ -3926,9 +3992,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     moodGreeting.hidden = true;
     mascotResult.hidden = true;
     mascotLoading.hidden = false;
-    thinkingLine.textContent = source === "reroll"
+    thinkingLine.textContent = mascotLine(source === "reroll"
       ? MASCOT_LINES.thinkingReroll
-      : (activeMood && MASCOT_LINES.thinking[activeMood.id]) || MASCOT_LINES.thinkingDefault;
+      : (activeMood && MASCOT_LINES.thinking[activeMood.id]) || MASCOT_LINES.thinkingDefault);
     stapleHeading.hidden = true;
     sidesHeading.hidden = true;
     timePillMain.hidden = true;
@@ -4030,7 +4096,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(nowActive){
       recordFeedback(heroDish, "like", activeMood ? activeMood.id : null);
       trackEvent("menu_feedback", {action: "like", main_cat: heroDish.cat, main_name: heroDish.name});
-      showToast("覚えておくね！似た感じのを増やしていくよ。");
+      showToast("メモしたよ。似たの、また持ってくるね。");
     }else{
       clearLikeDislike(heroDish);
       safeSet(LS_FEEDBACK, feedback);
@@ -4046,7 +4112,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(nowActive){
       recordFeedback(heroDish, "dislike", activeMood ? activeMood.id : null);
       trackEvent("menu_feedback", {action: "dislike", main_cat: heroDish.cat, main_name: heroDish.name});
-      showToast("教えてくれてありがとう。次からは控えめにするね。");
+      showToast("教えてくれてありがとう。この子は、しばらくお休みにするね。");
     }else{
       clearLikeDislike(heroDish);
       safeSet(LS_FEEDBACK, feedback);

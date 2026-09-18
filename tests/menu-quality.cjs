@@ -22,7 +22,7 @@ function safeSet(){} // LS書き込みはブラウザのみで確認するため
 
 // 定数(SALAD_STYLE_RE, HEAVY_CATSなど)は手打ちコピーせず、ソースから
 // そのまま抜き出して評価する(実装とテストの二重管理によるズレを防ぐ)。
-for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT']){
+for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','HIRARI_MOOD_LEDES','HIRARI_TAG_PHRASES','HIRARI_GENRE_PHRASES','HIRARI_FLOURISHES']){
   const re=new RegExp('  var '+name+' = [^;]+;', 's');
   const decl=source.match(re)?.[0];
   assert(decl, name+' declaration not found in source');
@@ -45,7 +45,7 @@ for(const name of ['allMenus','roleOf','pickRandom','recentNamesByRole','matches
   'getTemplate','selectTemplate','buildDefaultCombo','buildSingleCombo','buildDrinkCombo','buildComboForTemplate',
   'estimatedTotalTime','estimatedTotalCost','estimateActiveSteps','estimateCookware',
   'validateCombo','scoreMenuCombination','safeFallbackCombo','pickCombo',
-  'dishFactSentence','reasonFor','reasonForCombo',
+  'dishFactSentence','reasonFor','hirariTagPhrase','hirariFlourish','reasonForCombo',
   'comboMenus','shoppingRows','scaleNumber','scaleIngredientText','servingsRatio']){
  const re=new RegExp('  function '+name+'\\([^]*?\\n  \\}');
  let fn=source.match(re)?.[0];
