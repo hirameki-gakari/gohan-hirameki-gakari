@@ -3829,83 +3829,561 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return fact;
   }
 
-  // 献立「全体」に対するひらりのひとこと(結果の吹き出し)。
-  // 実際に表示されている料理名に必ず触れつつ、ひらりの口調(やわらかく、
-  // 頭のあかり・手帳といった自分の持ち物にも触れる)で短く話す。
-  var HIRARI_MOOD_LEDES = {
-    hearty: ["ガッツリいきたい日だね。", "おなか、ぐぅって鳴ってるね。", "おかわり、いっぱいしそうだね。"],
-    quick: ["おつかれさま。", "今日はがんばらなくていいよ。", "サッといこう。"],
-    save: ["お財布にやさしくいこう。", "今日は節約モードだね。"],
-    meat: ["お肉の気分だね。", "じゅわっとしたい日だね。"],
-    fish: ["お魚の気分だね。", "海のごはん、いいね。"],
-    light: ["軽やかにいきたい日だね。", "おなか、やさしめでいこう。"],
-    new: ["いつもと違うの、ためしてみよう。", "ちょっと冒険する日だね。"],
-    cleanup: ["冷蔵庫、すっきりさせちゃおう。", "のこりものに、出番だよ。"],
-    surprise: ["おまかせ、うけたまわりました。", "ひらり、はりきっちゃうよ。"]
-  };
-  var HIRARI_TAG_PHRASES = {
-    "ガツン系": "ガツンとくる味で", "時短": "サッとできて", "節約": "お財布にやさしくて",
-    "育ち盛り": "育ち盛りがおかわりしそうで", "ボリューム": "ボリュームたっぷりで", "ご飯が進む": "ごはんがすすんで",
-    "ご褒美": "ちょっとご褒美感があって", "懐かし": "どこか懐かしくて", "昭和": "どこか懐かしくて", "平成": "どこか懐かしくて",
-    "世界旅行": "旅気分も味わえて", "韓国": "旅気分も味わえて", "台湾": "旅気分も味わえて", "タイ": "旅気分も味わえて",
-    "メキシコ": "旅気分も味わえて", "イタリア": "旅気分も味わえて", "ハワイ": "旅気分も味わえて",
-    "冷蔵庫一掃": "冷蔵庫もすっきりして", "ヘルシー": "ほどよくヘルシーで", "さっぱり": "さっぱりいただけて",
-    "レンジ": "レンジにおまかせで", "定番": "安心の定番で", "鍋": "あったまって", "スタミナ": "スタミナもついて",
-    "高タンパク": "たんぱく質もしっかりで", "豪華見え": "ちょっと豪華に見えて", "バズり": "ちょっと話題の味で"
-  };
-  var HIRARI_GENRE_PHRASES = {japanese: "ほっとする和の味で", western: "ちょっと洋風気分で", chinese: "中華の香りがして"};
-
-  // 結果の最後に、ときどき添えるひらりらしいひとこと(頭のあかり・手帳)。
+  // @reason-start
+  // =========================================================
+  // おすすめ理由(2026-09 全面改訂)
+  // 目的は「なぜ、今のあなたにこの献立なのか」が伝わること。
+  // 構造は
+  //   opener  : 選んだ気分に寄り添う一言(気分ごとに複数)
+  //   hero行  : その気分が求める価値を、実際に出た主役の料理の特徴で説明
+  //   support行: 副菜・汁物・時間・費用のうち、実際に当てはまる事実で補う
+  //   closer  : 気分を受け止める締めの一言(30%は「hero→support→closer」の順)
+  // 各行には when(f) があり、献立が本当にその条件を満たすときだけ使われる
+  // (例:「ごはんが進む」は白いごはんが付くときだけ、「洗い物も少なめ」は
+  // 品数が少ないときだけ)。MOOD_INTENT.want は、その気分の人が本当に
+  // 求めているものの明文化で、行を足すときの判断基準になる。
+  // =========================================================
   var HIRARI_FLOURISHES = [
     "いま、頭のあかりがぴかっとしたよ。",
     "手帳のはしっこに、ちゃんとメモしたよ。",
     "これ、ぜったい合うと思う。",
     "ひらり、ちょっとお腹がすいてきたかも。"
   ];
-  function hirariFlourish(){
-    return Math.random() < 0.4 ? pickRandom(HIRARI_FLOURISHES) : "";
+
+  var METHOD_FEEL = {grill:"香ばしさ", fry:"揚げたてのサクッと感", stirfry:"炒めたての香り", simmer:"じんわり染みた味",
+    steam:"ふっくらやさしい口当たり", boil:"さっぱりした口当たり", dressed:"さっぱりした口当たり", raw:"ひんやりした口当たり"};
+  var NOVEL_COUNTRIES = ["韓国", "台湾", "タイ", "メキシコ", "ハワイ", "イタリア"];
+  var MEAT_LABEL = {chicken:"鶏肉", pork:"豚肉", beef:"牛肉"};
+  var CHEAP_CATS = ["tofu", "egg_natto", "cabbage", "potato", "onion", "daikon", "carrot"];
+  var PROTEIN_CATS = ["chicken", "fish", "egg_natto", "tofu"];
+
+  function reasonFacts(combo, moodId){
+    var hero = combo.main || combo.staple;
+    var sides = [combo.side1, combo.side2].filter(Boolean);
+    var soup = null, fresh = null, vegSide = null;
+    sides.forEach(function(s){
+      if(isSoupStyle(s)){ if(!soup && !/冷/.test(s.name)) soup = s; return; }
+      var st = traitsOf(s);
+      if(!fresh && (isSaladStyle(s) || st.method === "raw" || st.method === "dressed" || tasteTagsOf(s).indexOf("sour") !== -1)) fresh = s;
+      if(!vegSide && VEG_CATS.indexOf(s.cat) !== -1) vegSide = s;
+    });
+    var t = traitsOf(hero);
+    var staple = combo.staple || null;
+    return {
+      mood: moodId, hero: hero, heroName: hero.name, t: t, taste: tasteTagsOf(hero), tags: hero.tags || [],
+      main: combo.main || null, staple: staple,
+      oneDish: !combo.main && !!combo.staple,
+      noodle: !!(staple && !combo.main && staple.staple === "noodle"),
+      riceBase: !!(combo.main && staple && staple.plain && staple.staple === "rice"),
+      sides: sides, soup: soup, fresh: fresh, vegSide: vegSide,
+      time: estimatedTotalTime(combo),
+      pp: Math.round(estimatedTotalCost(combo) / BASE_SERVINGS / 10) * 10,
+      steps: (hero.steps || []).length, n: comboMenus(combo).length,
+      cat: hero.cat, meatLabel: MEAT_LABEL[hero.cat] || "",
+      feel: METHOD_FEEL[t.method] || "",
+      sea: /たこ|タコ|えび|エビ|海老|いか|イカ|ほたて|ホタテ|帆立|貝|かに|カニ|あさり|アサリ/.test(hero.name) ? "海の幸" : "お魚"
+    };
   }
 
-  function hirariTagPhrase(menu){
-    var tags = menu.tags || [];
-    for(var i = 0; i < tags.length; i++){
-      if(HIRARI_TAG_PHRASES[tags[i]]) return HIRARI_TAG_PHRASES[tags[i]];
+  function R(id, slot, pri, when, text){ return {id: id, slot: slot, pri: pri, when: when, text: text}; }
+  // 意味を変えずに言い回しだけ変える(同じ事実の別の言い方から1つ選ぶ)
+  function V(list){ return pickRandom(list); }
+  function bowlOf(f){ return /丼|麺|そば|うどん|ラーメン|パスタ/.test(f.heroName) ? "一杯" : "一皿"; }
+  function hasTaste(f, keys){ return keys.some(function(k){ return f.taste.indexOf(k) !== -1; }); }
+  function hasTag(f, tag){ return f.tags.indexOf(tag) !== -1; }
+  function countryOf(f){ return NOVEL_COUNTRIES.filter(function(c){ return hasTag(f, c); })[0] || ""; }
+
+  var MOOD_INTENT = {
+    quick: {
+      want: "手間・工程・洗い物が少なく、疲れていてもホッとできること",
+      signature: /ラク|がんばらな|手間|洗い物|片づけ|ひと息|力は使わ|力を抜|手順|作るのも/,
+      openers: [
+        "今日は、がんばらなくていい日にしよう。",
+        "おつかれさま、ラクできるほうを選んだよ。",
+        "ごはん作りに、力は使わなくて大丈夫。",
+        "手間ぬきでいこう、ひらりが選んでおいたよ。",
+        "今夜は、ラクなほうの味方でいるね。",
+        "洗い物も、手間も、少なめでいこう。",
+        "今日は、力を抜いて食べる日。",
+        "ほっとひと息つける夜にしよう。"
+      ],
+      closers: ["今夜は、ラクしていいんだよ。", "がんばらない日も、ちゃんとごはんだよ。", "あとは、ゆっくりひと息ついてね。"],
+      lines: [
+        R("q_one", "hero", 3, function(f){ return f.oneDish; },
+          function(f){ return V([
+            f.heroName + "ひとつでおなかが満たされるから、作るのも片づけも少なくてすむよ。",
+            f.heroName + "は一品で完結するから、あれこれ作らなくてすむよ。"]); }),
+        R("q_steps", "hero", 3, function(f){ return f.steps > 0 && f.steps <= 4; },
+          function(f){ return V([
+            f.heroName + "は手順が" + f.steps + "つだけ。全部で約" + f.time + "分だよ。",
+            f.heroName + "は" + f.steps + "ステップで作れるから、頭も使わずにすむよ。"]); }),
+        R("q_time", "hero", 2, function(f){ return f.time <= 20; },
+          function(f){ return f.heroName + "が主役なら、全部そろえても約" + f.time + "分。ラクな夜になりそう。"; }),
+        R("q_easy", "hero", 1, function(f){ return f.t.effort === "easy"; },
+          function(f){ return f.heroName + "は難しいところがないから、疲れている日でも大丈夫。"; }),
+        R("q_soup", "support", 2, function(f){ return !!f.soup; },
+          function(f){ return V([
+            "あたたかい" + f.soup.name + "を添えたから、体の中からゆるむよ。",
+            f.soup.name + "があるだけで、心までゆるむよね。",
+            "最後は" + f.soup.name + "で、ほっと落ち着けるよ。"]); }),
+        R("q_few", "support", 2, function(f){ return f.n <= 2; },
+          function(f){ return "品数をしぼったから、洗い物も少なめだよ。"; }),
+        R("q_side", "support", 1, function(f){ return f.sides.length >= 1 && !f.soup; },
+          function(f){ return f.sides[0].name + "は軽めの一品。手間は増やさないでおいたよ。"; })
+      ],
+      fallback: function(f){ return f.heroName + "を選んだよ。手間は少なめで、約" + f.time + "分。"; }
+    },
+
+    hearty: {
+      want: "満腹感・ボリューム・しっかりした味・ごはんとの相性・食べた満足感",
+      signature: /ガッツリ|がっつり|遠慮|食べた|満足するまで|食べごたえ|ごはんがどんどん|パンチ|ボリューム|おなかいっぱい|おなか、ぐぅ|量も味も|しっかり食べ/,
+      openers: [
+        "今日は遠慮なしでいこう。",
+        "おなか、ぐぅって鳴ってるね、しっかりいこう。",
+        "「食べた！」って思える日にしよう。",
+        "ちゃんとおなかいっぱいになる日にするね。",
+        "今日は、量も味もしっかりめで。",
+        "今日は、ガッツリいこう。",
+        "満足するまで食べたい日だね。",
+        "食べごたえ、しっかり用意したよ。"
+      ],
+      closers: ["今日は、しっかり食べていい日だよ。", "満足するまで、食べてね。", "おなかいっぱい、目指そうね。"],
+      lines: [
+        R("h_rice", "hero", 3, function(f){ return f.riceBase && (hasTag(f, "ご飯が進む") || hasTaste(f, ["soysweet", "miso", "spicy", "chinese"]) || f.t.rich === "rich"); },
+          function(f){ return V([
+            f.heroName + "は味がしっかりしていて、ごはんがどんどん進むよ。",
+            f.heroName + "の濃いめの味と、ごはんの相性はばっちりだよ。"]); }),
+        R("h_big", "hero", 3, function(f){ return f.t.size === "large" || f.t.size === "xl"; },
+          function(f){ return V([
+            f.heroName + "は食べごたえたっぷり。食べ終わったとき、ちゃんと満足できるはず。",
+            f.heroName + "のボリュームなら、「食べた！」って思えるよ。"]); }),
+        R("h_fry", "hero", 2, function(f){ return f.t.method === "fry"; },
+          function(f){ return f.heroName + "は揚げ物のパンチがあるから、満足感もしっかり。"; }),
+        R("h_rich", "hero", 2, function(f){ return f.t.rich === "rich"; },
+          function(f){ return f.heroName + "のこっくりした味で、しっかり食べた気持ちになれるよ。"; }),
+        R("h_one", "hero", 2, function(f){ return f.oneDish; },
+          function(f){ return f.heroName + "ひとつで、おなかがしっかり満たされるよ。"; }),
+        R("h_rice2", "hero", 2, function(f){ return f.riceBase && !!f.meatLabel; },
+          function(f){ return f.heroName + "は、ごはんと一緒にがっつり食べたいお肉の一品だよ。"; }),
+        R("h_meat", "hero", 1, function(f){ return !!f.meatLabel; },
+          function(f){ return f.heroName + "は、お肉のボリュームで満足感を出したよ。"; }),
+        R("hs_fresh", "support", 2, function(f){ return !!f.fresh; },
+          function(f){ return V([
+            f.fresh.name + "が、しっかりめの味の合間のひと息になるよ。",
+            f.fresh.name + "で口をさっぱりさせながら、最後まで食べきれるよ。"]); }),
+        R("hs_soup", "support", 1, function(f){ return !!f.soup; },
+          function(f){ return V([
+            f.soup.name + "もあるから、最後まであたたまりながら食べられるよ。",
+            f.soup.name + "でひと息つきながら、しっかりいこう。"]); }),
+        R("hs_rice", "support", 1, function(f){ return f.riceBase; },
+          function(f){ return "おかわりは、遠慮しなくていいよ。"; })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、食べごたえのある組み合わせにしたよ。"; }
+    },
+
+    drink: {
+      want: "つまみながら楽しめる・味のメリハリ・ごはん中心にならない・〆の主食・居酒屋っぽい満足感",
+      signature: /つまみ|つまむ|お酒|乾杯|一杯|飲|しめ/,
+      openers: [
+        "今日は、ちびちびつまむ夜にしよう。",
+        "一杯やる日だね、ごはんは脇役でいこう。",
+        "乾杯の前に、つまみ会議をしておいたよ。",
+        "お酒がおいしくなる並びにしてみたよ。",
+        "今夜は、つまみが主役の夜。",
+        "今日は、一杯やりたい気分だね。",
+        "つまみを並べて、ゆっくり飲もう。",
+        "お酒に合うものを、そろえてみたよ。"
+      ],
+      closers: ["今夜は、ゆっくり一杯どうぞ。", "乾杯、たのしんでね。", "つまみながら、のんびり飲んでね。"],
+      lines: [
+        R("d_spicy", "hero", 4, function(f){ return hasTaste(f, ["spicy"]); },
+          function(f){ return f.heroName + "のぴりっとした刺激が、お酒を呼ぶよ。"; }),
+        R("d_cheese", "hero", 4, function(f){ return /チーズ/.test(f.heroName); },
+          function(f){ return f.heroName + "は、とろけるチーズのコクがお酒をおいしくしてくれるよ。"; }),
+        R("d_garlic", "hero", 4, function(f){ return /ガーリック|にんにく|アヒージョ/.test(f.heroName); },
+          function(f){ return f.heroName + "は、にんにくの香りがお酒を進ませるよ。"; }),
+        R("d_chinese", "hero", 3, function(f){ return hasTaste(f, ["chinese"]); },
+          function(f){ return f.heroName + "は、中華のコクのある味がお酒に合うよ。"; }),
+        R("d_feel", "hero", 3, function(f){ return ["grill", "fry", "stirfry", "simmer", "steam"].indexOf(f.t.method) !== -1; },
+          function(f){ return f.heroName + "は、" + f.feel + "がお酒にぴったり。"; }),
+        R("d_cool", "hero", 3, function(f){ return ["raw", "boil", "dressed"].indexOf(f.t.method) !== -1; },
+          function(f){ return f.heroName + "は、" + f.feel + "で、お酒の合間にちょうどいいよ。"; }),
+        R("d_rich", "hero", 2, function(f){ return f.t.rich === "rich" || hasTaste(f, ["soysweet", "miso"]); },
+          function(f){ return f.heroName + "は味がしっかりめ。お酒に負けない一品を選んだよ。"; }),
+        R("d_gen", "hero", 1, function(f){ return true; },
+          function(f){ return V([
+            f.heroName + "を主役に、お酒が進むほうへ寄せたよ。",
+            f.heroName + "を真ん中に、つまみやすい並びにしたよ。"]); }),
+        R("ds_fresh", "support", 3, function(f){ return !!f.fresh; },
+          function(f){ return V([
+            f.fresh.name + "が口の中をさっぱりさせてくれるから、お酒が進んでも重くならないよ。",
+            f.fresh.name + "を挟めば、味が変わって最後まで飽きずに飲めるよ。"]); }),
+        R("ds_pair", "support", 2, function(f){ return f.sides.length === 2 && traitsOf(f.sides[0]).method !== traitsOf(f.sides[1]).method; },
+          function(f){ return f.sides[0].name + "と" + f.sides[1].name + "、味わいの違うつまみを2つそろえたよ。"; }),
+        R("ds_finish", "support", 2, function(f){ return !!f.staple; },
+          function(f){ return "主食は主役にせず、最後に" + f.staple.name + "でしめるくらいにしたよ。"; }),
+        R("ds_none", "support", 2, function(f){ return !f.staple; },
+          function(f){ return V([
+            "ごはんはなし、つまみだけで、ゆっくり飲める形にしたよ。",
+            "主食はあえて入れずに、つまみで楽しむ形にしたよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、つまみながら楽しめる形にしたよ。"; }
+    },
+
+    save: {
+      want: "予算をおさえつつ、満足感を落とさないこと",
+      signature: /円|お財布|節約|ふところ|使うお金|光熱費|出費/,
+      openers: [
+        "今日はお財布にやさしく、でも満足感は落とさないよ。",
+        "節約の日も、ちゃんとおいしくいこう。",
+        "ふところと相談して、こうなったよ。",
+        "使うお金は少なめ、満足は多めでいこう。",
+        "今日は、お財布と仲よくいこう。",
+        "節約モード、ひらりもおつきあいするよ。",
+        "出費をおさえて、ちゃんとおいしく。",
+        "お財布にやさしい日は、ひらりの出番だね。"
+      ],
+      closers: ["お財布も気持ちも、軽くいこうね。", "節約の日でも、ちゃんとごちそうだよ。", "ふところにやさしく、おなかは満足。"],
+      lines: [
+        R("s_tag", "hero", 3, function(f){ return hasTag(f, "節約") && f.pp > 0; },
+          function(f){ return f.heroName + "は節約向きの定番。全部そろえても1人あたり約" + f.pp + "円だよ。"; }),
+        R("s_cheap", "hero", 2, function(f){ return CHEAP_CATS.indexOf(f.cat) !== -1 && f.pp > 0; },
+          function(f){ return V([
+            f.heroName + "は手ごろな食材でしっかり満足できるよ。全部で1人あたり約" + f.pp + "円。",
+            f.heroName + "なら食材費がおさえられて、全部で1人あたり約" + f.pp + "円。しっかり食べられるよ。",
+            f.heroName + "は安心の手ごろさ。献立ぜんぶ合わせても1人あたり約" + f.pp + "円だよ。"]); }),
+        R("s_pp", "hero", 1, function(f){ return f.pp > 0; },
+          function(f){ return V([
+            f.heroName + "を主役に、全部そろえて1人あたり約" + f.pp + "円におさえたよ。",
+            f.heroName + "が中心で、献立ぜんぶ合わせて1人あたり約" + f.pp + "円だよ。"]); }),
+        R("ss_time", "support", 2, function(f){ return f.time <= 20; },
+          function(f){ return "調理は約" + f.time + "分。火を使う時間も短めで、光熱費にもやさしいよ。"; }),
+        R("ss_rice", "support", 1, function(f){ return f.riceBase; },
+          function(f){ return "ごはんをしっかり食べれば、おなかはちゃんと満たされるよ。"; }),
+        R("ss_side", "support", 1, function(f){ return f.sides.length >= 1; },
+          function(f){ return V([
+            f.sides[0].name + "を添えても、合計はおさえたままだよ。",
+            "副菜の" + f.sides[0].name + "を足しても、ふところは軽いままだよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を選んだよ。全部で1人あたり約" + f.pp + "円。"; }
+    },
+
+    meat: {
+      want: "お肉の満足感(じゅわっと・食べごたえ)と、ごはんとの相性",
+      signature: /お肉|肉|じゅわ/,
+      openers: [
+        "今日は、お肉にどーんと頼ろう。",
+        "お肉の日だね、じゅわっといこう。",
+        "しっかりお肉を食べたい顔してるよ。",
+        "お肉が食べたい日は、迷わずお肉で。",
+        "ひらり、お肉のページをひらいたよ。",
+        "今日は、お肉をしっかり食べる日。",
+        "お肉のうま味、ぞんぶんに味わおう。",
+        "お肉が主役の夜にしよう。"
+      ],
+      closers: ["お肉の日、しっかり楽しんでね。", "今日はお肉に、ぞんぶんに頼ってね。", "お肉パワーで、いってらっしゃい。"],
+      lines: [
+        R("m_grill", "hero", 3, function(f){ return f.t.method === "grill" && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、焼き目の香ばしさと" + f.meatLabel + "のうま味を一度に味わえるよ。",
+            f.heroName + "は、香ばしく焼いた" + f.meatLabel + "が主役。お肉らしさをしっかり感じられるよ。"]); }),
+        R("m_fry", "hero", 3, function(f){ return f.t.method === "fry" && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、衣の中の" + f.meatLabel + "のうま味を楽しめるよ。",
+            f.heroName + "は、揚げたての" + f.meatLabel + "をがぶっといただける一品だよ。"]); }),
+        R("m_simmer", "hero", 3, function(f){ return f.t.method === "simmer" && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、味のしみた" + f.meatLabel + "をじっくり味わえるよ。",
+            f.heroName + "は、" + f.meatLabel + "に味がしっかりしみた一品だよ。"]); }),
+        R("m_stir", "hero", 3, function(f){ return f.t.method === "stirfry" && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、手早く火を通した" + f.meatLabel + "が主役だよ。",
+            f.heroName + "は、" + f.meatLabel + "のうま味を炒めて引き出した一品だよ。"]); }),
+        R("m_don", "hero", 3, function(f){ return f.oneDish && !f.noodle && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、" + f.meatLabel + "とごはんを一度に味わえる、お肉気分にぴったりの" + bowlOf(f) + "だよ。",
+            f.heroName + "は、" + f.meatLabel + "の存在感がしっかりあって、ごはんも進む" + bowlOf(f) + "だよ。",
+            f.heroName + "は、" + f.meatLabel + "の満足感をまるごと味わえる、お肉の日向きの" + bowlOf(f) + "だよ。"]); }),
+        R("m_noodle", "hero", 3, function(f){ return f.noodle && !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "は、" + f.meatLabel + "のうま味が麺にからんで、お肉気分にぴったりだよ。",
+            f.heroName + "は、麺と" + f.meatLabel + "を一緒にすすれる、お肉の日向きの" + bowlOf(f) + "だよ。"]); }),
+        R("m_cat", "hero", 1, function(f){ return !!f.meatLabel; },
+          function(f){ return V([
+            f.heroName + "で、" + f.meatLabel + "をしっかり味わってね。",
+            f.heroName + "は、" + f.meatLabel + "の食べごたえで選んだよ。"]); }),
+        R("ms_fresh", "support", 2, function(f){ return !!f.fresh && (f.t.rich === "rich" || f.t.method === "fry" || f.t.method === "grill"); },
+          function(f){ return V([
+            f.fresh.name + "が、お肉のこってり感を受け止めてくれるよ。",
+            f.fresh.name + "を挟めば、お肉が最後までおいしく食べられるよ。"]); }),
+        R("ms_rice", "support", 1, function(f){ return f.riceBase && (hasTag(f, "ご飯が進む") || hasTaste(f, ["soysweet"])); },
+          function(f){ return "ごはんとの相性もいいよ。"; }),
+        R("ms_soup", "support", 1, function(f){ return !!f.soup; },
+          function(f){
+            var heavy = f.t.rich === "rich" || f.t.method === "fry" || f.t.method === "grill";
+            return V(heavy
+              ? [f.soup.name + "で、あたたかく締めくくれるよ。", f.soup.name + "があるから、こってりのあともほっとできるよ。"]
+              : [f.soup.name + "で、あたたかく締めくくれるよ。", f.soup.name + "を添えて、ほっとできる食卓にしたよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、お肉をしっかり楽しめる形にしたよ。"; }
+    },
+
+    fish: {
+      want: "お魚のおいしさをそのまま味わえる、やさしくて和らぐ食事",
+      signature: /お魚|魚|海/,
+      openers: [
+        "今日は、お魚の気分だね。",
+        "海のごはんの日にしよう。",
+        "おなかにやさしく、お魚でいこう。",
+        "お魚を食べたい日、ちゃんと分かってるよ。",
+        "今日は、しっとりお魚でいこうか。",
+        "今日は、お魚をゆっくり味わう日。",
+        "魚の気分、うけとりました。",
+        "海の恵みで、ほっとする夜にしよう。"
+      ],
+      closers: ["お魚の日、ゆっくり味わってね。", "海のごはんで、ほっとしてね。", "お魚のやさしさ、ぞんぶんにどうぞ。"],
+      lines: [
+        R("f_rice", "hero", 3, function(f){ return f.oneDish; },
+          function(f){ return V([
+            f.heroName + "ひとつで、" + f.sea + "もごはんも一緒に楽しめるよ。",
+            f.heroName + "は、" + f.sea + "とごはんを一度に味わえる" + bowlOf(f) + "だよ。",
+            f.heroName + "は、" + f.sea + "とごはんの相性で選んだよ。"]); }),
+        R("f_grill", "hero", 3, function(f){ return f.t.method === "grill"; },
+          function(f){ return f.heroName + "は、焼いた香ばしさと" + f.sea + "のうま味がそのまま楽しめるよ。"; }),
+        R("f_simmer", "hero", 3, function(f){ return f.t.method === "simmer"; },
+          function(f){ return f.heroName + "は、味のしみた" + f.sea + "のほっとする一品だよ。"; }),
+        R("f_steam", "hero", 3, function(f){ return f.t.method === "steam"; },
+          function(f){ return f.heroName + "は、ふっくら蒸して" + f.sea + "のやさしさが際立つよ。"; }),
+        R("f_fry", "hero", 3, function(f){ return f.t.method === "fry"; },
+          function(f){ return f.heroName + "は、さくっと揚げて" + f.sea + "のふっくらを楽しむタイプだよ。"; }),
+        R("f_stir", "hero", 3, function(f){ return f.t.method === "stirfry"; },
+          function(f){ return f.heroName + "は、" + f.sea + "を手早く炒めて、うま味を閉じ込めたよ。"; }),
+        R("f_gen", "hero", 1, function(f){ return true; },
+          function(f){ return V([
+            f.heroName + "で、" + f.sea + "をおいしく食べきれるようにしたよ。",
+            f.heroName + "を主役に、" + f.sea + "のうま味を楽しめる形にしたよ。"]); }),
+        R("fs_sour", "support", 2, function(f){ return !!f.fresh && tasteTagsOf(f.fresh).indexOf("sour") !== -1; },
+          function(f){ return f.fresh.name + "のさっぱり感が、" + f.sea + "の後味をすっきりさせるよ。"; }),
+        R("fs_jp", "support", 2, function(f){ return f.sides.length >= 1 && f.sides.every(function(s){ var st = traitsOf(s); return s.genre === "japanese" && st.method !== "fry" && st.rich !== "rich"; }); },
+          function(f){ return V([
+            "副菜も和の味でそろえて、" + f.sea + "がいちばん引き立つようにしたよ。",
+            "副菜は和のやさしい味にして、" + f.sea + "の邪魔をしないようにしたよ。"]); }),
+        R("fs_soup", "support", 1, function(f){ return !!f.soup; },
+          function(f){ return V([
+            f.soup.name + "があるから、あたたかくやさしい食卓になるよ。",
+            f.soup.name + "を添えて、ほっとする食卓にしたよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、" + f.sea + "を楽しめる形にしたよ。"; }
+    },
+
+    light: {
+      want: "重すぎず、さっぱり・すっきり食べられて、食後まで軽いこと",
+      signature: /軽|さっぱり|重く|重た|やさしめ|すっきり|身軽|ひかえめ/,
+      openers: [
+        "今日は、軽やかにいこう。",
+        "おなかが重くならないのがいい日だね。",
+        "食べたあと、身軽でいたい日だね。",
+        "さっぱり、すっきりの気分だね。",
+        "今日は、やさしめの味でいこう。",
+        "今日は、さっぱりいきたい日だね。",
+        "重たいのは、お休みの日にしよう。",
+        "軽くて、ちゃんとおいしいのにしたよ。"
+      ],
+      closers: ["食べたあとも、身軽でいられるといいな。", "軽やかな夜になりますように。", "さっぱり食べて、すっきり眠ってね。"],
+      lines: [
+        R("l_steam", "hero", 3, function(f){ return f.t.method === "steam"; },
+          function(f){ return f.heroName + "は蒸して仕上げるから、食べたあとも重たくならないよ。"; }),
+        R("l_boil", "hero", 3, function(f){ return f.t.method === "boil"; },
+          function(f){ return f.heroName + "はゆでて仕上げるから、食べたあとも重たくならないよ。"; }),
+        R("l_sour", "hero", 3, function(f){ return hasTaste(f, ["sour"]); },
+          function(f){ return f.heroName + "の酸味で、口の中もさっぱりするよ。"; }),
+        R("l_protein", "hero", 2, function(f){ return PROTEIN_CATS.indexOf(f.cat) !== -1; },
+          function(f){ return V([
+            f.heroName + "は軽めでも、たんぱく質でちゃんと満たされるよ。",
+            f.heroName + "は軽いのに、ちゃんとおなかにたまる一品だよ。"]); }),
+        R("l_light", "hero", 1, function(f){ return f.t.rich === "light"; },
+          function(f){ return V([
+            f.heroName + "は油やこってり感がひかえめで、軽くいただけるよ。",
+            f.heroName + "は味がやさしめで、おなかにもたれにくいよ。"]); }),
+        R("ls_veg", "support", 2, function(f){ return !!(f.vegSide || f.fresh); },
+          function(f){ var d = f.vegSide || f.fresh; return V([
+            d.name + "を添えて、さっぱり感をひとつ足したよ。",
+            d.name + "で、口の中をすっきりさせながら食べられるよ。"]); }),
+        R("ls_soup", "support", 1, function(f){ return !!f.soup; },
+          function(f){ return V([
+            f.soup.name + "で、おなかをあたためてやさしく満たすよ。",
+            f.soup.name + "があるから、軽くてもほっとできるよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、軽く食べられる形にしたよ。"; }
+    },
+
+    "new": {
+      want: "いつもと違う新鮮さ・ちょっとした冒険。でも作れなさそうな無理はしない",
+      signature: /冒険|いつもと|新しい|めずらしい|旅|話題|飛び出|挑戦|マンネリ/,
+      openers: [
+        "今日は、ちょっと冒険してみよう。",
+        "いつもの棚から、ひとつ飛び出してみたよ。",
+        "新しい味をためす日だね。",
+        "いつもと違うごはんの気分、受け取ったよ。",
+        "ひらり、めずらしいページをひらいたよ。",
+        "いつもと違うの、食べてみたい日だね。",
+        "新しい味に、ちょっと挑戦してみよう。",
+        "マンネリを飛び出す日にしよう。"
+      ],
+      closers: ["ちょっと冒険する夜、楽しんでね。", "新しい味に、出会えますように。", "いつもと違う夜も、悪くないよね。"],
+      lines: [
+        R("n_country", "hero", 3, function(f){ return !!countryOf(f); },
+          function(f){ return V([
+            f.heroName + "は" + countryOf(f) + "の味。おうちにいながら旅気分だよ。",
+            countryOf(f) + "の味を、おうちごはんで。" + f.heroName + "で旅気分を味わってね。"]); }),
+        R("n_buzz", "hero", 3, function(f){ return hasTag(f, "バズり"); },
+          function(f){ return f.heroName + "は、ちょっと話題の味だよ。"; }),
+        R("n_world", "hero", 2, function(f){ return hasTag(f, "世界旅行"); },
+          function(f){ return f.heroName + "で、世界のごはんを食卓に。"; }),
+        R("n_gen", "hero", 1, function(f){ return true; },
+          function(f){ return V([
+            f.heroName + "は、いつもの献立にはあまり出てこない味だよ。",
+            f.heroName + "は、いつもの棚にはない一品だよ。"]); }),
+        R("ns_easy", "support", 2, function(f){ return f.t.effort !== "hard"; },
+          function(f){ return "作るのは約" + f.time + "分。むずかしい工程は少なめだよ。"; }),
+        R("ns_safe", "support", 2, function(f){ return f.sides.length >= 1 && f.sides.every(function(s){ return !traitsOf(s).novel; }); },
+          function(f){ return V([
+            "副菜はなじみのある味にして、冒険しすぎないようにしたよ。",
+            "まわりは食べ慣れた味で固めて、主役だけ冒険にしたよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、いつもと違う一皿にしたよ。"; }
+    },
+
+    cleanup: {
+      want: "冷蔵庫の余りものを使い切れて、罪悪感なくすっきりすること",
+      signature: /冷蔵庫|余|残り|のこり|使い切|半端|消費/,
+      openers: [
+        "冷蔵庫の残りものに、出番をあげよう。",
+        "使い切り作戦、いくよ。",
+        "余ってる食材、ちゃんと主役にするね。",
+        "冷蔵庫、すっきりさせちゃおう。",
+        "のこりものたちの、がんばりどころだよ。",
+        "冷蔵庫の中身、ぜんぶ活かそう。",
+        "余りものを、ごちそうに変えよう。",
+        "半端なやつら、まとめて片づけよう。"
+      ],
+      closers: ["冷蔵庫がすっきりする夜になるよ。", "残りものが、ごちそうに変わるよ。", "使い切れたら、気持ちもすっきりだね。"],
+      lines: [
+        R("c_left", "hero", 3, function(f){ return /残り|余り|一掃/.test(f.heroName); },
+          function(f){ return f.heroName + "は、冷蔵庫の残りものをそのまま主役にできる一品だよ。"; }),
+        R("c_veg", "hero", 3, function(f){ return /野菜/.test(f.heroName); },
+          function(f){ return f.heroName + "は、余りがちな野菜をまとめて使い切れるよ。"; }),
+        R("c_bulk", "hero", 3, function(f){ return /消費/.test(f.heroName); },
+          function(f){ return f.heroName + "は、余りがちな食材をたっぷり消費できるよ。"; }),
+        R("c_mix", "hero", 1, function(f){ return true; },
+          function(f){ return V([
+            f.heroName + "なら、半端に残った食材を、ひとつの料理にまとめて使えるよ。",
+            f.heroName + "は、あれこれ余った食材を、まとめて片づけられる一品だよ。"]); }),
+        R("cs_veg", "support", 2, function(f){ return !!f.vegSide; },
+          function(f){ return V([
+            f.vegSide.name + "にも野菜を使うから、使い切りがさらに進むよ。",
+            "副菜の" + f.vegSide.name + "でも野菜を消費できるよ。"]); }),
+        R("cs_easy", "support", 1, function(f){ return f.t.effort === "easy"; },
+          function(f){ return V([
+            "むずかしい工程はないから、片づけながらでも作れるよ。",
+            "手順がシンプルだから、余りものの処理もラクだよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を主役に、冷蔵庫の残りを使い切る形にしたよ。"; }
+    },
+
+    surprise: {
+      want: "決めなくていい安心感と、納得できるバランス",
+      signature: /おまかせ|任せ|迷う|迷った|決め/,
+      openers: [
+        "決められない日は、ひらりにおまかせ。",
+        "おまかせだね、ちょっと考えてみたよ。",
+        "迷う日は、選ぶのをお休みしよう。",
+        "どれにしようか、ひらりが決めておくね。",
+        "今日は、ひらりに任せてみて。",
+        "決めるのはお休み、ひらりにおまかせ。",
+        "迷ったら、おまかせでいいんだよ。",
+        "任せてくれて、ありがとう。"
+      ],
+      closers: ["おまかせして正解、って言わせたいな。", "決めなくていい日って、ラクだよね。", "迷ったら、またひらりにおまかせしてね。"],
+      lines: [
+        R("u_contrast", "hero", 3, function(f){ return !!f.fresh && f.t.rich !== "light"; },
+          function(f){ return f.heroName + "に、" + f.fresh.name + "のさっぱり感を合わせて、味のバランスをとったよ。"; }),
+        R("u_soup", "hero", 2, function(f){ return !!f.soup; },
+          function(f){ return f.heroName + "に、" + f.soup.name + "をつけて、ほっとするまとまりにしたよ。"; }),
+        R("u_one", "hero", 2, function(f){ return f.oneDish && f.sides.length >= 1; },
+          function(f){ return f.heroName + "ひとつで満足できる形に、副菜をそえてバランスをとったよ。"; }),
+        R("u_gen", "hero", 1, function(f){ return true; },
+          function(f){ return V([
+            f.heroName + "を軸に、味も食感も偏らない組み合わせにしたよ。",
+            f.heroName + "を真ん中に、ちょうどいい並びにまとめたよ。"]); }),
+        R("us_time", "support", 2, function(f){ return f.time <= 35; },
+          function(f){ return V([
+            "全部で約" + f.time + "分。無理なく作れる範囲でまとめたよ。",
+            "作るのは約" + f.time + "分。がんばりすぎなくて大丈夫だよ。"]); })
+      ],
+      fallback: function(f){ return f.heroName + "を軸に、まとめてみたよ。"; }
     }
-    return HIRARI_GENRE_PHRASES[menu.genre] || "";
+  };
+
+  var REASON_RECENT = {};
+  function rememberReason(key, id, keep){
+    var recent = REASON_RECENT[key] || (REASON_RECENT[key] = []);
+    recent.push(id);
+    while(recent.length > keep) recent.shift();
+  }
+  // 優先度の高い行から、直近に使っていないものを選ぶ(同じ文の連続を避ける)。
+  // 弱い汎用行には落とさない(汎用行は「該当する行が無いとき」のためのもの)。
+  // 高い優先度の行しか無く、それを直近に使っていた場合は、それを再利用する。
+  function pickReasonLine(key, lines, window){
+    if(lines.length === 0) return null;
+    var maxPri = Math.max.apply(null, lines.map(function(l){ return l.pri; }));
+    var recent = REASON_RECENT[key] || [];
+    var pool = lines.filter(function(l){ return l.pri >= maxPri - window && recent.indexOf(l.id) === -1; });
+    if(pool.length === 0) pool = lines.filter(function(l){ return l.pri >= maxPri - window; });
+    var chosen = pickRandom(pool);
+    rememberReason(key, chosen.id, 2);
+    return chosen;
+  }
+  function pickFreshText(key, list, keep){
+    var recent = REASON_RECENT[key] || [];
+    var pool = list.filter(function(s){ return recent.indexOf(s) === -1; });
+    var chosen = pickRandom(pool.length ? pool : list);
+    rememberReason(key, chosen, keep);
+    return chosen;
+  }
+
+  function sentenceCount(str){ return (str.match(/。/g) || []).length; }
+
+  // 気分 × 実際に出た献立 から、理由文と、使った行のidを返す(テスト・検証用にidも返す)
+  // 長さはスマホで読める2〜3文に収める(3文を超えるときは補足の行を落とす)。
+  function buildReason(combo, moodId){
+    var intent = MOOD_INTENT[moodId] || MOOD_INTENT.surprise;
+    var f = reasonFacts(combo, moodId);
+    var usable = intent.lines.filter(function(l){ return l.when(f); });
+    var heroLine = pickReasonLine("h:" + moodId, usable.filter(function(l){ return l.slot === "hero"; }), 0);
+    var heroText = heroLine ? heroLine.text(f) : intent.fallback(f);
+    var support = Math.random() < 0.8 ? pickReasonLine("s:" + moodId, usable.filter(function(l){ return l.slot === "support"; }), 1) : null;
+    var supportText = support ? support.text(f) : "";
+    var closerFirst = Math.random() < 0.3;
+    var lead = closerFirst ? pickFreshText("c:" + moodId, intent.closers, 2) : pickFreshText("o:" + moodId, intent.openers, 4);
+
+    function assemble(withSupport){
+      var parts = closerFirst ? [heroText] : [lead, heroText];
+      if(withSupport) parts.push(supportText);
+      if(closerFirst) parts.push(lead);
+      return parts.join("");
+    }
+    var withSupport = !!supportText;
+    var text = assemble(withSupport);
+    if(withSupport && (sentenceCount(text) > 3 || text.length > 125)){ withSupport = false; text = assemble(false); }
+    if(!withSupport && !closerFirst && sentenceCount(text) < 3 && Math.random() < 0.2) text += pickRandom(HIRARI_FLOURISHES);
+    return {text: text, ids: [heroLine ? heroLine.id : "fallback"].concat(withSupport ? [support.id] : [], closerFirst ? ["closer"] : [])};
   }
 
   function reasonForCombo(combo, moodId){
-    var template = getTemplate(moodId);
-    var totalTime = estimatedTotalTime(combo);
-    var extras = [combo.side1, combo.side2].filter(Boolean).map(function(m){ return m.name; });
-
-    if(template.structure === "drink"){
-      var snackText = extras.length > 0 ? "、" + extras.join("と") : "";
-      var tail = combo.staple
-        ? "おつまみ会議の結果、こうなったよ。最後は" + combo.staple.name + "でしめるのもいいね。"
-        : pickRandom(["おつまみ会議、満場一致でこの組み合わせ。締めなしで、軽くいこう。", "ちびちびつまめる組み合わせだよ。乾杯の準備、できたね。"]);
-      return combo.main.name + "に" + snackText + "。" + tail;
-    }
-
-    if(template.structure === "single"){
-      var withExtras = extras.length > 0 ? "、" + extras.join("と") + "をそえて" : "";
-      if(Math.random() < 0.5){
-        return "おつかれさま。" + combo.staple.name + "ひとつで大丈夫" + withExtras + "、約" + totalTime + "分。洗い物も少なめだよ。" + hirariFlourish();
-      }
-      return "サッといこう。" + combo.staple.name + "で" + withExtras + "、約" + totalTime + "分。もう、おなかが待ってるね。";
-    }
-
-    // structure:"default"(定食・一品献立)
-    var heroDish = combo.main || combo.staple;
-    var ledes = HIRARI_MOOD_LEDES[moodId];
-    var lede = ledes ? pickRandom(ledes) : "";
-    var dishText = extras.length > 0
-      ? heroDish.name + "に、" + extras.join("と") + "をそえたよ。"
-      : heroDish.name + "を選んだよ。";
-    var phrase = hirariTagPhrase(heroDish);
-    var timeText = pickRandom(["約" + totalTime + "分が目安だよ。", "約" + totalTime + "分あれば作れそう。"]);
-    return lede + dishText + (phrase ? phrase + "、" : "") + timeText + hirariFlourish();
+    return buildReason(combo, moodId).text;
   }
+  // @reason-end
 
   // =========================================================
   // ひらめき度: 根拠のない乱数ではなく、実際にその献立を選んだ理由

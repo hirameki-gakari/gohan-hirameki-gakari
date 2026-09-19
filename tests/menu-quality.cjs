@@ -22,7 +22,7 @@ function safeSet(){} // LS書き込みはブラウザのみで確認するため
 
 // 定数(SALAD_STYLE_RE, HEAVY_CATSなど)は手打ちコピーせず、ソースから
 // そのまま抜き出して評価する(実装とテストの二重管理によるズレを防ぐ)。
-for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','HIRARI_MOOD_LEDES','HIRARI_TAG_PHRASES','HIRARI_GENRE_PHRASES','HIRARI_FLOURISHES','TRAIT_SIZE_XL_RE','TRAIT_SIZE_LARGE_RE','TRAIT_RICH_RE','TRAIT_LIGHT_RE','TRAIT_HOT_RE','TRAIT_ADULT_RE','TRAIT_STARCH_RE','TRAIT_PROCESSED_FISH_RE','TRAIT_KID_FAV_RE','TRAIT_CLEAN_RE','TRAIT_NOVEL_RE','TRAIT_MEAT_FISH_CATS','TRAIT_FINISH_LIGHT_RICE','TRAIT_OVERRIDES','TRAIT_CACHE','MOOD_DISH_RULES','MOOD_SWEET_OK']){
+for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','TRAIT_SIZE_XL_RE','TRAIT_SIZE_LARGE_RE','TRAIT_RICH_RE','TRAIT_LIGHT_RE','TRAIT_HOT_RE','TRAIT_ADULT_RE','TRAIT_STARCH_RE','TRAIT_PROCESSED_FISH_RE','TRAIT_KID_FAV_RE','TRAIT_CLEAN_RE','TRAIT_NOVEL_RE','TRAIT_MEAT_FISH_CATS','TRAIT_FINISH_LIGHT_RICE','TRAIT_OVERRIDES','TRAIT_CACHE','MOOD_DISH_RULES','MOOD_SWEET_OK']){
   const re=new RegExp('  var '+name+' = [^;]+;', 's');
   const decl=source.match(re)?.[0];
   assert(decl, name+' declaration not found in source');
@@ -46,12 +46,20 @@ for(const name of ['allMenus','roleOf','pickRandom','recentNamesByRole','matches
   'estimatedTotalTime','estimatedTotalCost','estimateActiveSteps','estimateCookware',
   'validateCombo','scoreMenuCombination','safeFallbackCombo','pickCombo',
   'traitMethodOf','deriveTraits','traitsOf','moodRuleOk','moodDishOk','moodRulesSupersede','moodAllows',
-  'dishFactSentence','reasonFor','hirariTagPhrase','hirariFlourish','reasonForCombo',
+  'dishFactSentence','reasonFor',
   'comboMenus','shoppingRows','scaleNumber','scaleIngredientText','servingsRatio']){
  const re=new RegExp('  function '+name+'\\([^]*?\\n  \\}');
  let fn=source.match(re)?.[0];
  if(!fn){fn=source.match(new RegExp('  function '+name+'\\([^\\n]+'))?.[0];}
  assert(fn,name);run(fn);
+}
+
+// おすすめ理由のブロック(MOOD_INTENT・行の選択・buildReason)は、関数内に「;」を
+// 多数含むため、目印コメントの間をそのままソースから切り出して評価する。
+{
+  const a = source.indexOf('// @reason-start'), b = source.indexOf('// @reason-end');
+  assert(a > 0 && b > a, 'おすすめ理由ブロックの目印が見つからない');
+  run(source.slice(a, b));
 }
 
 // ----- 材料スケーリング(既存の仕様。今回の変更範囲外だが、破壊していないことを確認) -----
@@ -233,6 +241,90 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
     const comboBig = {staple:bigName, main:null, side1:null, side2:null};
     assert.equal(run(`validateCombo(${JSON.stringify(comboBig)}, 'light')`), false, '大盛り名なのにlightで合格してしまう');
   }
+}
+
+// =========================================================
+// おすすめ理由の品質(2026-09 全面改訂)
+// 「気分 × 実際に出た献立」から作られる理由が、(1)気分を反映し、(2)献立の事実と
+// 一致し、(3)機械的な繰り返しになっていないことを、全気分×300回で確認する。
+// =========================================================
+{
+  const REASON_N = 300;
+  const NG_PHRASES = /栄養バランス|美味しい組み合わせ|おいしい組み合わせ|おすすめの献立|バランスの良い献立/;
+  const MOOD_FORBIDDEN = {
+    drink: /栄養|ヘルシー|健康|カロリー/,
+    quick: /手のこん|時間をかけ|じっくり煮込/,
+    light: /がっつり|ボリューム満点|食べごたえ/
+  };
+  const intents = run('MOOD_INTENT');
+  const openerOwner = {};
+  moodIds.forEach(id => {
+    const it = intents[id];
+    assert(it, `気分「${id}」に MOOD_INTENT が無い`);
+    assert(typeof it.want === 'string' && it.want.length > 5, `気分「${id}」に want(求めているもの)が無い`);
+    assert(it.openers.length >= 8 && it.closers.length >= 3, `気分「${id}」の openers/closers が少ない`);
+    [...it.openers, ...it.closers].forEach(t => {
+      assert(!(t in openerOwner) || openerOwner[t] === id, `書き出し/締めが複数の気分で共通: ${t}`);
+      openerOwner[t] = id;
+      assert(it.signature.test(t), `気分「${id}」の書き出し/締めに気分の手がかりが無い: ${t}`);
+    });
+  });
+
+  const stats = {};
+  const problems = [];
+  moodIds.forEach(moodId => {
+    run(`activeMood = MOODS.find(m=>m.id===${JSON.stringify(moodId)});`);
+    const texts = [], lens = [], sentences = [];
+    let consecutiveSame = 0, prev = null, closerCount = 0;
+    for(let n = 0; n < REASON_N; n++){
+      const c = run('pickCombo()');
+      if(!c) continue;
+      const res = run(`buildReason(${JSON.stringify(c)}, ${JSON.stringify(moodId)})`);
+      const f = run(`reasonFacts(${JSON.stringify(c)}, ${JSON.stringify(moodId)})`);
+      const text = res.text;
+      const bad = msg => problems.push(`[${moodId}] ${msg} :: ${text}`);
+      if(!text.includes(f.heroName)) bad('主役の料理名が理由に含まれない');
+      const sc = (text.match(/。/g) || []).length;
+      if(sc < 2 || sc > 3) bad(`文の数が2〜3文でない(${sc})`);
+      if(text.length > 125) bad(`長すぎる(${text.length}文字)`);
+      if(!intents[moodId].signature.test(text)) bad('気分の手がかりが読み取れない');
+      // 料理名そのもの(例:「ヘルシー蒸し」)は説明文ではないので、禁止語の判定からは除く
+      let explanation = text;
+      run(`comboMenus(${JSON.stringify(c)}).map(m=>m.name)`).forEach(nm => { explanation = explanation.split(nm).join(''); });
+      if(NG_PHRASES.test(explanation)) bad('NG表現');
+      if(MOOD_FORBIDDEN[moodId] && MOOD_FORBIDDEN[moodId].test(explanation)) bad('その気分に合わない説明');
+      // 使われた行は、実際の献立で条件(when)を満たしていること(=事実と一致)
+      res.ids.filter(id => id !== 'fallback' && id !== 'closer').forEach(id => {
+        const ok = run(`MOOD_INTENT[${JSON.stringify(moodId)}].lines.find(l=>l.id===${JSON.stringify(id)}).when(reasonFacts(${JSON.stringify(c)}, ${JSON.stringify(moodId)}))`);
+        if(!ok) bad(`行 ${id} が条件を満たさないのに使われた`);
+      });
+      // 数値の主張が、実際の献立から計算した値と一致していること
+      [...text.matchAll(/約(\d+)分/g)].forEach(m => { if(+m[1] !== f.time) bad(`時間が不一致(${m[1]}≠${f.time})`); });
+      [...text.matchAll(/1人あたり約(\d+)円/g)].forEach(m => { if(+m[1] !== f.pp) bad(`1人あたりの金額が不一致(${m[1]}≠${f.pp})`); });
+      [...text.matchAll(/手順が(\d+)つ|(\d+)ステップ/g)].forEach(m => { if(+(m[1] || m[2]) !== f.steps) bad('手順数が不一致'); });
+      if(/ごはんがどんどん進む|ごはんの相性はばっちり|ごはんとの相性もいい/.test(text) && !f.riceBase) bad('白いごはんが付かないのにごはんとの相性に言及');
+      if(/洗い物も少なめ/.test(text) && f.n > 2) bad('品数が多いのに洗い物が少ないと言及');
+      if(moodId === 'quick' && /ひとつで/.test(text) && !f.oneDish) bad('一品完結でないのに「ひとつで」と言及');
+      if(res.ids.includes('closer')) closerCount++;
+      texts.push(text); lens.push(text.length); sentences.push(sc);
+      if(text === prev) consecutiveSame++;
+      prev = text;
+    }
+    const uniq = new Set(texts).size;
+    const freq = {}; texts.forEach(t => freq[t] = (freq[t] || 0) + 1);
+    const topShare = Math.max(...Object.values(freq)) / texts.length;
+    stats[moodId] = {n: texts.length, unique: uniq, uniqueRate: +(uniq / texts.length).toFixed(2), topShare: +topShare.toFixed(3),
+      avgLen: Math.round(lens.reduce((a, b) => a + b, 0) / lens.length), consecutiveSame, closerRate: +(closerCount / texts.length).toFixed(2)};
+    assert(consecutiveSame <= Math.ceil(texts.length * 0.01), `気分「${moodId}」で同じ理由が連続(${consecutiveSame}回)`);
+  });
+  console.log('[reason-quality]', JSON.stringify(stats));
+  assert.equal(problems.length, 0, `おすすめ理由の問題が${problems.length}件:\n` + problems.slice(0, 8).join('\n'));
+  // 繰り返し感: 気分ごとに、理由文の種類が十分あり、特定の文が突出しないこと
+  Object.entries(stats).forEach(([id, st]) => {
+    assert(st.uniqueRate >= 0.45, `気分「${id}」の理由文の種類が少ない(${st.uniqueRate})`);
+    assert(st.topShare <= 0.05, `気分「${id}」で同じ理由文が${(st.topShare * 100).toFixed(1)}%を占める`);
+  });
+  console.log(`PASS: おすすめ理由の品質(全${moodIds.length}気分 × ${REASON_N}回: 主役名・2〜3文・気分の手がかり・事実との一致・NG表現・繰り返し)`);
 }
 
 // ----- 旧reasonFor()も後方互換として残っていること(内部で引き続き使用) -----
