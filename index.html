@@ -2855,6 +2855,178 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   // =========================================================
+  // 料理の属性(traits)と、気分ごとの「この料理は今日の気分に合うか」ルール
+  // (2026-09 追加)。
+  // BASE_MENUS の weight(がっつり/ヘルシー)だけでは、「特盛り牛カルビ丼」が
+  // 疲れた気分に出る、締めが「鶏そぼろ丼」になる、軽め気分に麻婆豆腐が出る、
+  // といった不一致を防げなかったため、名前・食材・手順・時間・タグから
+  // 「量・こってり度・手間・辛さ・子ども向き・おつまみ向き・締め向き」を
+  // 導出し、気分ごとの適合ルールを候補プールの段階で厳格に適用する。
+  // 判定が間違う料理は TRAIT_OVERRIDES(id→上書きしたい属性)で個別に直せる。
+  // =========================================================
+  var TRAIT_SIZE_XL_RE = /大盛り|特盛り|特大|デカ|どっさり|爆盛り|ボリューム満点|食べ盛り|部活男子/;
+  var TRAIT_SIZE_LARGE_RE = /ボリューム|がっつり|スタミナ|悪魔|厚切り|ローストビーフ丼/;
+  var TRAIT_RICH_RE = /チーズ|クリーム|バター|カレー|フライ|揚げ|カツ|とんかつ|チキン南蛮|こってり|マヨ|ガーリック|デミグラス|ハンバーグ|天ぷら|豚バラ|チャーシュー|カルビ|焼肉|ラード|オムライス|ロコモコ|ミートソース|カルボナーラ|グラタン|シチュー|チャーハン|メルト|ホットサンド|ピザ|ハンバーガー|ホットドッグ|コロッケ|ベーコン|キーマ|よだれ|悪魔|ミルフィーユカツ/;
+  var TRAIT_LIGHT_RE = /サラダ|マリネ|和え|酢の物|おひたし|冷奴|豆腐|蒸し|スープ|味噌汁|椀|おろし|梅|ポン酢|さっぱり|レモン|ナムル|温野菜|しゃぶ|冷やし|漬け|白和え|煮浸し/;
+  var TRAIT_HOT_RE = /辛|ピリ|キムチ|担々|チリ|花椒|唐辛子|ラー油|豆板醤|コチュジャン|山椒|ゆず胡椒|柚子胡椒|ナンプラー|パクチー|エスニック|四川|よだれ|ペペロンチーノ/;
+  var TRAIT_ADULT_RE = /お酒|酒のあて|わさび|からし|ゆず胡椒|柚子胡椒|ナンプラー|パクチー|山椒|エスニック/;
+  var TRAIT_STARCH_RE = /丼|ライス|カレー|シチュー|雑炊|ハヤシ|パスタ|ラーメン|うどん|そば|焼きそば|チャーハン|パン|サンド/;
+  var TRAIT_PROCESSED_FISH_RE = /ツナ|明太子|ちくわ|かまぼこ|シーチキン/;
+  var TRAIT_KID_FAV_RE = /ハンバーグ|カレー|オムライス|ナポリタン|コロッケ|から揚げ|唐揚げ|ミートソース|ポークチャップ|ステーキ|照り焼き|そぼろ|グラタン|シチュー|卵焼き|肉じゃが|生姜焼き|しょうが焼き|チキン|フライ|カツ|ピザ|ホットドッグ|ハンバーガー|つくね|親子丼|牛丼|焼きそば|チャーハン|パスタ|ラーメン|うどん|ロコモコ|ミートボール|オムレツ|ポテト|ホットサンド|サンド/;
+  var TRAIT_CLEAN_RE = /消費|余り|救済|なんでも|使い切り|一掃|くたくた|ごった煮|具だくさん|野菜たっぷり|チャンプルー|炒め煮|卵とじ|お好み焼き/;
+  // いつもと違うもの: 世界の料理・洋食店/居酒屋メニュー的な「普段の家庭料理ではない」名前
+  var TRAIT_NOVEL_RE = /ストロガノフ|アクアパッツァ|カチャトーレ|タンドリー|キッシュ|ピカタ|ポトフ|カプレーゼ|コブサラダ|ミネストローネ|スパニッシュ|ガパオ|ヤンニョム|タコライス|魯肉飯|ジャーマン|ロコモコ|キーマ|バターチキン|ホイコーロー|チンジャオ|青椒肉絲|よだれ鶏|棒棒鶏|プルコギ|タッカルビ|ビーフシチュー|ハヤシ|カルボナーラ|ペペロンチーノ|ラタトゥイユ|パエリア|アヒージョ|ブルスケッタ|ローストビーフ|ステーキ|グラタンスープ|オニオングラタン|クリームシチュー|ガーリックシュリンプ/;
+  var TRAIT_MEAT_FISH_CATS = ["chicken", "pork", "beef", "fish"];
+  // 締めに向く軽い丼(名前だけでは判定できないため手で選んだもの)。
+  // b108=納豆オクラ山かけ丼 fs15=まぐろの漬け丼 b122=豆腐そぼろ丼
+  var TRAIT_FINISH_LIGHT_RICE = ["b108", "fs15", "b122"];
+  var TRAIT_OVERRIDES = {};
+  var TRAIT_CACHE = {};
+
+  function traitMethodOf(name){
+    var rules = [
+      [/揚げ|フライ|カツ|唐揚げ|竜田揚げ|天ぷら|コロッケ/, "fry"],
+      [/炒め|チャーハン|焼きそば/, "stirfry"],
+      [/照り焼き|グリル|ロースト|ステーキ|串焼き|網焼き|焼き/, "grill"],
+      [/煮|おでん|炊き合わせ/, "simmer"],
+      [/蒸し/, "steam"],
+      [/茹で|ゆで|しゃぶしゃぶ/, "boil"],
+      [/和え|ナムル|ぬた/, "dressed"],
+      [/味噌汁|スープ|汁|椀/, "soup"],
+      [/サラダ|マリネ|ラペ|コールスロー|酢の物|なます|刺身|冷奴|漬け|冷やし|たたき/, "raw"]
+    ];
+    for(var i = 0; i < rules.length; i++){
+      if(rules[i][0].test(name)) return rules[i][1];
+    }
+    return "other";
+  }
+
+  function deriveTraits(m){
+    var name = m.name || "", tags = m.tags || [], role = m.role || "main";
+    // 「厚揚げ・フライパン・パン粉」などは揚げ物・パン主食ではないので、判定前に除く
+    var plainName = name.replace(/厚揚げ|油揚げ|揚げ玉|フライパン|パン粉|ホットプレート/g, "");
+    var method = traitMethodOf(plainName);
+    var ingText = (m.ing || []).join(" ");
+    var t = {};
+
+    if(TRAIT_SIZE_XL_RE.test(name)) t.size = "xl";
+    else if(TRAIT_SIZE_LARGE_RE.test(name) || tags.indexOf("ボリューム") !== -1 || tags.indexOf("ガツン系") !== -1 ||
+      tags.indexOf("スタミナ") !== -1 || tags.indexOf("育ち盛り") !== -1) t.size = "large";
+    else if(role === "side") t.size = "small";
+    else t.size = "normal";
+
+    var rich = TRAIT_RICH_RE.test(plainName) ||
+      (/南蛮漬け/.test(plainName) && TRAIT_MEAT_FISH_CATS.indexOf(m.cat) !== -1);
+    var lightish = TRAIT_LIGHT_RE.test(name) || tags.indexOf("ヘルシー") !== -1 || tags.indexOf("さっぱり") !== -1;
+    t.rich = rich ? "rich" : (lightish ? "light" : "normal");
+    if((t.size === "xl" || t.size === "large") && t.rich === "light") t.rich = "normal";
+
+    var steps = (m.steps || []).length;
+    var time = typeof m.cookingTime === "number" ? m.cookingTime : 15;
+    if(m.difficulty >= 2 || time >= 25 || method === "fry") t.effort = "hard";
+    else if(m.difficulty === 1 && time <= 15 && steps <= 5) t.effort = "easy";
+    else t.effort = "normal";
+
+    t.hot = TRAIT_HOT_RE.test(name) || TRAIT_HOT_RE.test(ingText);
+    t.kid = !t.hot && !TRAIT_ADULT_RE.test(name) && !TRAIT_ADULT_RE.test(ingText) && tags.indexOf("おつまみ") === -1;
+    t.kidPick = t.kid && (tags.indexOf("育ち盛り") !== -1 || tags.indexOf("定番") !== -1 ||
+      tags.indexOf("懐かし") !== -1 || TRAIT_KID_FAV_RE.test(plainName));
+    t.cleanup = tags.indexOf("冷蔵庫一掃") !== -1 || TRAIT_CLEAN_RE.test(plainName);
+    t.novel = ["世界旅行", "バズり", "台湾", "タイ", "メキシコ", "ハワイ", "イタリア", "韓国"].some(function(x){ return tags.indexOf(x) !== -1; }) ||
+      TRAIT_NOVEL_RE.test(plainName);
+    t.method = method;
+    t.processedFish = m.cat === "fish" && TRAIT_PROCESSED_FISH_RE.test(name);
+    t.sweetMeal = /フレンチトースト/.test(name);
+    t.snack = role !== "staple" && !t.sweetMeal && t.size !== "xl" && !TRAIT_STARCH_RE.test(plainName) &&
+      tags.indexOf("ご飯が進む") === -1 && method !== "soup";
+    t.finish = role === "staple" && !m.plain && !t.sweetMeal && t.size === "normal" && t.rich !== "rich" && !t.hot &&
+      (m.staple === "noodle" || TRAIT_FINISH_LIGHT_RICE.indexOf(m.id) !== -1);
+
+    var ov = m.id && TRAIT_OVERRIDES[m.id];
+    if(ov){ for(var k in ov){ if(ov.hasOwnProperty(k)) t[k] = ov[k]; } }
+    return t;
+  }
+
+  function traitsOf(m){
+    var key = (m.id || "") + "|" + m.name;
+    return TRAIT_CACHE[key] || (TRAIT_CACHE[key] = deriveTraits(m));
+  }
+
+  // 気分ごとの適合ルール。all=全ての皿 / hero=主役(主菜または一品完結の主食)
+  // main=drinkの主菜枠 / side=副菜・汁物 / finish=drinkの締め枠。
+  var MOOD_DISH_RULES = {
+    tired: {all: {size: ["small", "normal"]}, hero: {effort: ["easy"]}},
+    quick: {all: {size: ["small", "normal"], effort: ["easy"]}},
+    hearty: {hero: {sizeNot: ["small"], richNot: ["light"]}},
+    bulk: {hero: {size: ["large", "xl"]}},
+    save: {all: {tagsNone: ["ご褒美", "豪華見え", "記念日", "週末"], sizeNot: ["xl"]}, hero: {maxCost: 1000}},
+    light: {all: {richNot: ["rich"], sizeNot: ["large", "xl"], methodNot: ["fry"], hotNot: true,
+      tagsNone: ["ご褒美", "豪華見え", "ガツン系", "スタミナ", "ボリューム", "育ち盛り"]}, hero: {rich: ["light"]}},
+    drink: {all: {sweetMealNot: true}, main: {snack: true}, side: {snack: true}, finish: {finish: true}},
+    meat: {hero: {catsAny: ["chicken", "pork", "beef"]}, side: {catsNot: ["fish"]}},
+    fish: {hero: {catsAny: ["fish"], processedFishNot: true}, side: {catsNot: ["chicken", "pork", "beef"]}},
+    "new": {hero: {novel: true}},
+    cleanup: {hero: {cleanup: true}},
+    family: {all: {hotNot: true, kid: true}, hero: {kidPick: true}}
+  };
+  // フレンチトーストのような「甘い食事」は、これらの気分以外では出さない
+  var MOOD_SWEET_OK = [null, "surprise", "family"];
+
+  function moodRuleOk(m, t, r){
+    if(!r) return true;
+    if(r.size && r.size.indexOf(t.size) === -1) return false;
+    if(r.sizeNot && r.sizeNot.indexOf(t.size) !== -1) return false;
+    if(r.rich && r.rich.indexOf(t.rich) === -1) return false;
+    if(r.richNot && r.richNot.indexOf(t.rich) !== -1) return false;
+    if(r.effort && r.effort.indexOf(t.effort) === -1) return false;
+    if(r.methodNot && r.methodNot.indexOf(t.method) !== -1) return false;
+    if(r.hotNot && t.hot) return false;
+    if(r.kid && !t.kid) return false;
+    if(r.kidPick && !t.kidPick) return false;
+    if(r.cleanup && !t.cleanup) return false;
+    if(r.novel && !t.novel) return false;
+    if(r.snack && !(t.snack || (m.tags || []).indexOf("おつまみ") !== -1)) return false;
+    if(r.finish && !t.finish) return false;
+    if(r.sweetMealNot && t.sweetMeal) return false;
+    if(r.processedFishNot && t.processedFish) return false;
+    if(r.catsAny && r.catsAny.indexOf(m.cat) === -1) return false;
+    if(r.catsNot && r.catsNot.indexOf(m.cat) !== -1) return false;
+    if(r.tagsAny && !(m.tags || []).some(function(x){ return r.tagsAny.indexOf(x) !== -1; })) return false;
+    if(r.tagsNone && (m.tags || []).some(function(x){ return r.tagsNone.indexOf(x) !== -1; })) return false;
+    if(typeof r.maxCost === "number" && (m.cost5 || 0) > r.maxCost) return false;
+    return true;
+  }
+
+  // slot: "hero" | "main" | "side" | "finish"。白いごはん・食パン(plain)は
+  // どの気分でも「ただの土台」なので常に許可する。
+  function moodDishOk(m, moodId, slot){
+    if(m.plain) return true;
+    var t = traitsOf(m);
+    // データ上「主菜」として登録されている軽い汁物(〜みそ汁・〜スープ)は、
+    // 主役の枠には出さない(肉・魚入りの豚汁などは主役として許可)。
+    if((slot === "hero" || slot === "main") && t.method === "soup" && TRAIT_MEAT_FISH_CATS.indexOf(m.cat) === -1) return false;
+    if(t.sweetMeal && MOOD_SWEET_OK.indexOf(moodId || null) === -1) return false;
+    var rules = moodId && MOOD_DISH_RULES[moodId];
+    if(!rules) return true;
+    if(!moodRuleOk(m, t, rules.all)) return false;
+    if((slot === "hero" || slot === "main") && !moodRuleOk(m, t, rules.hero)) return false;
+    if(slot === "main" && !moodRuleOk(m, t, rules.main)) return false;
+    if(slot === "side" && !moodRuleOk(m, t, rules.side)) return false;
+    if(slot === "finish" && !moodRuleOk(m, t, rules.finish)) return false;
+    return true;
+  }
+  // タグだけで絞っていた気分(いつもと違う・冷蔵庫・家族)は、名前・食材も見る
+  // 新ルール(novel/cleanup/kidPick)に置き換えたため、旧来のタグ絞り込み
+  // (matchesMood)を併用すると再びタグ付きの少数品に固定されてしまう。
+  function moodRulesSupersede(moodId){
+    var r = moodId && MOOD_DISH_RULES[moodId];
+    return !!(r && r.hero && (r.hero.novel || r.hero.cleanup || r.hero.kidPick));
+  }
+  function moodAllows(m, slot){
+    return moodDishOk(m, activeMood ? activeMood.id : null, slot);
+  }
+
+  // =========================================================
   // フィードバック(👍これにする/❤️好き/🙅苦手)の保存と、推薦への反映。
   // 個人情報は保存せず、料理名・カテゴリ・ジャンル・気分・日時のみ。
   // 「使うほど分かってくれる」を実現するが、完全固定化はしない
@@ -2933,7 +3105,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(sessionMainHistory[1] && sessionMainHistory[1].genre && sessionMainHistory[1].genre === m.genre) score -= 2;
     if(history[0] && history[0].main && history[0].main.cat === m.cat) score -= 6; // "昨日と違うもの"
     if(activeMood){
-      if(activeMood.filter && activeMood.filter(m)) score += 8;
+      // 新ルール(novel/cleanup/kidPick)に置き換えた気分では、旧来のタグ一致加点を
+      // 外す(残すとタグ付きの少数品が毎回上位に固定される)
+      if(!moodRulesSupersede(activeMood.id) && activeMood.filter && activeMood.filter(m)) score += 8;
       if(activeMood.cats && activeMood.cats.indexOf(m.cat) !== -1) score += 5;
     }
     if(m.tags && m.tags.length > 0) score += 2; // curated / characterful dishes get a small nudge
@@ -2952,10 +3126,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       // 肉・魚のような必須条件は、0件になっても無条件の全体プールへは
       // フォールバックしない(pickCombo側の再抽選・別枠探索に委ねる)。
       pool = pool.filter(function(m){ return requiredCats.indexOf(m.cat) !== -1; });
-    }else if(activeMood){
+    }else if(activeMood && !moodRulesSupersede(activeMood.id)){
       var moodPool = pool.filter(matchesMood);
       if(moodPool.length > 0) pool = moodPool;
     }
+    // 気分に合わない料理は、0件になっても無条件のプールへ戻さない(厳格)
+    pool = pool.filter(function(m){ return moodAllows(m, "hero"); });
     var notDisliked = pool.filter(function(m){ return !isDisliked(m); });
     if(notDisliked.length > 0) pool = notDisliked;
     var recent = recentNamesByRole("main", 3);
@@ -2971,7 +3147,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(sessionStapleHistory[0] && sessionStapleHistory[0].staple === m.staple) score -= 6; // same 米/麺/パン type as last time
     if(history[0] && history[0].staple && history[0].staple.name === m.name) score -= 6;
     if(activeMood){
-      if(activeMood.filter && activeMood.filter(m)) score += 8;
+      if(!moodRulesSupersede(activeMood.id) && activeMood.filter && activeMood.filter(m)) score += 8;
     }
     if(m.tags && m.tags.length > 0) score += 2;
     score += catPreferenceBonus(m.cat);
@@ -2986,11 +3162,16 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     pool = pool.filter(matchesGenreWeight);
     var requiredCatsStaple = activeMood ? getTemplate(activeMood.id).requiredCategories : null;
     if(requiredCatsStaple && requiredCatsStaple.length > 0){
-      pool = pool.filter(function(m){ return requiredCatsStaple.indexOf(m.cat) !== -1; });
-    }else if(activeMood){
-      var moodPool = pool.filter(matchesMood);
+      // 白いごはん・食パン(plain)はただの土台なので、必須カテゴリの対象外にする。
+      // (除くと肉・魚の気分では定食型が出なくなり、一品完結の主食ばかりになる)
+      pool = pool.filter(function(m){ return m.plain || requiredCatsStaple.indexOf(m.cat) !== -1; });
+    }else if(activeMood && !moodRulesSupersede(activeMood.id)){
+      // 白いごはん・食パン(plain)はタグを持たないため、気分の絞り込みで
+      // 落ちてしまい定食型が出なくなる。土台として常に残す。
+      var moodPool = pool.filter(function(m){ return m.plain || matchesMood(m); });
       if(moodPool.length > 0) pool = moodPool;
     }
+    pool = pool.filter(function(m){ return moodAllows(m, "hero"); });
     var notDislikedStaple = pool.filter(function(m){ return !isDisliked(m); });
     if(notDislikedStaple.length > 0) pool = notDislikedStaple;
     // 献立モード(定食 or 一品献立)を先に絞り込んでからスコアリングする。
@@ -3088,6 +3269,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     // 汁物(味噌汁・スープなど)は専用の soupPool() 経由でのみ選ぶ。通常の
     // 副菜プールに混ざると、汁物枠と重複して2品汁物になりうるため除外する。
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
+    allSides = allSides.filter(function(m){ return moodAllows(m, "side"); });
     var notDislikedSides = allSides.filter(function(m){ return !isDisliked(m); });
     if(notDislikedSides.length > 0) allSides = notDislikedSides;
     var pool = allSides.filter(matchesGenreWeight);
@@ -3124,6 +3306,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // 極端な連続表示を抑えている。
   function soupPool(excludeNames, contextMenus){
     var soups = allMenus().filter(function(m){ return roleOf(m) === "side" && isSoupStyle(m); });
+    soups = soups.filter(function(m){ return moodAllows(m, "side"); });
     var notDislikedSoups = soups.filter(function(m){ return !isDisliked(m); });
     if(notDislikedSoups.length > 0) soups = notDislikedSoups;
     var recent = recentNamesByRole("side", 5);
@@ -3142,6 +3325,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // サラダ/和え物中心の「小鉢」的な側面を少し優先する(汁物は別枠で選ぶため除外)。
   function lightSidePool(contextMenus, excludeNames){
     var allSides = allMenus().filter(function(m){ return roleOf(m) === "side" && !isSoupStyle(m); });
+    allSides = allSides.filter(function(m){ return moodAllows(m, "side"); });
     var notDislikedLight = allSides.filter(function(m){ return !isDisliked(m); });
     if(notDislikedLight.length > 0) allSides = notDislikedLight;
     var pool = allSides.filter(matchesGenreWeight);
@@ -3253,21 +3437,23 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // structure:"drink"。主食を必須にせず、主菜(お酒に合う一品)＋おつまみ2品
   // ＋任意の締めで構成する。
   function buildDrinkCombo(template){
-    var mPoolAll = allMenus().filter(function(m){ return roleOf(m) === "main"; }).filter(matchesGenreWeight);
+    var mPoolAll = allMenus().filter(function(m){ return roleOf(m) === "main"; }).filter(matchesGenreWeight)
+      .filter(function(m){ return moodAllows(m, "main"); });
     var tagged = mPoolAll.filter(function(m){ return m.tags && m.tags.indexOf("おつまみ") !== -1; });
     var recentMain = recentNamesByRole("main", 3);
-    var freshTagged = tagged.filter(function(m){ return recentMain.indexOf(m.name) === -1; });
-    // 「おつまみ」タグの品目は数が少ないため、タグ一致をまず優先しつつ、
-    // 尽きた場合は通常の主菜プールにフォールバックする(タグは強制条件では
-    // なく優先条件として扱う)。
-    var mainSource = freshTagged.length > 0 ? freshTagged
-      : (tagged.length > 0 ? tagged
-      : mPoolAll.filter(function(m){ return recentMain.indexOf(m.name) === -1; }));
-    if(mainSource.length === 0) mainSource = mPoolAll;
+    // 「おつまみ」タグの品目は10品ほどしかなく、それだけだと毎回同じ顔ぶれに
+    // なるため、タグ付きは半分の確率で優先し、それ以外は「おつまみ向き」と
+    // 判定された主菜(mPoolAll)全体から選ぶ。
+    var taggedFresh = tagged.filter(function(m){ return recentMain.indexOf(m.name) === -1; });
+    var allFresh = mPoolAll.filter(function(m){ return recentMain.indexOf(m.name) === -1; });
+    var useTagged = taggedFresh.length > 0 && Math.random() < 0.5;
+    var mainSource = useTagged ? taggedFresh : (allFresh.length > 0 ? allFresh : mPoolAll);
     mainSource = mainSource.filter(function(m){ return !isDisliked(m); }).length > 0
       ? mainSource.filter(function(m){ return !isDisliked(m); }) : mainSource;
     if(mainSource.length === 0) return null;
-    var mainPick = pickRandom(topScoringBand(mainSource, scoreMain, 4));
+    var mainPick = useTagged
+      ? pickRandom(topScoringBand(mainSource, scoreMain, 4))
+      : pickRandom(mainSource);
 
     var s1Pool = sidePool([mainPick], [mainPick.name], [mainPick.cat], isSaladStyle(mainPick), [cookingMethodOf(mainPick)]);
     if(s1Pool.length === 0) return null;
@@ -3282,19 +3468,31 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(Math.random() < (template.finishProbability || 0)){
       // 締め: 白いごはん・食パンそのもの(plain)は量が多すぎるため除外し、
       // 一品完結型のうち軽め(hearty以外)のものを優先する。
-      var finishPool = allMenus().filter(function(m){ return roleOf(m) === "staple" && !m.plain; });
-      var lightFinish = finishPool.filter(function(m){ return m.weight !== "hearty"; });
-      var finishSource = lightFinish.length > 0 ? lightFinish : finishPool;
-      if(finishSource.length > 0) finish = pickRandom(finishSource);
+      var finishPool = allMenus().filter(function(m){
+        return roleOf(m) === "staple" && !m.plain && moodAllows(m, "finish") && !isDisliked(m);
+      });
+      if(finishPool.length > 0) finish = pickRandom(finishPool);
     }
 
     return {staple: finish, main: mainPick, side1: side1, side2: side2};
   }
 
+  // テンプレートの品数上限を超える場合は、汁物→副菜の順に減らす
+  // (例: 軽め=最大3品なら、主食+主菜+副菜1品にする)。
+  function trimToMaxItems(combo, template){
+    if(!combo || typeof template.maxItems !== "number") return combo;
+    while(comboMenus(combo).length > template.maxItems){
+      if(combo.side2) combo.side2 = null;
+      else if(combo.side1) combo.side1 = null;
+      else break;
+    }
+    return combo;
+  }
+
   function buildComboForTemplate(template){
     if(template.structure === "drink") return buildDrinkCombo(template);
     if(template.structure === "single") return buildSingleCombo(template);
-    return buildDefaultCombo();
+    return trimToMaxItems(buildDefaultCombo(), template);
   }
 
   // 献立全体の推定調理時間。並行調理を考慮した精密な見積りは行わず、
@@ -3359,6 +3557,16 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       if(spicyCount > template.maxSpicyItems) return false;
     }
 
+    // 気分ごとの料理適合ルール(候補プールでも適用済みだが、完成した献立に
+    // 対する最終確認として、表示される全皿を枠に応じて再チェックする)
+    var isDrinkStruct = template.structure === "drink";
+    var heroDish = combo.main || combo.staple;
+    if(combo.staple && !moodDishOk(combo.staple, moodId, isDrinkStruct ? "finish" : (combo.main ? "side" : "hero"))) return false;
+    if(combo.main && !moodDishOk(combo.main, moodId, isDrinkStruct ? "main" : "hero")) return false;
+    if(combo.side1 && !moodDishOk(combo.side1, moodId, "side")) return false;
+    if(combo.side2 && !moodDishOk(combo.side2, moodId, "side")) return false;
+    if(!heroDish) return false;
+
     // 副菜①・②の重複禁止(全気分共通)
     if(combo.side1 && combo.side2 && combo.side1.name === combo.side2.name) return false;
 
@@ -3376,8 +3584,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(menus.length === 0) return -999;
     var score = 0;
 
-    // 気分一致(皿ごとの緩いフィット)
-    if(activeMood){
+    // 気分一致(皿ごとの緩いフィット)。drinkは「おつまみ」タグ付きが10品ほどしか
+    // なく、ここで加点すると毎回その10品だけが選ばれてしまうため加点しない
+    // (drinkの適合は候補プールと validateCombo の traits ルールで担保済み)。
+    if(activeMood && template.structure !== "drink"){
       menus.forEach(function(m){
         if(activeMood.filter && activeMood.filter(m)) score += 3;
         if(activeMood.cats && activeMood.cats.indexOf(m.cat) !== -1) score += 2;

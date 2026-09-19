@@ -22,7 +22,7 @@ function safeSet(){} // LS書き込みはブラウザのみで確認するため
 
 // 定数(SALAD_STYLE_RE, HEAVY_CATSなど)は手打ちコピーせず、ソースから
 // そのまま抜き出して評価する(実装とテストの二重管理によるズレを防ぐ)。
-for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','HIRARI_MOOD_LEDES','HIRARI_TAG_PHRASES','HIRARI_GENRE_PHRASES','HIRARI_FLOURISHES']){
+for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','HIRARI_MOOD_LEDES','HIRARI_TAG_PHRASES','HIRARI_GENRE_PHRASES','HIRARI_FLOURISHES','TRAIT_SIZE_XL_RE','TRAIT_SIZE_LARGE_RE','TRAIT_RICH_RE','TRAIT_LIGHT_RE','TRAIT_HOT_RE','TRAIT_ADULT_RE','TRAIT_STARCH_RE','TRAIT_PROCESSED_FISH_RE','TRAIT_KID_FAV_RE','TRAIT_CLEAN_RE','TRAIT_NOVEL_RE','TRAIT_MEAT_FISH_CATS','TRAIT_FINISH_LIGHT_RICE','TRAIT_OVERRIDES','TRAIT_CACHE','MOOD_DISH_RULES','MOOD_SWEET_OK']){
   const re=new RegExp('  var '+name+' = [^;]+;', 's');
   const decl=source.match(re)?.[0];
   assert(decl, name+' declaration not found in source');
@@ -42,9 +42,10 @@ for(const name of ['allMenus','roleOf','pickRandom','recentNamesByRole','matches
   'catPreferenceBonus','isDisliked','clearLikeDislike','recordFeedback',
   'scoreMain','mainPool','scoreStaple','staplePool','isSaladStyle','isSoupStyle','isOneDishStaple',
   'cookingMethodOf','tasteTagsOf','heavyCatOf','scoreSide','sidePool','soupPool','lightSidePool',
-  'getTemplate','selectTemplate','buildDefaultCombo','buildSingleCombo','buildDrinkCombo','buildComboForTemplate',
+  'getTemplate','selectTemplate','buildDefaultCombo','buildSingleCombo','buildDrinkCombo','trimToMaxItems','buildComboForTemplate',
   'estimatedTotalTime','estimatedTotalCost','estimateActiveSteps','estimateCookware',
   'validateCombo','scoreMenuCombination','safeFallbackCombo','pickCombo',
+  'traitMethodOf','deriveTraits','traitsOf','moodRuleOk','moodDishOk','moodRulesSupersede','moodAllows',
   'dishFactSentence','reasonFor','hirariTagPhrase','hirariFlourish','reasonForCombo',
   'comboMenus','shoppingRows','scaleNumber','scaleIngredientText','servingsRatio']){
  const re=new RegExp('  function '+name+'\\([^]*?\\n  \\}');
@@ -119,12 +120,16 @@ assert(moodIds.length >= 13, 'MOODSが13種類未満: '+moodIds.length);
 const violation = {};
 moodIds.forEach(id => violation[id] = 0);
 let dupSideTotal = 0, reasonMismatchTotal = 0;
+const traitViolation = {}; moodIds.forEach(id => traitViolation[id] = 0);
+const traitExamples = [];
+const heroSet = {}; moodIds.forEach(id => heroSet[id] = new Set());
+const nullCount = {}; moodIds.forEach(id => nullCount[id] = 0);
 
 moodIds.forEach(moodId => {
   run(`activeMood = MOODS.find(m=>m.id===${JSON.stringify(moodId)});`);
   for(let n=0;n<MOOD_N;n++){
     const c = run('pickCombo()');
-    if(!c){ continue; } // 「条件に合う候補が不足」。安全側でnullが許される唯一のケース。
+    if(!c){ nullCount[moodId]++; continue; } // 「条件に合う候補が不足」。安全側でnullが許される唯一のケース。
     const menus = run(`comboMenus(${JSON.stringify(c)})`);
 
     // 副菜①・②の重複は全気分共通で禁止
@@ -158,6 +163,34 @@ moodIds.forEach(moodId => {
       if(spicyCount > 1){ violation[moodId]++; }
     }
 
+    heroSet[moodId].add((c.main || c.staple).name);
+    // ---- 料理側の適合(traits)ルール: 表示される全皿を、枠ごとに独立に再検証する ----
+    const isDrink = moodId === 'drink';
+    const slotOf = (key, dish) => {
+      if(key === 'staple') return isDrink ? 'finish' : (c.main ? 'side' : 'hero');
+      if(key === 'main') return isDrink ? 'main' : 'hero';
+      return 'side';
+    };
+    ['staple','main','side1','side2'].forEach(key => {
+      const dish = c[key];
+      if(!dish) return;
+      const ok = run(`moodDishOk(${JSON.stringify(dish)}, ${JSON.stringify(moodId)}, ${JSON.stringify(slotOf(key, dish))})`);
+      if(!ok){ traitViolation[moodId]++; traitExamples.push(moodId+':'+key+':'+dish.name); }
+    });
+    const heroTraits = run(`traitsOf(${JSON.stringify(c.main || c.staple)})`);
+    const heroName0 = (c.main || c.staple).name;
+    if(moodId === 'tired' || moodId === 'quick'){
+      if(menus.some(m => /大盛り|特盛り|特大|デカ|どっさり|爆盛り|ボリューム満点/.test(m.name))){ violation[moodId]++; }
+    }
+    if(moodId === 'light' && heroTraits.rich !== 'light'){ violation[moodId]++; }
+    if(moodId === 'family' && menus.some(m => run(`traitsOf(${JSON.stringify(m)}).hot`))){ violation[moodId]++; }
+    if(moodId === 'fish' && heroTraits.processedFish){ violation[moodId]++; }
+    if(moodId === 'cleanup' && !heroTraits.cleanup){ violation[moodId]++; }
+    if(moodId === 'save' && menus.some(m => (m.tags||[]).some(t => ['ご褒美','豪華見え','記念日','週末'].includes(t)))){ violation[moodId]++; }
+    if(moodId === 'drink' && c.main && /丼|ライス|カレー|シチュー|パスタ|ラーメン|うどん|そば/.test(c.main.name)){ violation[moodId]++; }
+    if(moodId === 'drink' && c.staple && !run(`traitsOf(${JSON.stringify(c.staple)}).finish`)){ violation[moodId]++; }
+    if(/フレンチトースト/.test(heroName0) && !['surprise','family'].includes(moodId)){ violation[moodId]++; }
+
     // 理由文が、実際に表示されている献立の料理名を含んでいること
     // (=表示中の献立と理由文の料理が一致する)
     const reason = run(`reasonForCombo(${JSON.stringify(c)}, ${JSON.stringify(moodId)})`);
@@ -171,6 +204,12 @@ moodIds.forEach(moodId => {
 run(`activeMood=null;`);
 
 console.log('[mood-templates] violations per mood:', JSON.stringify(violation));
+console.log('[mood-traits] rule violations per mood:', JSON.stringify(traitViolation), traitExamples.slice(0,5));
+console.log('[mood-variety] 主役の料理の種類数(1000回中):', JSON.stringify(Object.fromEntries(Object.entries(heroSet).map(([k,v])=>[k,v.size]))));
+Object.entries(heroSet).forEach(([id, set]) => assert(set.size >= 8, `気分「${id}」の主役が${set.size}種類しか出ない(厳格化で毎回同じ料理になっている)`));
+console.log('[mood-null] 候補不足(null)の回数:', JSON.stringify(nullCount));
+Object.entries(traitViolation).forEach(([id, n]) => assert.equal(n, 0, `気分「${id}」で料理適合ルール違反が${n}件: `+traitExamples.slice(0,5).join(', ')));
+Object.entries(nullCount).forEach(([id, n]) => assert(n <= MOOD_N*0.01, `気分「${id}」で候補不足(null)が${n}回(1%超)`));
 assert.equal(dupSideTotal, 0, '副菜①・②の重複が発生した');
 assert.equal(reasonMismatchTotal, 0, '理由文に表示中の献立の料理名が含まれない生成があった');
 Object.entries(violation).forEach(([id, count]) => {
