@@ -109,13 +109,15 @@ assert(teishokuCount>0, 'teishoku mode never triggered in '+N+' spins');
 console.log('[default] one-dish:', oneDishCount, 'teishoku:', teishokuCount, 'soup-present:', soupPresentCount, '/', N);
 
 // =========================================================
-// 気分別テンプレート: 全13気分について1000回ずつ生成し、
+// 気分別テンプレート: 全10気分について1000回ずつ生成し、
 // テンプレートのハード条件(必須カテゴリ・品数・禁止語・重複)が
 // 破られていないことと、理由文が献立・気分と食い違わないことを確認する。
 // =========================================================
 const MOOD_N = 1000;
 const moodIds = run('MOODS.map(m=>m.id)');
-assert(moodIds.length >= 13, 'MOODSが13種類未満: '+moodIds.length);
+assert.deepEqual([...moodIds].sort(), ['cleanup','drink','fish','hearty','light','meat','new','quick','save','surprise'],
+  '気分は10種類(ラクしたい/ガッツリ食べたい/今日は飲みたい/節約したい/肉/魚/ちょっと軽め/いつもと違うもの/冷蔵庫を片付けたい/おまかせ): '+moodIds.join(','));
+assert.equal(run('MOODS.find(m=>m.id==="quick").label'), 'ラクしたい');
 
 const violation = {};
 moodIds.forEach(id => violation[id] = 0);
@@ -149,18 +151,11 @@ moodIds.forEach(moodId => {
       if(menus.some(m=>/大盛り|特盛り|どっさり|デカ/.test(m.name))){ violation[moodId]++; }
     }
     if(moodId === 'quick'){
-      if(menus.length > 2){ violation[moodId]++; }
-    }
-    if(moodId === 'tired'){
       if(menus.length > 3){ violation[moodId]++; }
     }
     if(moodId === 'save'){
       const totalCost = run(`estimatedTotalCost(${JSON.stringify(c)})`);
       if(totalCost > 2800){ violation[moodId]++; }
-    }
-    if(moodId === 'family'){
-      const spicyCount = menus.filter(m => run(`tasteTagsOf(${JSON.stringify(m)}).indexOf('spicy')`) !== -1).length;
-      if(spicyCount > 1){ violation[moodId]++; }
     }
 
     heroSet[moodId].add((c.main || c.staple).name);
@@ -179,17 +174,16 @@ moodIds.forEach(moodId => {
     });
     const heroTraits = run(`traitsOf(${JSON.stringify(c.main || c.staple)})`);
     const heroName0 = (c.main || c.staple).name;
-    if(moodId === 'tired' || moodId === 'quick'){
+    if(moodId === 'quick'){
       if(menus.some(m => /大盛り|特盛り|特大|デカ|どっさり|爆盛り|ボリューム満点/.test(m.name))){ violation[moodId]++; }
     }
     if(moodId === 'light' && heroTraits.rich !== 'light'){ violation[moodId]++; }
-    if(moodId === 'family' && menus.some(m => run(`traitsOf(${JSON.stringify(m)}).hot`))){ violation[moodId]++; }
     if(moodId === 'fish' && heroTraits.processedFish){ violation[moodId]++; }
     if(moodId === 'cleanup' && !heroTraits.cleanup){ violation[moodId]++; }
     if(moodId === 'save' && menus.some(m => (m.tags||[]).some(t => ['ご褒美','豪華見え','記念日','週末'].includes(t)))){ violation[moodId]++; }
     if(moodId === 'drink' && c.main && /丼|ライス|カレー|シチュー|パスタ|ラーメン|うどん|そば/.test(c.main.name)){ violation[moodId]++; }
     if(moodId === 'drink' && c.staple && !run(`traitsOf(${JSON.stringify(c.staple)}).finish`)){ violation[moodId]++; }
-    if(/フレンチトースト/.test(heroName0) && !['surprise','family'].includes(moodId)){ violation[moodId]++; }
+    if(/フレンチトースト/.test(heroName0) && moodId !== 'surprise'){ violation[moodId]++; }
 
     // 理由文が、実際に表示されている献立の料理名を含んでいること
     // (=表示中の献立と理由文の料理が一致する)

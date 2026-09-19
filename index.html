@@ -2338,14 +2338,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var STAPLE_MAP = {}; STAPLES.forEach(function(s){ STAPLE_MAP[s.id] = s; });
 
   var MOODS = [
-    {id:"tired", emoji:"😫", label:"疲れた", greeting:"今日は疲れているあなたへ",
-      cats:[], genres:[], weights:[], filter:function(m){ return (typeof m.difficulty === "number" && m.difficulty <= 1) || (m.tags && m.tags.indexOf("時短") !== -1); }},
+    {id:"quick", emoji:"🛋", label:"ラクしたい", greeting:"今日はラクしたいあなたへ",
+      cats:[], genres:[], weights:[], filter:function(m){
+        return (typeof m.cookingTime === "number" && m.cookingTime <= 15) || (m.tags && m.tags.indexOf("時短") !== -1);
+      }},
     {id:"hearty", emoji:"🔥", label:"ガッツリ食べたい", greeting:"今日はガッツリいきたいあなたへ",
       cats:[], genres:[], weights:["hearty"], filter:null},
     {id:"drink", emoji:"🍺", label:"今日は飲みたい", greeting:"今日は一杯やりたいあなたへ",
       cats:[], genres:[], weights:[], filter:function(m){ return m.tags && m.tags.indexOf("おつまみ") !== -1; }},
-    {id:"quick", emoji:"⏱", label:"とにかくラクしたい", greeting:"とにかくラクしたい日のあなたへ",
-      cats:[], genres:[], weights:[], filter:function(m){ return typeof m.cookingTime === "number" && m.cookingTime <= 15; }},
     {id:"save", emoji:"💰", label:"節約したい", greeting:"今日は節約したいあなたへ",
       cats:[], genres:[], weights:[], filter:function(m){ return (m.tags && m.tags.indexOf("節約") !== -1) || m.cost5 <= 850; }},
     {id:"meat", emoji:"🥩", label:"肉が食べたい", greeting:"お肉が食べたい日のあなたへ",
@@ -2360,12 +2360,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       }},
     {id:"cleanup", emoji:"🧹", label:"冷蔵庫を片付けたい", greeting:"冷蔵庫を片付けたい日のあなたへ",
       cats:[], genres:[], weights:[], filter:function(m){ return m.tags && m.tags.indexOf("冷蔵庫一掃") !== -1; }},
-    {id:"family", emoji:"👨‍👩‍👧", label:"家族を喜ばせたい", greeting:"家族を喜ばせたい日のあなたへ",
-      cats:[], genres:[], weights:[], filter:function(m){
-        return m.tags && m.tags.some(function(t){ return ["育ち盛り","ご褒美"].indexOf(t) !== -1; });
-      }},
-    {id:"bulk", emoji:"🍚", label:"たくさん食べさせたい", greeting:"育ち盛りにたっぷり食べさせたい日のあなたへ",
-      cats:[], genres:[], weights:["hearty"], filter:function(m){ return m.tags && m.tags.indexOf("育ち盛り") !== -1; }},
     {id:"surprise", emoji:"✨", label:"おまかせ", greeting:"今日はおまかせで決めたいあなたへ",
       cats:[], genres:[], weights:[], filter:null}
   ];
@@ -2381,7 +2375,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
        "default" … 主食+主菜+副菜+副菜(または一品献立)の、既存の
                     4枠構成(buildDefaultCombo)をそのまま使う
        "single"  … 主食(一品完結)＋任意の軽い副菜/汁物のみ。
-                    tired/quickのような「品数を絞りたい」気分用
+                    quick(ラクしたい)のような「品数を絞りたい」気分用
        "drink"   … 主菜(お酒に合う一品)＋おつまみ2品＋任意の締め。
                     主食を必須にしない、drink専用の構成
      requiredCategories は「肉・魚」のような必須条件。厳格に扱い、
@@ -2395,21 +2389,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       finishProbability: 0.35,
       displayLabels: {staple:"🍙 締め(任意)", main:"🍶 お酒に合う一品", side1:"🥜 おつまみ①", side2:"🥜 おつまみ②"}
     },
-    tired: {
+    quick: {
       structure: "single",
       maxItems: 3,
       maxTotalTime: 20,
       maxDifficulty: 1,
       optionalSide: true,
       optionalSoup: true
-    },
-    quick: {
-      structure: "single",
-      maxItems: 2,
-      maxTotalTime: 15,
-      maxDifficulty: 1,
-      optionalSide: true,
-      optionalSoup: false
     },
     fish: {
       structure: "default",
@@ -2431,10 +2417,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       // おおよそ中央値3,100円前後(2026-09時点のBASE_MENUS実測)なので、
       // 下位25〜30%程度に収まる水準を目安にする。
       maxTotalCost: 2800
-    },
-    family: {
-      structure: "default",
-      maxSpicyItems: 1
     },
     DEFAULT: {
       structure: "default"
@@ -2466,18 +2448,15 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     thinkingReroll: ["じゃあ、別の子を呼んでくるね。", "手帳、ぱらぱらめくってみるね。", "おっけー、もうひとつ探してくるよ。"],
     thinkingDefault: ["うーん…頭のあかり、ぽわぽわしてきた。", "ちょっと待ってね。いま、ひらめき中。"],
     thinking: {
-      tired: ["ひと息つけるやつ、探してくるね。", "おつかれさま。がんばらないやつを、そっと選ぶよ。"],
-      hearty: ["おなかがぐぅって言ってるね。しっかりめ、探すよ。", "ガツンといくよ。手帳のいちばん熱いページ、めくってる。"],
+      hearty: ["おなかがぐぅって言ってるね。しっかりめ、探すよ。", "ガツンといくよ。手帳のいちばん熱いページ、めくってる。", "おかわり続出のやつ、考えてる。おなか、空けといてね。"],
       drink: ["乾杯の前に、おつまみ会議してるよ。", "ひと口目に合うの、そろえてくるね。"],
-      quick: ["ぱぱっと行ってくる！すぐ戻るね。", "手ぎわよくいこう。ひらり、ダッシュ。"],
+      quick: ["ぱぱっと行ってくる！すぐ戻るね。", "おつかれさま。がんばらないやつを、そっと選ぶよ。", "ひと息つけるやつ、探してくるね。"],
       save: ["お財布とそうだん中…", "ふところにやさしいの、こそっと探してるよ。"],
       meat: ["じゅわ〜っとしたの、いま浮かんでるよ。", "お肉の気分だね。どの子にしようかな。"],
       fish: ["お魚さんね。今日は、どの子がいいかな。", "海のごはん、思い浮かべてるよ。"],
       light: ["ふわっと軽いの、選ぶね。", "おなかにやさしいの、探してるよ。"],
       new: ["いつもと違うの、ちょっとだけ冒険しよ。ひらり、わくわく。", "ちょっと変わったの、手帳のすみっこにあった気がする。"],
       cleanup: ["冷蔵庫のなか、こっそりのぞいてくるね。", "のこりものたちに、出番をあげたいな。"],
-      family: ["みんなのにこにこ顔、思い浮かべてるよ。", "家族が喜びそうなの、考え中。"],
-      bulk: ["おかわり続出のやつ、考えてる。おなか、空けといてね。", "たっぷり系、探してくるよ。"],
       surprise: ["おまかせだね。ひらり、ちょっとはりきるよ。", "目をつぶって、手帳をぱっと開いてみるね。"]
     },
     decided: [
@@ -2919,7 +2898,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // 料理の属性(traits)と、気分ごとの「この料理は今日の気分に合うか」ルール
   // (2026-09 追加)。
   // BASE_MENUS の weight(がっつり/ヘルシー)だけでは、「特盛り牛カルビ丼」が
-  // 疲れた気分に出る、締めが「鶏そぼろ丼」になる、軽め気分に麻婆豆腐が出る、
+  // ラクしたい気分に出る、締めが「鶏そぼろ丼」になる、軽め気分に麻婆豆腐が出る、
   // といった不一致を防げなかったため、名前・食材・手順・時間・タグから
   // 「量・こってり度・手間・辛さ・子ども向き・おつまみ向き・締め向き」を
   // 導出し、気分ごとの適合ルールを候補プールの段階で厳格に適用する。
@@ -3016,10 +2995,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // 気分ごとの適合ルール。all=全ての皿 / hero=主役(主菜または一品完結の主食)
   // main=drinkの主菜枠 / side=副菜・汁物 / finish=drinkの締め枠。
   var MOOD_DISH_RULES = {
-    tired: {all: {size: ["small", "normal"]}, hero: {effort: ["easy"]}},
     quick: {all: {size: ["small", "normal"], effort: ["easy"]}},
     hearty: {hero: {sizeNot: ["small"], richNot: ["light"]}},
-    bulk: {hero: {size: ["large", "xl"]}},
     save: {all: {tagsNone: ["ご褒美", "豪華見え", "記念日", "週末"], sizeNot: ["xl"]}, hero: {maxCost: 1000}},
     light: {all: {richNot: ["rich"], sizeNot: ["large", "xl"], methodNot: ["fry"], hotNot: true,
       tagsNone: ["ご褒美", "豪華見え", "ガツン系", "スタミナ", "ボリューム", "育ち盛り"]}, hero: {rich: ["light"]}},
@@ -3027,11 +3004,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     meat: {hero: {catsAny: ["chicken", "pork", "beef"]}, side: {catsNot: ["fish"]}},
     fish: {hero: {catsAny: ["fish"], processedFishNot: true}, side: {catsNot: ["chicken", "pork", "beef"]}},
     "new": {hero: {novel: true}},
-    cleanup: {hero: {cleanup: true}},
-    family: {all: {hotNot: true, kid: true}, hero: {kidPick: true}}
+    cleanup: {hero: {cleanup: true}}
   };
   // フレンチトーストのような「甘い食事」は、これらの気分以外では出さない
-  var MOOD_SWEET_OK = [null, "surprise", "family"];
+  var MOOD_SWEET_OK = [null, "surprise"];
 
   function moodRuleOk(m, t, r){
     if(!r) return true;
@@ -3453,7 +3429,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return {staple: staplePick, main: mainPick, side1: side1, side2: side2};
   }
 
-  // structure:"single" (tired/quick)。主食枠に一品完結型の料理(丼・麺など)
+  // structure:"single" (quick)。主食枠に一品完結型の料理(丼・麺など)
   // だけを置き、主菜は使わない。軽い副菜・汁物は任意でもう1品まで。
   function buildSingleCombo(template){
     var pool = staplePool(false); // wantPlain=false → 一品完結型のみ
@@ -3667,7 +3643,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     // 合計調理時間・作業工程数・調理器具数。
     // これらの「効率」は、テンプレートが時間/難易度に明示的な上限を
-    // 課している場合(tired/quickのようなmaxTotalTime・maxDifficulty指定
+    // 課している場合(quickのようなmaxTotalTime・maxDifficulty指定
     // つきのテンプレート)にのみ評価する。structure自体では判定しない
     // (drinkは品数が多い構造だが「時短」が目的ではないため、締めが
     // 付いたというだけで一律減点されると本来出るはずの締めがほぼ出なく
@@ -3813,18 +3789,15 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   var MOOD_DESCRIPTOR = {
-    tired: "疲れて何もしたくない日には",
     hearty: "ガッツリ気分の日には",
     drink: "お酒のお供にしたい日には",
-    quick: "とにかくラクしたい日には",
+    quick: "ラクしたい日には",
     save: "節約したい日には",
     meat: "お肉が食べたい日には",
     fish: "お魚が食べたい日には",
     light: "軽めに済ませたい日には",
     new: "いつもと違うものを食べたい日には",
     cleanup: "冷蔵庫を片付けたい日には",
-    family: "家族を喜ばせたい日には",
-    bulk: "育ち盛りにたっぷり食べさせたい日には",
     surprise: "気分を決めきれない日には"
   };
   var MOOD_IMPLIES_CAT = {meat: true, fish: true};
@@ -3860,17 +3833,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   // 実際に表示されている料理名に必ず触れつつ、ひらりの口調(やわらかく、
   // 頭のあかり・手帳といった自分の持ち物にも触れる)で短く話す。
   var HIRARI_MOOD_LEDES = {
-    tired: ["おつかれさま。", "今日はがんばらなくていいよ。"],
-    hearty: ["ガッツリいきたい日だね。", "おなか、ぐぅって鳴ってるね。"],
-    quick: ["サッといこう。", "いそぐ日だね。"],
+    hearty: ["ガッツリいきたい日だね。", "おなか、ぐぅって鳴ってるね。", "おかわり、いっぱいしそうだね。"],
+    quick: ["おつかれさま。", "今日はがんばらなくていいよ。", "サッといこう。"],
     save: ["お財布にやさしくいこう。", "今日は節約モードだね。"],
     meat: ["お肉の気分だね。", "じゅわっとしたい日だね。"],
     fish: ["お魚の気分だね。", "海のごはん、いいね。"],
     light: ["軽やかにいきたい日だね。", "おなか、やさしめでいこう。"],
     new: ["いつもと違うの、ためしてみよう。", "ちょっと冒険する日だね。"],
     cleanup: ["冷蔵庫、すっきりさせちゃおう。", "のこりものに、出番だよ。"],
-    family: ["みんなで食べたら、きっとにこにこ。", "家族の笑顔がうかぶね。"],
-    bulk: ["おかわり、いっぱいしそうだね。", "育ち盛りに、たっぷりね。"],
     surprise: ["おまかせ、うけたまわりました。", "ひらり、はりきっちゃうよ。"]
   };
   var HIRARI_TAG_PHRASES = {
@@ -3919,7 +3889,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     if(template.structure === "single"){
       var withExtras = extras.length > 0 ? "、" + extras.join("と") + "をそえて" : "";
-      if(moodId === "tired"){
+      if(Math.random() < 0.5){
         return "おつかれさま。" + combo.staple.name + "ひとつで大丈夫" + withExtras + "、約" + totalTime + "分。洗い物も少なめだよ。" + hirariFlourish();
       }
       return "サッといこう。" + combo.staple.name + "で" + withExtras + "、約" + totalTime + "分。もう、おなかが待ってるね。";
@@ -3978,7 +3948,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
     // 3. 条件(時短・予算など)との一致(最大30点)
     var condScore;
-    var wantsQuick = mood && (mood.id === "quick" || mood.id === "tired");
+    var wantsQuick = mood && mood.id === "quick";
     var wantsBudget = mood && mood.id === "save";
     if(wantsQuick && typeof mainMenu.cookingTime === "number" && mainMenu.cookingTime <= 20){
       condScore = 30;
@@ -4104,7 +4074,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     hiramekiScoreReasons.hidden = true;
     hiramekiScoreBtn.setAttribute("aria-expanded", "false");
     hiramekiScoreBtn.hidden = false;
-    crossLinkBanner.hidden = !(activeMood && activeMood.id === "tired");
+    crossLinkBanner.hidden = !(activeMood && activeMood.id === "quick");
     comboRequestId++;
     var requestId = comboRequestId;
     var mainShown = false;
@@ -4410,7 +4380,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(!currentPicks) return;
     var shareHero = currentPicks.main || currentPicks.staple;
     trackEvent("share_menu", {method: navigator.share ? "web_share" : "clipboard", main_name: shareHero ? shareHero.name : ""});
-    // drink/tired/quickなどのテンプレートでは主食・主菜のどちらかがnullの
+    // drink/quickなどのテンプレートでは主食・主菜のどちらかがnullの
     // ことがあるため、comboMenus()で実在する皿だけを取り出して組み立てる。
     var shareLines = comboMenus(currentPicks).map(function(m){ return "・" + m.name; }).join("\n");
     var text = "今日の晩ごはん、決まりました。\n\n" +
