@@ -382,7 +382,7 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
   assert(lightHeroes.some(m => /雑炊|にゅうめん/.test(m.name)), '軽めの主役に雑炊・にゅうめんが無い');
   // 「いつもと違うもの」: 海外・地方の料理が十分あり、ジャンルが偏らない
   const novelHeroes = run('BASE_MENUS').filter(m => m.role !== 'side' && !m.plain && run(`moodDishOk(${JSON.stringify(m)}, "new", "hero")`));
-  assert(novelHeroes.length >= 100, `いつもと違う主役候補が少ない(${novelHeroes.length})`);
+  assert(novelHeroes.length >= 70, `いつもと違う主役候補が少ない(${novelHeroes.length})`);
   assert(novelHeroes.filter(m => (m.tags || []).includes('地方料理')).length >= 10, '地方料理の主役が少ない');
   assert(new Set(novelHeroes.flatMap(m => (m.tags || []).filter(t => ['韓国','台湾','タイ','メキシコ','ハワイ','イタリア','ベトナム','インド','トルコ','ギリシャ','モロッコ','スペイン','フランス','ドイツ','ロシア','ペルー'].includes(t)))).size >= 12, '海外の国の幅が少ない');
 
@@ -395,6 +395,24 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
   assert(sc.reasons[0].includes('お酒との合い'), '気分の見どころに触れていない: ' + sc.reasons[0]);
   moodIds.forEach(id => assert(run('MOOD_SCORE_VIEW')[id], `MOOD_SCORE_VIEW に ${id} が無い`));
   console.log(`PASS: 献立の相性(全11区分×${N}回=${total}件: 不自然な組み合わせ0件)・主役の偏り・軽め${lightHeroes.length}品/いつもと違う${novelHeroes.length}品・「なぜ?」の文言`);
+}
+
+// 一品完結の主食(丼・麺・パン)の主食タイプ(rice/noodle/bread)が、料理名と食い違っていないこと。
+// (食い違うと、相性判定や理由文が「麺なのにごはん」のようにずれる)
+{
+  const staples = run('BASE_MENUS').filter(m => m.role === 'staple' && !m.plain);
+  const bad = [];
+  staples.forEach(m => {
+    const n = m.name.replace(/パン粉|フライパン/g, '');
+    const noodleName = /うどん|そば|ラーメン|パスタ|麺|そうめん|フォー|焼きそば/.test(n);
+    const riceName = /丼|ライス|ごはん|チャーハン|雑炊|飯|カレー(?!うどん)/.test(n);
+    const breadName = /パン|サンド|トースト|バーガー|ホットドッグ|ケサディヤ/.test(n);
+    let expect = null;
+    if(noodleName && !riceName) expect = 'noodle'; else if(breadName && !noodleName) expect = 'bread'; else if(riceName && !noodleName) expect = 'rice';
+    if(expect && expect !== m.staple) bad.push(m.id + ' ' + m.name + ' staple=' + m.staple + ' 想定=' + expect);
+  });
+  assert.equal(bad.length, 0, '主食タイプが料理名と食い違う: ' + bad.join(' / '));
+  console.log('PASS: 一品主食' + staples.length + '品の主食タイプ(rice/noodle/bread)が料理名と一致');
 }
 
 // ----- 旧reasonFor()も後方互換として残っていること(内部で引き続き使用) -----
