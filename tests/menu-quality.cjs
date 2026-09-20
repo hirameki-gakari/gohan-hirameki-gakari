@@ -404,7 +404,7 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
   const bad = [];
   staples.forEach(m => {
     const n = m.name.replace(/パン粉|フライパン/g, '');
-    const noodleName = /うどん|そば|ラーメン|パスタ|麺|そうめん|フォー|焼きそば/.test(n);
+    const noodleName = /うどん|そば|ラーメン|パスタ|スパゲ|ナポリタン|ミートソース|麺|そうめん|フォー|焼きそば/.test(n);
     const riceName = /丼|ライス|ごはん|チャーハン|雑炊|飯|カレー(?!うどん)/.test(n);
     const breadName = /パン|サンド|トースト|バーガー|ホットドッグ|ケサディヤ/.test(n);
     let expect = null;
@@ -413,6 +413,20 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
   });
   assert.equal(bad.length, 0, '主食タイプが料理名と食い違う: ' + bad.join(' / '));
   console.log('PASS: 一品主食' + staples.length + '品の主食タイプ(rice/noodle/bread)が料理名と一致');
+}
+
+// 材料にパスタ・麺類が入っている料理は「主食(role:staple, noodle)」であること。
+// (主菜として登録されていると、白いごはんとパスタのように主食が重なる献立が出る)
+{
+  const NOODLE_ING = /スパゲ|パスタ|ペンネ|マカロニ|うどん|そば|中華麺|そうめん|ラーメン|焼きそば/;
+  const ALLOWED = ['gw7']; // ミネストローネ(パスタ少々の汁物。主菜扱いのスープ)
+  const bad = run('BASE_MENUS').filter(m => m.role !== 'staple' && !ALLOWED.includes(m.id) && (m.ing || []).some(i => NOODLE_ING.test(i)))
+    .map(m => m.id + ' ' + m.name);
+  assert.equal(bad.length, 0, '麺・パスタを含むのに主食でない料理: ' + bad.join(' / '));
+  const pasta = run('BASE_MENUS').filter(m => /パスタ|スパゲ|ミートソース|ペペロンチーノ|カルボナーラ/.test(m.name) && (m.ing || []).some(i => NOODLE_ING.test(i)));
+  pasta.forEach(m => { assert(m.role === 'staple' && m.staple === 'noodle', 'パスタ料理は主食(noodle): ' + m.name); });
+  assert(pasta.length >= 7, 'パスタ系の主食が少ない: ' + pasta.length);
+  console.log('PASS: 麺・パスタを含む料理はすべて主食(noodle)に分類(パスタ系' + pasta.length + '品)');
 }
 
 // ----- 旧reasonFor()も後方互換として残っていること(内部で引き続き使用) -----
