@@ -5012,6 +5012,14 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     budgetBox.hidden = true;
   }
 
+  // ひらりのコメント(結果カードの先頭)が見える位置までスクロールする。
+  // 「もう一度ひらめく」は画面下の固定ボタンで、結果の下の方を見ている位置から押すため、
+  // 入れ替え後に何も見えない位置に取り残されないよう、ひらりの位置へ戻す。
+  function scrollToHirari(){
+    var target = document.getElementById("rouletteCard");
+    if(target) target.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"});
+  }
+
   function spin(source){
     var combo = pickCombo();
     if(!combo){
@@ -5084,12 +5092,23 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         clearInterval(spinTimer);
         SLOTS.forEach(function(key){ slotEls[key].name.classList.remove("spinning"); });
         showPick(combo);
+        // 結果が表示されて高さが変わった後でも、ひらりのコメントが見える位置に合わせ直す
+        if(source === "reroll"){
+          var card = document.getElementById("rouletteCard");
+          if(card){
+            var top = card.getBoundingClientRect().top;
+            if(top < -4 || top > window.innerHeight * 0.4) scrollToHirari();
+          }
+        }
       }
     }, 90);
   }
 
   spinBtn.addEventListener("click", function(){ spin("manual"); });
-  againBtn.addEventListener("click", function(){ spin("reroll"); });
+  againBtn.addEventListener("click", function(){
+    spin("reroll");
+    setTimeout(scrollToHirari, 60);
+  });
 
   var toastEl = document.getElementById("toast");
   var toastTimer = null;
