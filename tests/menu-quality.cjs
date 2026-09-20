@@ -22,7 +22,7 @@ function safeSet(){} // LS書き込みはブラウザのみで確認するため
 
 // 定数(SALAD_STYLE_RE, HEAVY_CATSなど)は手打ちコピーせず、ソースから
 // そのまま抜き出して評価する(実装とテストの二重管理によるズレを防ぐ)。
-for(const name of ['SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','TRAIT_SIZE_XL_RE','TRAIT_SIZE_LARGE_RE','TRAIT_RICH_RE','TRAIT_LIGHT_RE','TRAIT_HOT_RE','TRAIT_ADULT_RE','TRAIT_STARCH_RE','TRAIT_PROCESSED_FISH_RE','TRAIT_KID_FAV_RE','TRAIT_CLEAN_RE','TRAIT_NOVEL_RE','TRAIT_MEAT_FISH_CATS','TRAIT_FINISH_LIGHT_RICE','TRAIT_OVERRIDES','TRAIT_CACHE','MOOD_DISH_RULES','MOOD_SWEET_OK']){
+for(const name of ['ONE_DISH_SHARE_CACHE','MOOD_SCORE_VIEW','SALAD_STYLE_RE','FRIED_STYLE_RE','VEG_CATS','SOUP_STYLE_RE','METHOD_RULES','TASTE_RULES','HEAVY_CATS','MOOD_TEMPLATES','MOOD_DESCRIPTOR','MOOD_IMPLIES_CAT','TRAIT_SIZE_XL_RE','TRAIT_SIZE_LARGE_RE','TRAIT_RICH_RE','TRAIT_LIGHT_RE','TRAIT_HOT_RE','TRAIT_ADULT_RE','TRAIT_STARCH_RE','TRAIT_PROCESSED_FISH_RE','TRAIT_KID_FAV_RE','TRAIT_CLEAN_RE','TRAIT_NOVEL_RE','TRAIT_MEAT_FISH_CATS','TRAIT_FINISH_LIGHT_RICE','TRAIT_OVERRIDES','TRAIT_CACHE','MOOD_DISH_RULES','MOOD_SWEET_OK']){
   const re=new RegExp('  var '+name+' = [^;]+;', 's');
   const decl=source.match(re)?.[0];
   assert(decl, name+' declaration not found in source');
@@ -42,16 +42,23 @@ for(const name of ['allMenus','roleOf','pickRandom','recentNamesByRole','matches
   'catPreferenceBonus','isDisliked','clearLikeDislike','recordFeedback',
   'scoreMain','mainPool','scoreStaple','staplePool','isSaladStyle','isSoupStyle','isOneDishStaple',
   'cookingMethodOf','tasteTagsOf','heavyCatOf','scoreSide','sidePool','soupPool','lightSidePool',
-  'getTemplate','selectTemplate','buildDefaultCombo','buildSingleCombo','buildDrinkCombo','trimToMaxItems','buildComboForTemplate',
+  'getTemplate','selectTemplate','buildTeishoku','buildOneDish','oneDishShare','buildDefaultCombo','buildSingleCombo','buildDrinkCombo','trimToMaxItems','buildComboForTemplate',
   'estimatedTotalTime','estimatedTotalCost','estimateActiveSteps','estimateCookware',
   'validateCombo','scoreMenuCombination','safeFallbackCombo','pickCombo',
   'traitMethodOf','deriveTraits','traitsOf','moodRuleOk','moodDishOk','moodRulesSupersede','moodAllows',
-  'dishFactSentence','reasonFor',
+  'dishFactSentence','reasonFor','hiramekiScoreFor',
   'comboMenus','shoppingRows','scaleNumber','scaleIngredientText','servingsRatio']){
  const re=new RegExp('  function '+name+'\\([^]*?\\n  \\}');
  let fn=source.match(re)?.[0];
  if(!fn){fn=source.match(new RegExp('  function '+name+'\\([^\\n]+'))?.[0];}
  assert(fn,name);run(fn);
+}
+
+// 献立の相性(harmonyIssues / harmonyScore)のブロックも、目印コメントの間をそのまま評価する。
+{
+  const a = source.indexOf('// @harmony-start'), b = source.indexOf('// @harmony-end');
+  assert(a > 0 && b > a, '献立の相性ブロックの目印が見つからない');
+  run(source.slice(a, b));
 }
 
 // おすすめ理由のブロック(MOOD_INTENT・行の選択・buildReason)は、関数内に「;」を
@@ -185,7 +192,7 @@ moodIds.forEach(moodId => {
     if(moodId === 'quick'){
       if(menus.some(m => /大盛り|特盛り|特大|デカ|どっさり|爆盛り|ボリューム満点/.test(m.name))){ violation[moodId]++; }
     }
-    if(moodId === 'light' && heroTraits.rich !== 'light'){ violation[moodId]++; }
+    if(moodId === 'light' && !(heroTraits.rich === 'light' || heroTraits.lightish) || (moodId === 'light' && heroTraits.rich === 'rich')){ violation[moodId]++; }
     if(moodId === 'fish' && heroTraits.processedFish){ violation[moodId]++; }
     if(moodId === 'cleanup' && !heroTraits.cleanup){ violation[moodId]++; }
     if(moodId === 'save' && menus.some(m => (m.tags||[]).some(t => ['ご褒美','豪華見え','記念日','週末'].includes(t)))){ violation[moodId]++; }
@@ -233,7 +240,10 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
   const meatMenu = run(`allMenus().find(m=>['chicken','pork','beef'].includes(m.cat))`);
   const comboNoFish = {staple:meatMenu, main:meatMenu, side1:null, side2:null};
   assert.equal(run(`validateCombo(${JSON.stringify(comboNoFish)}, 'fish')`), false, '魚が無いのにfishで合格してしまう');
-  const comboWithFish = {staple:fishMenu, main:fishMenu, side1:null, side2:null};
+  // 同じ料理を主食と主菜に重ねた献立は、相性ルール(同じ食材の重複)で除外されるため、
+  // 実際に出うる形(白いごはん+魚の主菜)で「fishで合格する」ことを確認する。
+  const plainRice = run(`allMenus().find(m=>m.plain && m.staple==='rice')`);
+  const comboWithFish = {staple:plainRice, main:fishMenu, side1:null, side2:null};
   assert.equal(run(`validateCombo(${JSON.stringify(comboWithFish)}, 'fish')`), true, '魚があるのにfishで不合格になる');
 
   const bigName = run(`allMenus().find(m=>/大盛り|特盛り/.test(m.name))`);
@@ -325,6 +335,66 @@ console.log(`PASS: 全${moodIds.length}気分 × ${MOOD_N}回のテンプレー�
     assert(st.topShare <= 0.05, `気分「${id}」で同じ理由文が${(st.topShare * 100).toFixed(1)}%を占める`);
   });
   console.log(`PASS: おすすめ理由の品質(全${moodIds.length}気分 × ${REASON_N}回: 主役名・2〜3文・気分の手がかり・事実との一致・NG表現・繰り返し)`);
+}
+
+// =========================================================
+// 献立の相性・「ちょっと軽め」「いつもと違うもの」の料理の幅・「なぜ?」の文言
+// (2026-09 追加)。個々の料理は気分に合っていても、並べると不自然な献立を
+// 出さないことを、独立に書いた判定(AUD)で全気分×500回確認する。
+// =========================================================
+{
+  const N = 200;
+  const AUD = {
+    fishBread: c => c.staple && c.staple.plain && c.staple.staple === 'bread' && c.main && /鮭|さば|ぶり|あじ|いわし|さんま|たら|鯛|かれい|ほっけ|さわら|まぐろ|かつお|カツオ|えび|いか|たこ|ほたて|ホタテ|白身魚/.test(c.main.name),
+    nonWesternBread: c => c.staple && c.staple.plain && c.staple.staple === 'bread' && c.main && c.main.genre !== 'western',
+    oneDishStarchy: c => c.staple && !c.staple.plain && !c.main && [c.side1, c.side2].filter(Boolean).some(m => /じゃがいも|ポテト|春雨|丼|ライス|雑炊|パスタ|ラーメン|うどん|そば|チャーハン|パン粉?(?!粉)|サンド/.test(m.name.replace(/パン粉|フライパン/g, ''))),
+    friedTwice: c => comboMenus2(c).filter(m => run(`traitsOf(${JSON.stringify(m)}).method`) === 'fry').length >= 2,
+    soupTwice: c => comboMenus2(c).filter(m => /ミネストローネ|ポトフ|シチュー|鍋|ポタージュ|スープ|汁|椀/.test(m.name) && !m.plain).length >= 2,
+    pastaWithPlain: c => c.staple && c.staple.plain && c.main && /パスタ|ペペロンチーノ|カルボナーラ|ナポリタン/.test(c.main.name),
+    threeGenres: c => new Set(comboMenus2(c).filter(m => !m.plain).map(m => m.genre)).size >= 3
+  };
+  function comboMenus2(c){ return run(`comboMenus(${JSON.stringify(c)})`); }
+  const unnatural = {}; let total = 0, bad = 0, sameProtein = 0;
+  const heroSeen = {};
+  ['light', 'new', 'fish', 'drink', 'hearty', 'quick', 'save', 'meat', 'cleanup', 'surprise', null].forEach(moodId => {
+    run(`activeMood = ${moodId ? `MOODS.find(m=>m.id===${JSON.stringify(moodId)})` : 'null'};`);
+    const heroCount = {}; let n = 0;
+    for(let i = 0; i < N; i++){
+      const c = run('pickCombo()'); if(!c) continue; n++; total++;
+      const issues = run(`harmonyIssues(${JSON.stringify(c)})`);
+      if(issues.length){ bad++; unnatural[issues[0]] = (unnatural[issues[0]] || 0) + 1; }
+      Object.entries(AUD).forEach(([k, f]) => { if(f(c)){ bad++; unnatural[k] = (unnatural[k] || 0) + 1; } });
+      const hero = (c.main || c.staple).name; heroCount[hero] = (heroCount[hero] || 0) + 1;
+    }
+    heroSeen[moodId || '(なし)'] = {distinct: Object.keys(heroCount).length, top: +(Math.max(...Object.values(heroCount)) / n).toFixed(3)};
+  });
+  console.log('[harmony] 不自然な組み合わせ:', bad, '/', total, JSON.stringify(unnatural));
+  console.log('[hero-variety]', JSON.stringify(heroSeen));
+  assert.equal(bad, 0, `不自然な献立が${bad}件: ` + JSON.stringify(unnatural));
+  // 主役が特定の料理に偏らないこと(最頻の主役が全体の12%以下)
+  Object.entries(heroSeen).forEach(([id, v]) => assert(v.top <= 0.15, `気分「${id}」で同じ主役が${(v.top * 100).toFixed(1)}%を占める`));
+
+  // 「ちょっと軽め」: 主役になれる料理が十分あり、魚・鶏・麺・雑炊など幅がある
+  const lightHeroes = run('BASE_MENUS').filter(m => m.role !== 'side' && !m.plain && run(`moodDishOk(${JSON.stringify(m)}, "light", "hero")`));
+  assert(lightHeroes.length >= 180, `軽めの主役候補が少ない(${lightHeroes.length})`);
+  ['fish', 'chicken'].forEach(cat => assert(lightHeroes.some(m => m.cat === cat), `軽めの主役に${cat}が無い`));
+  assert(lightHeroes.some(m => m.staple === 'noodle'), '軽めの主役に麺類が無い');
+  assert(lightHeroes.some(m => /雑炊|にゅうめん/.test(m.name)), '軽めの主役に雑炊・にゅうめんが無い');
+  // 「いつもと違うもの」: 海外・地方の料理が十分あり、ジャンルが偏らない
+  const novelHeroes = run('BASE_MENUS').filter(m => m.role !== 'side' && !m.plain && run(`moodDishOk(${JSON.stringify(m)}, "new", "hero")`));
+  assert(novelHeroes.length >= 100, `いつもと違う主役候補が少ない(${novelHeroes.length})`);
+  assert(novelHeroes.filter(m => (m.tags || []).includes('地方料理')).length >= 10, '地方料理の主役が少ない');
+  assert(new Set(novelHeroes.flatMap(m => (m.tags || []).filter(t => ['韓国','台湾','タイ','メキシコ','ハワイ','イタリア','ベトナム','インド','トルコ','ギリシャ','モロッコ','スペイン','フランス','ドイツ','ロシア','ペルー'].includes(t)))).size >= 12, '海外の国の幅が少ない');
+
+  // 「なぜ?」の内訳: 旧式の文言が残らず、ひらりの口調で、気分の見どころに触れる
+  run('activeMood = MOODS.find(m=>m.id==="drink");');
+  const cc = run('pickCombo()');
+  const sc = run(`hiramekiScoreFor(${JSON.stringify(cc.main || cc.staple)}, "drink", ${JSON.stringify(cc)})`);
+  assert(sc.reasons.length >= 3 && sc.reasons.length <= 4, '内訳の行数');
+  assert(sc.reasons.every(r => !/しっかり合っています|意識して選びました|データが少ない|とかぶらない組み合わせを選んでいます/.test(r)), '旧式の文言が残っている');
+  assert(sc.reasons[0].includes('お酒との合い'), '気分の見どころに触れていない: ' + sc.reasons[0]);
+  moodIds.forEach(id => assert(run('MOOD_SCORE_VIEW')[id], `MOOD_SCORE_VIEW に ${id} が無い`));
+  console.log(`PASS: 献立の相性(全11区分×${N}回=${total}件: 不自然な組み合わせ0件)・主役の偏り・軽め${lightHeroes.length}品/いつもと違う${novelHeroes.length}品・「なぜ?」の文言`);
 }
 
 // ----- 旧reasonFor()も後方互換として残っていること(内部で引き続き使用) -----
