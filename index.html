@@ -641,6 +641,8 @@ section{margin-bottom:28px;}
   align-items:center;
   justify-content:center;
   gap:8px;
+  text-decoration:none;
+  box-sizing:border-box;
 }
 .btn-primary{
   background:var(--accent-strong);
@@ -1539,6 +1541,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
         <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="18" cy="5" r="2.6"/><circle cx="6" cy="12" r="2.6"/><circle cx="18" cy="19" r="2.6"/><path d="M8.3 10.7l7.4-4.2M8.3 13.3l7.4 4.2" stroke-linecap="round"/></svg>
         家族に送る
       </button>
+      <a class="btn btn-secondary" id="xShareBtn" href="#" target="_blank" rel="noopener">
+        <svg class="btn-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+        Xでシェア
+      </a>
       <button class="btn btn-secondary" id="shoppingListBtn" disabled>買い物リスト(準備中)</button>
       <button class="btn-link" id="newDayBtn">別の日の献立を考える</button>
     </div>
@@ -2801,6 +2807,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var emptyNote = document.getElementById("emptyNote");
   var decidedPanel = document.getElementById("decidedPanel");
   var decidedRecap = document.getElementById("decidedRecap");
+  var xShareBtn = document.getElementById("xShareBtn");
   var shoppingListBtn = document.getElementById("shoppingListBtn");
   var newDayBtn = document.getElementById("newDayBtn");
   var sidesHeading = document.getElementById("sidesHeading");
@@ -5148,6 +5155,18 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     decideRow.hidden = true;
     feedbackRow.hidden = true;
     decidedPanel.hidden = false;
+
+    var xShareLines = comboMenus(currentPicks).map(function(m){ return "・" + m.name; }).join("\n");
+    var xShareText = "今日の晩ごはん、決まりました。\n\n" + xShareLines + "\n\n" + "ひらめき係で決めました。";
+    xShareBtn.href = "https://twitter.com/intent/tweet?text=" + encodeURIComponent(xShareText)
+      + "&url=" + encodeURIComponent(location.href)
+      + "&via=hirameki365";
+  });
+
+  xShareBtn.addEventListener("click", function(){
+    if(!currentPicks) return;
+    var heroDish = currentPicks.main || currentPicks.staple;
+    trackEvent("share_menu", {method: "x_intent", main_name: heroDish ? heroDish.name : ""});
   });
 
   likeBtn.addEventListener("click", function(){
