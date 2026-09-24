@@ -2577,7 +2577,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       sessionStapleHistory = sessionStapleHistory.slice(0, SESSION_MEMORY);
     }
   }
-  var unsplashKey = "-Es-nrgH78WhEwxwEHN-4wYh2k1jOcX4DhxijEWHBAg";
+  // Unsplash APIキーはここに置かず、Cloudflare Worker(cloudflare-worker/)側の
+  // Secretとして保持する。このURLはWorkerデプロイ後に発行されるものに差し替える。
+  var PHOTO_PROXY_BASE = "https://hirameki-photo-proxy.yu-nishikawa0622-868.workers.dev";
   var photoCache = safeGet(LS_PHOTO_CACHE, {});
 
   // True if this exact Unsplash photo URL is already showing under a
@@ -2599,11 +2601,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       done(photoCache[keyword]);
       return;
     }
-    if(!unsplashKey){ done(null); return; }
-    var url = "https://api.unsplash.com/search/photos?query=" + encodeURIComponent(keyword) +
-      "&per_page=8&orientation=landscape&client_id=" + encodeURIComponent(unsplashKey);
+    var url = PHOTO_PROXY_BASE + "/search?query=" + encodeURIComponent(keyword);
     fetch(url).then(function(res){
-      if(!res.ok) throw new Error("unsplash error " + res.status);
+      if(!res.ok) throw new Error("photo proxy error " + res.status);
       return res.json();
     }).then(function(data){
       var results = (data.results || []).filter(function(r){ return r && r.urls && r.urls.small; });
@@ -2626,9 +2626,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   }
 
   function pingUnsplashDownload(downloadLocation){
-    if(!downloadLocation || !unsplashKey) return;
-    var sep = downloadLocation.indexOf("?") === -1 ? "?" : "&";
-    fetch(downloadLocation + sep + "client_id=" + encodeURIComponent(unsplashKey)).catch(function(){});
+    if(!downloadLocation) return;
+    var url = PHOTO_PROXY_BASE + "/download?location=" + encodeURIComponent(downloadLocation);
+    fetch(url).catch(function(){});
   }
 
   // Curated/self-hosted photos take priority over the live Unsplash search
