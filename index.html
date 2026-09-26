@@ -5154,11 +5154,20 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(target) target.scrollIntoView({behavior: reduceMotion ? "auto" : "smooth", block: "start"});
   }
 
+  // ?menu=b1 のようにIDを指定すると、その献立を主菜に強制表示できる。
+  // 何千通りもの組み合わせの中から特定の1品を確認したいとき(動作確認・
+  // 個別の献立への言及など)のための入り口で、通常の利用には影響しない。
+  var forcedMenuId = new URLSearchParams(location.search).get("menu");
+
   function spin(source){
     var combo = pickCombo();
     if(!combo){
       emptyNote.hidden = false;
       return;
+    }
+    if(forcedMenuId){
+      var forcedMenu = allMenus().find(function(m){ return m.id === forcedMenuId; });
+      if(forcedMenu) combo.main = forcedMenu;
     }
     emptyNote.hidden = true;
     var heroDish = combo.main || combo.staple;
@@ -5491,6 +5500,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   renderCustomList();
   var comboIntroTextEl = document.getElementById("comboIntroText");
   if(comboIntroTextEl) comboIntroTextEl.textContent = comboIntroLine();
+  if(forcedMenuId){
+    spin("manual");
+  }
   if(history.length > 0){
     trackEvent("history_view", {history_count: history.length});
   }
