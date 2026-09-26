@@ -5356,6 +5356,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     if(forcedMenuId){
       var forcedMenu = allMenus().find(function(m){ return m.id === forcedMenuId; });
       if(forcedMenu) combo.main = forcedMenu;
+      // ページを開いた直後の1回だけ強制表示し、以降の「ひらめく」「もう一度
+      // ひらめく」ではURLにmenuパラメータが残っていても通常どおり抽選する。
+      forcedMenuId = null;
     }
     emptyNote.hidden = true;
     var heroDish = combo.main || combo.staple;
