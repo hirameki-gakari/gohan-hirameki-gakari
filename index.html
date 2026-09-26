@@ -1337,7 +1337,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
               <ol id="stepMain"></ol>
             </div>
             <div id="deepDiveWrapMain" hidden>
-              <details class="recipe-deep-dive">
+              <details class="recipe-deep-dive" id="deepDiveDetailsMain">
                 <summary class="recipe-summary">もっとくわしく(なぜ・コツ)</summary>
                 <p class="deep-dive-why" id="deepDiveWhyMain"></p>
                 <ul id="deepDiveTipsMain"></ul>
@@ -2892,6 +2892,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       stepWrap: document.getElementById("stepWrap" + s),
       stepList: document.getElementById("step" + s),
       deepDiveWrap: document.getElementById("deepDiveWrap" + s),
+      deepDiveDetails: document.getElementById("deepDiveDetails" + s),
       deepDiveWhy: document.getElementById("deepDiveWhy" + s),
       deepDiveTips: document.getElementById("deepDiveTips" + s),
       shopLink: document.getElementById("shopLink" + s),
@@ -4853,6 +4854,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function servingsRatio(){ return servings / BASE_SERVINGS; }
 
   function fillRecipe(els, menu){
+    // 別の献立に切り替わるたび、前回開いたままの状態を引き継がないよう必ず閉じる。
+    els.recipe.open = false;
+    if(els.deepDiveDetails) els.deepDiveDetails.open = false;
     var ing = menu.ing || [];
     var steps = menu.steps || [];
     if(ing.length === 0 && steps.length === 0){
