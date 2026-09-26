@@ -546,10 +546,46 @@ section{margin-bottom:28px;}
   flex-direction:column;
   gap:14px;
 }
-.deep-dive-why{
-  font-size:13px;
-  line-height:1.7;
-  margin:8px 0 6px;
+.deep-dive-btn{
+  color:var(--accent);
+  text-align:left;
+}
+.deep-dive-dialog{
+  border:none;
+  border-radius:20px;
+  padding:20px;
+  max-width:360px;
+  width:calc(100% - 40px);
+  background:var(--surface);
+  box-shadow:0 20px 40px -20px rgba(43,39,34,.35);
+}
+.deep-dive-dialog::backdrop{
+  background:rgba(43,39,34,.45);
+}
+.deep-dive-dialog-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:10px;
+}
+.deep-dive-dialog-head .mascot-inline{
+  width:40px;
+  flex-shrink:0;
+}
+.deep-dive-dialog-dish{
+  font-weight:700;
+  font-size:14px;
+  color:var(--text);
+}
+.deep-dive-dialog-body{
+  margin-bottom:16px;
+}
+.deep-dive-dialog-body ul{
+  margin:10px 0 0;
+  padding-left:18px;
+}
+.deep-dive-dialog-body li{
+  margin-bottom:6px;
 }
 .recipe-label{
   font-size:12px;
@@ -1337,11 +1373,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
               <ol id="stepMain"></ol>
             </div>
             <div id="deepDiveWrapMain" hidden>
-              <details class="recipe-deep-dive" id="deepDiveDetailsMain">
-                <summary class="recipe-summary">もっとくわしく(なぜ・コツ)</summary>
-                <p class="deep-dive-why" id="deepDiveWhyMain"></p>
-                <ul id="deepDiveTipsMain"></ul>
-              </details>
+              <button type="button" class="btn-link deep-dive-btn" id="deepDiveBtnMain"></button>
             </div>
           </div>
         </details>
@@ -1564,6 +1596,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     <p class="empty-note" id="emptyNote" hidden>その条件の候補がありません。カテゴリを増やしてください。</p>
   </div>
   <div class="toast" id="toast" hidden></div>
+  <dialog class="deep-dive-dialog" id="deepDiveDialog">
+    <div class="deep-dive-dialog-head">
+      <img class="mascot mascot-inline" src="assets/character/hirameki-reveal.webp" width="240" height="244" alt="" loading="lazy">
+      <p class="deep-dive-dialog-dish" id="deepDiveDialogDish"></p>
+    </div>
+    <div class="mascot-bubble deep-dive-dialog-body">
+      <p id="deepDiveDialogWhy"></p>
+      <ul id="deepDiveDialogTips"></ul>
+    </div>
+    <button type="button" class="btn btn-secondary" id="deepDiveDialogClose">閉じる</button>
+  </dialog>
 </div>
 
 <script>
@@ -1595,11 +1638,12 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     var BASE_MENUS = [
     {id:"b1",cat:"chicken",name:"鶏の照り焼き",desc:"フライパン一つで作れる定番。",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:950,img:"chicken teriyaki japanese",ing:["鶏もも肉3枚","しょうゆ大さじ4","みりん大さじ4","砂糖大さじ1.5","油少々"],steps:["鶏肉を皮目から焼き色がつくまで焼く","余分な油を拭き取る","しょうゆ・みりん・砂糖を加えて煮絡める","食べやすく切って盛る"],
     deepDive:{
-      why:"皮目からじっくり焼くのは、皮の下の脂を自分でじわじわ溶かし出すため。溶けた脂が鍋になって身を揚げ焼きに近い状態で包み、皮はパリッと・中はしっとり仕上がる。途中で何度も触ったりひっくり返したりすると、皮が破れて脂が外に逃げ、べちゃっとした仕上がりになりやすい。",
+      teaser:"🐔 鶏肉の話になると止まらない、ひらりのコメント",
+      why:"実はね、鶏肉の話になるとひらり、つい早口になっちゃうんだ…。皮目からじっくり焼くのはね、皮の下の脂を自分でじわじわ溶かし出してあげるため。溶けた脂がフライパンの中で鍋になって、身を揚げ焼きみたいに包んでくれるの。だから皮はパリッと、中はしっとり仕上がるんだよ。途中で何度も触ったりひっくり返したりすると、皮が破れて脂が逃げちゃって、べちゃっとした仕上がりになりやすいから、そこだけ気をつけてね。",
       tips:[
-        "皮目を焼いている間は動かさない。反り返るときは菜箸やヘラで軽く上から押さえるだけにする",
-        "焼けた脂をキッチンペーパーで拭き取ってからタレを入れると、脂っぽさが残らずタレの味がしっかり乗る",
-        "仕上げに火を止める直前だけ強火にして10秒ほど煮詰めると、照りが濃く出て見た目もつやっと仕上がる"
+        "皮目を焼いてるあいだは、なるべく触らないであげて。反り返ってきたら、菜箸でちょっと上から押さえるだけで十分だよ",
+        "焼けた脂はキッチンペーパーで拭き取ってからタレを入れてね。そうするとタレの味がぼやけずにしっかり乗ってくれるの",
+        "仕上げは火を止める直前に、10秒だけ強火。ここでぐっと照りが出て、見た目もつやっと決まるよ"
       ]
     },
     photoUrl:"https://images.unsplash.com/photo-1514536958296-436f46226e74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Vinn Koonyosying",photoCreditUrl:"https://unsplash.com/@mggbox",photoDownloadLocation:"https://api.unsplash.com/photos/4CJ9AWZT7FM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww"},
@@ -2892,9 +2936,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       stepWrap: document.getElementById("stepWrap" + s),
       stepList: document.getElementById("step" + s),
       deepDiveWrap: document.getElementById("deepDiveWrap" + s),
-      deepDiveDetails: document.getElementById("deepDiveDetails" + s),
-      deepDiveWhy: document.getElementById("deepDiveWhy" + s),
-      deepDiveTips: document.getElementById("deepDiveTips" + s),
+      deepDiveBtn: document.getElementById("deepDiveBtn" + s),
       shopLink: document.getElementById("shopLink" + s),
       shopLinkA: document.getElementById("shopLinkA" + s)
     };
@@ -4856,7 +4898,6 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   function fillRecipe(els, menu){
     // 別の献立に切り替わるたび、前回開いたままの状態を引き継がないよう必ず閉じる。
     els.recipe.open = false;
-    if(els.deepDiveDetails) els.deepDiveDetails.open = false;
     var ing = menu.ing || [];
     var steps = menu.steps || [];
     if(ing.length === 0 && steps.length === 0){
@@ -4874,16 +4915,36 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     els.stepList.innerHTML = steps.map(function(s){ return "<li>" + escapeHtml(s) + "</li>"; }).join("");
     if(els.deepDiveWrap){
       if(menu.deepDive && menu.deepDive.why){
-        els.deepDiveWhy.textContent = menu.deepDive.why;
-        els.deepDiveTips.innerHTML = (menu.deepDive.tips || []).map(function(t){
-          return "<li>" + escapeHtml(t) + "</li>";
-        }).join("");
+        els.deepDiveBtn.textContent = menu.deepDive.teaser || "もっとくわしく(ひらりのコメント)";
+        els.deepDiveBtn.onclick = function(){ openDeepDive(menu); };
         els.deepDiveWrap.hidden = false;
       }else{
         els.deepDiveWrap.hidden = true;
       }
     }
   }
+
+  var deepDiveDialog = document.getElementById("deepDiveDialog");
+  var deepDiveDialogDish = document.getElementById("deepDiveDialogDish");
+  var deepDiveDialogWhy = document.getElementById("deepDiveDialogWhy");
+  var deepDiveDialogTips = document.getElementById("deepDiveDialogTips");
+  var deepDiveDialogClose = document.getElementById("deepDiveDialogClose");
+
+  function openDeepDive(menu){
+    if(!menu.deepDive) return;
+    deepDiveDialogDish.textContent = menu.name;
+    deepDiveDialogWhy.textContent = menu.deepDive.why;
+    deepDiveDialogTips.innerHTML = (menu.deepDive.tips || []).map(function(t){
+      return "<li>" + escapeHtml(t) + "</li>";
+    }).join("");
+    trackEvent("deep_dive_view", {main_name: menu.name});
+    deepDiveDialog.showModal();
+  }
+
+  deepDiveDialogClose.addEventListener("click", function(){ deepDiveDialog.close(); });
+  deepDiveDialog.addEventListener("click", function(e){
+    if(e.target === deepDiveDialog) deepDiveDialog.close();
+  });
 
   function updateBudget(combo){
     var costs = comboMenus(combo).map(function(m){ return m.cost5 || 0; });
