@@ -546,6 +546,11 @@ section{margin-bottom:28px;}
   flex-direction:column;
   gap:14px;
 }
+.deep-dive-why{
+  font-size:13px;
+  line-height:1.7;
+  margin:8px 0 6px;
+}
 .recipe-label{
   font-size:12px;
   font-weight:700;
@@ -1256,7 +1261,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
       <div class="combo-intro" id="comboIntro">
         <img class="mascot mascot-intro" src="assets/character/hirameki-thinking.webp" width="240" height="244" alt="" loading="lazy">
-        <p>気分を選ぶと、今日のひらめきが届きます。</p>
+        <p id="comboIntroText">気分を選ぶと、今日のひらめきが届きます。</p>
       </div>
 
       <p class="staple-heading" id="stapleHeading" hidden>今日の主食</p>
@@ -1330,6 +1335,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
             <div id="stepWrapMain">
               <p class="recipe-label">作り方</p>
               <ol id="stepMain"></ol>
+            </div>
+            <div id="deepDiveWrapMain" hidden>
+              <details class="recipe-deep-dive">
+                <summary class="recipe-summary">もっとくわしく(なぜ・コツ)</summary>
+                <p class="deep-dive-why" id="deepDiveWhyMain"></p>
+                <ul id="deepDiveTipsMain"></ul>
+              </details>
             </div>
           </div>
         </details>
@@ -1581,7 +1593,16 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   CATS.forEach(function(c){ CAT_MAP[c.id] = c; });
 
     var BASE_MENUS = [
-    {id:"b1",cat:"chicken",name:"鶏の照り焼き",desc:"フライパン一つで作れる定番。",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:950,img:"chicken teriyaki japanese",ing:["鶏もも肉3枚","しょうゆ大さじ4","みりん大さじ4","砂糖大さじ1.5","油少々"],steps:["鶏肉を皮目から焼き色がつくまで焼く","余分な油を拭き取る","しょうゆ・みりん・砂糖を加えて煮絡める","食べやすく切って盛る"],photoUrl:"https://images.unsplash.com/photo-1514536958296-436f46226e74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Vinn Koonyosying",photoCreditUrl:"https://unsplash.com/@mggbox",photoDownloadLocation:"https://api.unsplash.com/photos/4CJ9AWZT7FM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww"},
+    {id:"b1",cat:"chicken",name:"鶏の照り焼き",desc:"フライパン一つで作れる定番。",genre:"japanese",weight:"hearty",cookingTime:10,difficulty:1,cost5:950,img:"chicken teriyaki japanese",ing:["鶏もも肉3枚","しょうゆ大さじ4","みりん大さじ4","砂糖大さじ1.5","油少々"],steps:["鶏肉を皮目から焼き色がつくまで焼く","余分な油を拭き取る","しょうゆ・みりん・砂糖を加えて煮絡める","食べやすく切って盛る"],
+    deepDive:{
+      why:"皮目からじっくり焼くのは、皮の下の脂を自分でじわじわ溶かし出すため。溶けた脂が鍋になって身を揚げ焼きに近い状態で包み、皮はパリッと・中はしっとり仕上がる。途中で何度も触ったりひっくり返したりすると、皮が破れて脂が外に逃げ、べちゃっとした仕上がりになりやすい。",
+      tips:[
+        "皮目を焼いている間は動かさない。反り返るときは菜箸やヘラで軽く上から押さえるだけにする",
+        "焼けた脂をキッチンペーパーで拭き取ってからタレを入れると、脂っぽさが残らずタレの味がしっかり乗る",
+        "仕上げに火を止める直前だけ強火にして10秒ほど煮詰めると、照りが濃く出て見た目もつやっと仕上がる"
+      ]
+    },
+    photoUrl:"https://images.unsplash.com/photo-1514536958296-436f46226e74?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Vinn Koonyosying",photoCreditUrl:"https://unsplash.com/@mggbox",photoDownloadLocation:"https://api.unsplash.com/photos/4CJ9AWZT7FM/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Y2hpY2tlbiUyMHRlcml5YWtpJTIwamFwYW5lc2V8ZW58MHwwfHx8MTc4OTE5MjIzMnww"},
     {id:"b2",cat:"chicken",name:"鶏むね肉の塩麹焼き",desc:"パサつかずやわらかい。",genre:"japanese",weight:"healthy",cookingTime:20,difficulty:2,cost5:750,img:"grilled chicken breast",ing:["鶏むね肉3枚","塩麹大さじ4","油少々"],steps:["鶏肉に塩麹をまぶし30分〜一晩置く","フライパンで両面焼く","中まで火が通ったら切って盛る"],photoUrl:"https://images.unsplash.com/photo-1682991136736-a2b44623eeba?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Z3JpbGxlZCUyMGNoaWNrZW4lMjBicmVhc3R8ZW58MHwwfHx8MTc4OTE5MjIzNHww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Cristian Guillen",photoCreditUrl:"https://unsplash.com/@cristiang2023",photoDownloadLocation:"https://api.unsplash.com/photos/HsEnMY-ZYO8/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8Mnx8Z3JpbGxlZCUyMGNoaWNrZW4lMjBicmVhc3R8ZW58MHwwfHx8MTc4OTE5MjIzNHww"},
     {id:"b3",cat:"chicken",name:"鶏と白菜のクリーム煮",desc:"冬に体が温まる一品。",genre:"western",weight:"hearty",cookingTime:10,difficulty:1,cost5:1050,img:"chicken napa cabbage cream stew",ing:["鶏もも肉3枚","白菜1/3株","牛乳500ml","小麦粉大さじ3","コンソメ2個"],steps:["鶏肉と白菜を炒める","小麦粉をまぶしてさらに炒める","牛乳とコンソメを加えて煮込む","塩こしょうで味を調える"],photoUrl:"https://images.unsplash.com/photo-1768966741302-514746752d87?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMGNyZWFtJTIwc3RldyUyMHdoaXRlJTIwc2F1Y2UlMjBib3dsfGVufDB8MHx8fDE3ODkyMjI3ODd8MA&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"You Le",photoCreditUrl:"https://unsplash.com/@le_y0u",photoDownloadLocation:"https://api.unsplash.com/photos/x073Ru37rnI/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8Y2hpY2tlbiUyMGNyZWFtJTIwc3RldyUyMHdoaXRlJTIwc2F1Y2UlMjBib3dsfGVufDB8MHx8fDE3ODkyMjI3ODd8MA"},
     {id:"b4",cat:"chicken",name:"鶏の唐揚げ",desc:"育ち盛りにも人気。",genre:"japanese",weight:"hearty",cookingTime:20,difficulty:2,cost5:1000,img:"japanese fried chicken karaage",ing:["鶏もも肉3枚","しょうゆ大さじ3","しょうが・にんにく各少々","片栗粉適量","揚げ油"],steps:["鶏肉をしょうゆ・しょうが・にんにくに漬ける","片栗粉をまぶす","170℃の油で揚げる"],photoUrl:"https://images.unsplash.com/photo-1644203542635-e34075350a79?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBmcmllZCUyMGNoaWNrZW4lMjBrYXJhYWdlJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIxOTM4MXww&ixlib=rb-4.1.0&q=80&w=1080",photoCredit:"Markus Winkler",photoCreditUrl:"https://unsplash.com/@markuswinkler",photoDownloadLocation:"https://api.unsplash.com/photos/zRbSeCQbl8k/download?ixid=M3wxMDYyNTE1fDB8MXxzZWFyY2h8MXx8amFwYW5lc2UlMjBmcmllZCUyMGNoaWNrZW4lMjBrYXJhYWdlJTIwcGxhdGV8ZW58MHwwfHx8MTc4OTIxOTM4MXww"},
@@ -2369,6 +2390,7 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var LS_SELECTED_STAPLE = "konndate_selected_staple_v1";
   var LS_SERVINGS = "konndate_servings_v1";
   var LS_FEEDBACK = "konndate_feedback_v1";
+  var LS_DECIDE_COUNT = "konndate_decide_count_v1";
   var GENRES = [
     {id:"japanese", label:"和食"},
     {id:"western", label:"洋食"},
@@ -2521,6 +2543,23 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     return Array.isArray(list) ? list[Math.floor(Math.random() * list.length)] : list;
   }
 
+  // これまでの利用回数・好みの蓄積を、トップ画面のひとことで伝える。
+  // 裏側では毎回動いている好み学習(catPreferenceBonus等)を、実際に本人へ言葉で返す場所がここしか無かったため追加。
+  var DECIDE_MILESTONES = [5, 10, 20, 30, 50, 100, 150, 200];
+  function comboIntroLine(){
+    if(decideCount <= 0){
+      return "気分を選ぶと、今日のひらめきが届きます。";
+    }
+    var likeCount = feedback.filter(function(f){ return f.action === "like"; }).length;
+    if(DECIDE_MILESTONES.indexOf(decideCount) !== -1){
+      return "これで" + decideCount + "品目。ひらり、だいぶ物知りになってきた気がするよ。";
+    }
+    if(likeCount >= 3){
+      return "これまで" + decideCount + "回、一緒にごはんを決めてきたね。「好き」も" + likeCount + "個、教えてもらったよ。";
+    }
+    return "これまで" + decideCount + "回、一緒にごはんを決めてきたね。今日は気分を選んでみてね。";
+  }
+
   var LS_PHOTO_CACHE = "konndate_photo_cache_v3";
   var SERVING_OPTIONS = [1, 2, 3, 4, 5];
   var BASE_SERVINGS = 5;
@@ -2544,6 +2583,13 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
   var customMenus = safeGet(LS_CUSTOM, []);
   var history = safeGet(LS_HISTORY, []);
   var feedback = safeGet(LS_FEEDBACK, []);
+  var decideCount = safeGet(LS_DECIDE_COUNT, 0);
+  // 決定回数カウンターの追加前から使ってくれていた人が「0回」に戻らないよう、
+  // 既存の履歴(直近30件、決定回数カウンター導入前からある)を最低ラインとして引き継ぐ。
+  if(decideCount === 0 && history.length > 0){
+    decideCount = history.length;
+    safeSet(LS_DECIDE_COUNT, decideCount);
+  }
   var selectedCats = safeGet(LS_SELECTED_CATS, []);
   var selectedGenres = safeGet(LS_SELECTED_GENRES, []).slice(0, 1);
   var selectedWeights = safeGet(LS_SELECTED_WEIGHTS, []).slice(0, 1);
@@ -2845,6 +2891,9 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
       ingList: document.getElementById("ing" + s),
       stepWrap: document.getElementById("stepWrap" + s),
       stepList: document.getElementById("step" + s),
+      deepDiveWrap: document.getElementById("deepDiveWrap" + s),
+      deepDiveWhy: document.getElementById("deepDiveWhy" + s),
+      deepDiveTips: document.getElementById("deepDiveTips" + s),
       shopLink: document.getElementById("shopLink" + s),
       shopLinkA: document.getElementById("shopLinkA" + s)
     };
@@ -4819,6 +4868,17 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     }).join("");
     els.stepWrap.hidden = steps.length === 0;
     els.stepList.innerHTML = steps.map(function(s){ return "<li>" + escapeHtml(s) + "</li>"; }).join("");
+    if(els.deepDiveWrap){
+      if(menu.deepDive && menu.deepDive.why){
+        els.deepDiveWhy.textContent = menu.deepDive.why;
+        els.deepDiveTips.innerHTML = (menu.deepDive.tips || []).map(function(t){
+          return "<li>" + escapeHtml(t) + "</li>";
+        }).join("");
+        els.deepDiveWrap.hidden = false;
+      }else{
+        els.deepDiveWrap.hidden = true;
+      }
+    }
   }
 
   function updateBudget(combo){
@@ -5144,6 +5204,10 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
     history = history.slice(0, 30);
     safeSet(LS_HISTORY, history);
     renderHistory();
+    decideCount += 1;
+    safeSet(LS_DECIDE_COUNT, decideCount);
+    var introTextEl = document.getElementById("comboIntroText");
+    if(introTextEl) introTextEl.textContent = comboIntroLine();
     showToast("今日の献立に決定しました！");
     var heroDish = currentPicks.main || currentPicks.staple;
     trackEvent("decide_menu", {mood: activeMood ? activeMood.id : "none", main_cat: heroDish.cat, main_name: heroDish.name});
@@ -5360,6 +5424,8 @@ details.advanced-filters[open] summary .chevron{transform:rotate(180deg);}
 
   renderHistory();
   renderCustomList();
+  var comboIntroTextEl = document.getElementById("comboIntroText");
+  if(comboIntroTextEl) comboIntroTextEl.textContent = comboIntroLine();
   if(history.length > 0){
     trackEvent("history_view", {history_count: history.length});
   }
